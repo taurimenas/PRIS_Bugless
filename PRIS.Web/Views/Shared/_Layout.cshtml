@@ -3,32 +3,27 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - PRIS.Web</title>
+    <title>Akademija.it Priėmimo proceso valdymo sistema</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PRIS.Web</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <partial name="_LoginPartial" />
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
+                <div class="container">
+            <div class="text-white col-5"><h1 class="h4">Priėmimo proceso valdymo sistema</h1></div>
+
+                    <div class="col-5 collapse d-sm-inline-flex flex-sm-row-reverse nav-margin">
+                        <partial name="_LoginPartial" />
+                        <ul class="navbar-nav flex-grow-1">
+
+                        </ul>
+                    </div>
+                    <div class="col-2 text-right"><img src="http://akademija.it/file/2016/11/14/it_akademija.png" alt="akademija_it_logo" /></div>
                 </div>
-            </div>
         </nav>
+
+        
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -37,8 +32,8 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - PRIS.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="container text-right text-white">
+            &copy; 2020 - Bugless, Inc. All rights reserved <a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
