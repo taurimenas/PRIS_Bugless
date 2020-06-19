@@ -43,10 +43,10 @@ namespace PRIS.Web.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [EmailAddress]
+            [EmailAddress(ErrorMessage = "Įveskite teisingą el.paštą")]
             public string Email { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Įveskite slaptažodį")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -82,7 +82,7 @@ namespace PRIS.Web.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
+                    _logger.LogInformation("Prisijungėte");
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -91,12 +91,12 @@ namespace PRIS.Web.Areas.Identity.Pages.Account
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
+                    _logger.LogWarning("Sėkmingai atsijungėte");
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Nepavyko prisijungti");
                     return Page();
                 }
             }
