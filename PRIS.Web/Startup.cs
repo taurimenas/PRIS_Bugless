@@ -30,7 +30,7 @@ namespace PRIS.Web
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("LocalConnection")));
+                    Configuration.GetConnectionString("AzureConnection")));
             services.AddDefaultIdentity<IdentityUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
