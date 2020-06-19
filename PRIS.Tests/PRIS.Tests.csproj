@@ -13,4 +13,9 @@
     <PackageReference Include="coverlet.collector" Version="1.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PRIS.Core.Library\PRIS.Core.Library.csproj" />
+    <ProjectReference Include="..\PRIS.Web\PRIS.Web.csproj" />
+  </ItemGroup>
+
 </Project>
