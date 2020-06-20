@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace PRIS.Web.Models
 {
-    public class Program : EntityBase
+    public class Programs : EntityBase
     {
         public string Name { get; set; }
 
-        public Course Course { get; set; }
+        //public Course Course { get; set; }
     }
 }

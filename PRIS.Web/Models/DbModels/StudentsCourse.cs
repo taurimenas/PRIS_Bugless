@@ -11,7 +11,7 @@ namespace PRIS.Web.Models
         public int CourseId { get; set; }
         public int Priority { get; set; }
 
-        public Student Student { get; set; }
-        public Course Course { get; set; }
+        //public Student Student { get; set; }
+        //public Course Course { get; set; }
     }
 }

@@ -15,9 +15,9 @@ namespace PRIS.Web.Models
         public int ProgramId { get; set; }
         public string CityId { get; set; }
 
-        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
-        public List<StudentsCourse> StudentsCourses { get; set; }
-        public List<Program> Programs { get; set; }
-        public List<City> Cities { get; set; }
+        //[System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        //public List<StudentsCourse> StudentsCourses { get; set; }
+        //public List<Programs> Programs { get; set; }
+        //public List<City> Cities { get; set; }
     }
 }
