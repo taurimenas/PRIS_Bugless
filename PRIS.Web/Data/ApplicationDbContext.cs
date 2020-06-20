@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PRIS.Web.Models;
 using PRIS.Web.Models.DbModels;
 
@@ -25,6 +27,11 @@ namespace PRIS.Web.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<StudentsCourse>().HasNoKey();
+            modelBuilder.Entity<Program>().HasNoKey();
+
             modelBuilder.Entity<City>().ToTable("City");
             modelBuilder.Entity<ConversationResult>().ToTable("ConversationResult");
             modelBuilder.Entity<Course>().ToTable("Course");

@@ -14,9 +14,11 @@ namespace PRIS.Web.Models
         public string PhoneNumber { get; set; }
         public Gender Gender { get; set; }
         public string Comment { get; set; }
+        public int StudentsCourseId { get; set; }
 
         public TestResult TestResult { get; set; }
         public ConversationResult ConversationResult { get; set; }
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
         public List<StudentsCourse> StudentsCourses { get; set; }
     }
 }
