@@ -10,6 +10,6 @@ namespace PRIS.Web.Models.DbModels
     {
         public string Name { get; set; }
 
-        //public Course Course { get; set; }
+        public Course Course { get; set; }
     }
 }

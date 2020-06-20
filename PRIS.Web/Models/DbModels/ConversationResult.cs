@@ -11,6 +11,6 @@ namespace PRIS.Web.Models
         public int? Grade { get; set; }
         public string Comment { get; set; }
 
-        //public List<Student> Students { get; set; }
+        public List<Student> Students { get; set; }
     }
 }

@@ -21,6 +21,6 @@ namespace PRIS.Web.Models
         public double Task3_4 { get; set; }
         public string Comment { get; set; }
 
-        //public List<Student> Students { get; set; }
+        public List<Student> Students { get; set; }
     }
 }
