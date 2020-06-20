@@ -6,7 +6,7 @@ using PRIS.Core.Library;
 
 namespace PRIS.Web.Models
 {
-    public class Students : EntityBase
+    public class Student : EntityBase
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -14,6 +14,9 @@ namespace PRIS.Web.Models
         public string PhoneNumber { get; set; }
         public Gender Gender { get; set; }
         public string Comment { get; set; }
-        public List<StudentPrograms> StudentPrograms { get; set; }
+
+        public TestResult TestResult { get; set; }
+        public ConversationResult ConversationResult { get; set; }
+        public List<StudentsCourse> StudentsCourses { get; set; }
     }
 }

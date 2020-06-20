@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PRIS.Web.Models
 {
-    public class TestResults : EntityBase
+    public class TestResult : EntityBase
     {
         public DateTime Date { get; set; }
         public double Task1_1 { get; set; }
@@ -20,5 +20,7 @@ namespace PRIS.Web.Models
         public double Task3_3 { get; set; }
         public double Task3_4 { get; set; }
         public string Comment { get; set; }
+
+        public List<Student> Students { get; set; }
     }
 }
