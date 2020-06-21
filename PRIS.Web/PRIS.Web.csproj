@@ -6,14 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\Migrations\20200620103729_AddDb.cs" />
-    <Compile Remove="Data\Migrations\20200620103729_AddDb.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200620173051_AddedDbTables.cs" />
-    <Compile Remove="Data\Migrations\20200620173051_AddedDbTables.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200620185155_AddedLogTables.cs" />
-    <Compile Remove="Data\Migrations\20200620185155_AddedLogTables.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200620190108_AddedLogTablesAgain.cs" />
-    <Compile Remove="Data\Migrations\20200620190108_AddedLogTablesAgain.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200621180841_Tables.cs" />
+    <Compile Remove="Data\Migrations\20200621180841_Tables.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

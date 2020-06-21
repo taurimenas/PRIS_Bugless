@@ -16,7 +16,7 @@ namespace PRIS.Web.Models
         public string Comment { get; set; }
         public int StudentsCourseId { get; set; }
 
-        public TestResult TestResult { get; set; }
+        public Result Result { get; set; }
         public ConversationResult ConversationResult { get; set; }
         public List<StudentCourse> StudentCourses { get; set; }
     }
