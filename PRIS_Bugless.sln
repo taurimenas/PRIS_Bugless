@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PRIS.Web", "PRIS.Web\PRIS.Web.csproj", "{25CD7748-CC05-45C1-88BB-C361EDCE5BFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRIS.Tests", "PRIS.Tests\PRIS.Tests.csproj", "{8700FC53-BCA1-4689-9BE8-3815D1D969C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PRIS.Tests", "PRIS.Tests\PRIS.Tests.csproj", "{8700FC53-BCA1-4689-9BE8-3815D1D969C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRIS.Core.Library", "PRIS.Core.Library\PRIS.Core.Library.csproj", "{43099983-F03F-4B4F-BB4E-338FAF27E232}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{8700FC53-BCA1-4689-9BE8-3815D1D969C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8700FC53-BCA1-4689-9BE8-3815D1D969C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8700FC53-BCA1-4689-9BE8-3815D1D969C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43099983-F03F-4B4F-BB4E-338FAF27E232}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43099983-F03F-4B4F-BB4E-338FAF27E232}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43099983-F03F-4B4F-BB4E-338FAF27E232}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43099983-F03F-4B4F-BB4E-338FAF27E232}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

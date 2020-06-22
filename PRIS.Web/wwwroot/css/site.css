@@ -77,9 +77,8 @@ html {
 }
 
 body {
-    /* Margin bottom by footer height */
-    margin-bottom: 60px;
-    overflow-y: hidden;
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
 }
 footer {
     position: absolute;

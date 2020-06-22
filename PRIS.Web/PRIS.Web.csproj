@@ -6,6 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\Migrations\20200620103729_AddDb.cs" />
+    <Compile Remove="Data\Migrations\20200620103729_AddDb.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200620173051_AddedDbTables.cs" />
+    <Compile Remove="Data\Migrations\20200620173051_AddedDbTables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200620185155_AddedLogTables.cs" />
+    <Compile Remove="Data\Migrations\20200620185155_AddedLogTables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200620190108_AddedLogTablesAgain.cs" />
+    <Compile Remove="Data\Migrations\20200620190108_AddedLogTablesAgain.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.3" />
@@ -15,6 +26,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+  <ItemGroup>
+    <ProjectReference Include="..\PRIS.Core.Library\PRIS.Core.Library.csproj" />
+  </ItemGroup>
 
 </Project>
