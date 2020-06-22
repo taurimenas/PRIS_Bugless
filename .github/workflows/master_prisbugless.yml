@@ -30,6 +30,4 @@ jobs:
       uses: azure/webapps-deploy@v1
       with:
         app-name: 'prisbugless'
-#         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_00edcd8236f745acb28fbc986daee606 }}
-#         package: ${{env.DOTNET_ROOT}}/myapp 
