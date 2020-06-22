@@ -22,6 +22,6 @@ namespace PRIS.Web.Models
         public string Comment { get; set; }
 
         public List<Student> Students { get; set; }
-        public List<ExamResult> ExamResults { get; set; }
+        public Exam Exam { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace PRIS.Web.Models
         public DateTime StartYear { get; set; }
         public DateTime EndYear { get; set; }
         public int ProgramId { get; set; }
-        public string CityId { get; set; }
+        public int CityId { get; set; }
 
         public List<StudentCourse> StudentsCourses { get; set; }
         public List<Models.Program> Programs { get; set; }

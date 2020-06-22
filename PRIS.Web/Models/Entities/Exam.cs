@@ -1,4 +1,5 @@
 ﻿using PRIS.Core.Library;
+using PRIS.Web.Models.DbModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ namespace PRIS.Web.Models.Entity
 {
     public class Exam : EntityBase
     {
+        public int CityId { get; set; }
         public DateTime Date { get; set; }
         public double Task1_1 { get; set; }
         public double Task1_2 { get; set; }
@@ -21,6 +23,7 @@ namespace PRIS.Web.Models.Entity
         public double Task3_4 { get; set; }
         public string Comment { get; set; }
 
-        public List<ExamResult> ExamResults { get; set; }
+        public List<Result> Results { get; set; }
+        public List<City> Cities { get; set; }
     }
 }

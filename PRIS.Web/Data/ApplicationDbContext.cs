@@ -25,7 +25,6 @@ namespace PRIS.Web.Data
         public DbSet<Student> Students { get; set; }
         public DbSet<StudentCourse> StudentsCourses { get; set; }
         public DbSet<Result> Results { get; set; }
-        public DbSet<ExamResult> ExamResults { get; set; }
         public DbSet<Exam> Exams { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -39,8 +38,7 @@ namespace PRIS.Web.Data
             modelBuilder.Entity<Student>().ToTable("Student");
             modelBuilder.Entity<StudentCourse>().ToTable("StudentsCourse");
             modelBuilder.Entity<Result>().ToTable("Result");
-            modelBuilder.Entity<ExamResult>().ToTable("TestResult");
-            modelBuilder.Entity<Exam>().ToTable("Test");
+            modelBuilder.Entity<Exam>().ToTable("Exam");
 
             modelBuilder.Entity<StudentCourse>()
             .HasKey(s => new { s.StudentId, s.CourseId });
@@ -54,19 +52,6 @@ namespace PRIS.Web.Data
                 .HasOne(sc => sc.Course)
                 .WithMany(c => c.StudentsCourses)
                 .HasForeignKey(sc => sc.CourseId);
-
-            modelBuilder.Entity<ExamResult>()
-            .HasKey(t => new { t.ExamId, t.ResultId });
-
-            modelBuilder.Entity<ExamResult>()
-                .HasOne(tr => tr.Exam)
-                .WithMany(t => t.ExamResults)
-                .HasForeignKey(tr => tr.ExamId);
-
-            modelBuilder.Entity<ExamResult>()
-                .HasOne(tr => tr.Result)
-                .WithMany(r => r.ExamResults)
-                .HasForeignKey(tr => tr.ResultId);
         }
     }
 }
