@@ -24,7 +24,7 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      run: dotnet publish PRIS.Web/PRIS.Web.csproj --configuration Release -o ./output/
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v1
@@ -32,4 +32,4 @@ jobs:
         app-name: 'buglesspris'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_e28797b9fd8449c299c6d3d5f90149a2 }}
-        package: ${{env.DOTNET_ROOT}}/myapp 
+        package: ./output/ 
