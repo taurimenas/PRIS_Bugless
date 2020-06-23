@@ -247,8 +247,8 @@ namespace PRIS.Web.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CityId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -283,109 +283,30 @@ namespace PRIS.Web.Data.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("ExamId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
+
+                    b.HasIndex("ExamId");
 
                     b.ToTable("City");
                 });
 
-            modelBuilder.Entity("PRIS.Web.Models.Program", b =>
+            modelBuilder.Entity("PRIS.Web.Models.Entity.Exam", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CourseId")
+                    b.Property<int>("CityId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("Program");
-                });
-
-            modelBuilder.Entity("PRIS.Web.Models.Student", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ConversationResultId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StudentsCourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TestResultId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConversationResultId");
-
-                    b.HasIndex("TestResultId");
-
-                    b.ToTable("Student");
-                });
-
-            modelBuilder.Entity("PRIS.Web.Models.StudentCourse", b =>
-                {
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Priority")
-                        .HasColumnType("int");
-
-                    b.HasKey("StudentId", "CourseId");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("StudentsCourse");
-                });
-
-            modelBuilder.Entity("PRIS.Web.Models.TestResult", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
@@ -428,7 +349,147 @@ namespace PRIS.Web.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TestResult");
+                    b.ToTable("Exam");
+                });
+
+            modelBuilder.Entity("PRIS.Web.Models.Program", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("Program");
+                });
+
+            modelBuilder.Entity("PRIS.Web.Models.Result", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ExamId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Task1_1")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Task1_2")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Task1_3")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Task2_1")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Task2_2")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Task2_3")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Task3_1")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Task3_2")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Task3_3")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Task3_4")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExamId");
+
+                    b.ToTable("Result");
+                });
+
+            modelBuilder.Entity("PRIS.Web.Models.Student", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ConversationResultId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ResultId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentsCourseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationResultId");
+
+                    b.HasIndex("ResultId");
+
+                    b.ToTable("Student");
+                });
+
+            modelBuilder.Entity("PRIS.Web.Models.StudentCourse", b =>
+                {
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.HasKey("StudentId", "CourseId");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("StudentsCourse");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -487,6 +548,10 @@ namespace PRIS.Web.Data.Migrations
                     b.HasOne("PRIS.Web.Models.Course", "Course")
                         .WithMany("Cities")
                         .HasForeignKey("CourseId");
+
+                    b.HasOne("PRIS.Web.Models.Entity.Exam", "Exam")
+                        .WithMany("Cities")
+                        .HasForeignKey("ExamId");
                 });
 
             modelBuilder.Entity("PRIS.Web.Models.Program", b =>
@@ -496,15 +561,22 @@ namespace PRIS.Web.Data.Migrations
                         .HasForeignKey("CourseId");
                 });
 
+            modelBuilder.Entity("PRIS.Web.Models.Result", b =>
+                {
+                    b.HasOne("PRIS.Web.Models.Entity.Exam", "Exam")
+                        .WithMany("Results")
+                        .HasForeignKey("ExamId");
+                });
+
             modelBuilder.Entity("PRIS.Web.Models.Student", b =>
                 {
                     b.HasOne("PRIS.Web.Models.ConversationResult", "ConversationResult")
                         .WithMany("Students")
                         .HasForeignKey("ConversationResultId");
 
-                    b.HasOne("PRIS.Web.Models.TestResult", "TestResult")
+                    b.HasOne("PRIS.Web.Models.Result", "Result")
                         .WithMany("Students")
-                        .HasForeignKey("TestResultId");
+                        .HasForeignKey("ResultId");
                 });
 
             modelBuilder.Entity("PRIS.Web.Models.StudentCourse", b =>

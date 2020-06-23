@@ -6,27 +6,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Views\Students\**" />
-    <Content Remove="Views\Students\**" />
-    <EmbeddedResource Remove="Views\Students\**" />
-    <None Remove="Views\Students\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Controllers\StudentsController.cs" />
-    <Compile Remove="Data\Migrations\20200620103729_AddDb.cs" />
-    <Compile Remove="Data\Migrations\20200620103729_AddDb.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200620173051_AddedDbTables.cs" />
-    <Compile Remove="Data\Migrations\20200620173051_AddedDbTables.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200620185155_AddedLogTables.cs" />
-    <Compile Remove="Data\Migrations\20200620185155_AddedLogTables.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200620190108_AddedLogTablesAgain.cs" />
-    <Compile Remove="Data\Migrations\20200620190108_AddedLogTablesAgain.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="Views\Programs\Details.cshtml" />
-    <Content Remove="Views\Programs\Edit.cshtml" />
+    <Compile Remove="Data\Migrations\20200621180841_Tables.cs" />
+    <Compile Remove="Data\Migrations\20200621180841_Tables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200621191920_Tables.cs" />
+    <Compile Remove="Data\Migrations\20200621191920_Tables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200622070214_Tables.cs" />
+    <Compile Remove="Data\Migrations\20200622070214_Tables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200622070737_Tables.cs" />
+    <Compile Remove="Data\Migrations\20200622070737_Tables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200622071443_Tables.cs" />
+    <Compile Remove="Data\Migrations\20200622071443_Tables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200622072303_Tables.cs" />
+    <Compile Remove="Data\Migrations\20200622072303_Tables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200622075913_Tables.cs" />
+    <Compile Remove="Data\Migrations\20200622075913_Tables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200622082543_Tables.cs" />
+    <Compile Remove="Data\Migrations\20200622082543_Tables.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

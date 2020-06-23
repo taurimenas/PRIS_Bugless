@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using PRIS.Core.Library;
+﻿using System.Collections.Generic;
 
-namespace PRIS.Web.Models
+namespace PRIS.Core.Library.Entities
 {
     public class Student : EntityBase
     {
@@ -16,7 +12,7 @@ namespace PRIS.Web.Models
         public string Comment { get; set; }
         public int StudentsCourseId { get; set; }
 
-        public TestResult TestResult { get; set; }
+        public Result Result { get; set; }
         public ConversationResult ConversationResult { get; set; }
         public List<StudentCourse> StudentCourses { get; set; }
     }
