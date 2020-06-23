@@ -1,4 +1,4 @@
-﻿@model PRIS.Web.Models.Entity.Exam
+﻿@model PRIS.Web.Models.ExamViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -8,15 +8,9 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Exam</h4>
+    <h4>ExamViewModel</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CityId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CityId)
-        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Date)
         </dt>
@@ -24,81 +18,14 @@
             @Html.DisplayFor(model => model.Date)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task1_1)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task1_1)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task1_2)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task1_2)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task1_3)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task1_3)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task2_1)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task2_1)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task2_2)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task2_2)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task2_3)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task2_3)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task3_1)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task3_1)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task3_2)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task3_2)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task3_3)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task3_3)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task3_4)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task3_4)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Comment)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Comment)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Created)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Created)
-        </dd>
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>

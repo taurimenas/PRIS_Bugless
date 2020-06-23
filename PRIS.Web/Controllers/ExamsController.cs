@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using PRIS.Core.Library.Entities;
 using PRIS.Web.Data;
-using PRIS.Web.Models.Entity;
+using PRIS.Web.Mappings;
+using PRIS.Web.Models;
 
 namespace PRIS.Web.Controllers
 {
@@ -22,7 +25,14 @@ namespace PRIS.Web.Controllers
         // GET: Exams
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Exams.ToListAsync());
+            var result = await _context.Exams.ToListAsync();
+            List<ExamViewModel> examViewModels = new List<ExamViewModel>();
+            foreach (var item in result)
+            {
+                examViewModels.Add(ExamMappings.ToViewModel(item));
+            }
+
+            return View(examViewModels);
         }
 
         // GET: Exams/Details/5
@@ -39,8 +49,8 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-
-            return View(exam);
+            var model = ExamMappings.ToViewModel(exam);
+            return View(model);
         }
 
         // GET: Exams/Create
@@ -54,15 +64,16 @@ namespace PRIS.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CityId,Date,Task1_1,Task1_2,Task1_3,Task2_1,Task2_2,Task2_3,Task3_1,Task3_2,Task3_3,Task3_4,Comment,Id,Created")] Exam exam)
+        public async Task<IActionResult> Create([Bind("CityId,Date,Task1_1,Task1_2,Task1_3,Task2_1,Task2_2,Task2_3,Task3_1,Task3_2,Task3_3,Task3_4,Comment,Id,Created")] ExamViewModel examViewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(exam);
+                var result = ExamMappings.ToEntity(examViewModel);
+                _context.Add(result);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(exam);
+            return View(examViewModel);
         }
 
         // GET: Exams/Edit/5
@@ -78,7 +89,7 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-            return View(exam);
+            return View(ExamMappings.ToViewModel(exam));
         }
 
         // POST: Exams/Edit/5
@@ -86,8 +97,10 @@ namespace PRIS.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CityId,Date,Task1_1,Task1_2,Task1_3,Task2_1,Task2_2,Task2_3,Task3_1,Task3_2,Task3_3,Task3_4,Comment,Id,Created")] Exam exam)
+        public async Task<IActionResult> Edit(int id, [Bind("CityId,Date,Task1_1,Task1_2,Task1_3,Task2_1,Task2_2,Task2_3,Task3_1,Task3_2,Task3_3,Task3_4,Comment,Id,Created")] ExamViewModel examViewModel)
         {
+            var exam = ExamMappings.ToEntity(examViewModel);
+
             if (id != exam.Id)
             {
                 return NotFound();
@@ -131,7 +144,7 @@ namespace PRIS.Web.Controllers
                 return NotFound();
             }
 
-            return View(exam);
+            return View(ExamMappings.ToViewModel(exam));
         }
 
         // POST: Exams/Delete/5
