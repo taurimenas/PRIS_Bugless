@@ -1,11 +1,6 @@
-﻿using PRIS.Core.Library;
-using PRIS.Web.Models.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace PRIS.Web.Models
+namespace PRIS.Core.Library.Entities
 {
     public class Result : EntityBase
     {

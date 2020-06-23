@@ -1,11 +1,7 @@
-﻿using PRIS.Core.Library;
-using PRIS.Web.Models.DbModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace PRIS.Web.Models.Entity
+namespace PRIS.Core.Library.Entities
 {
     public class Exam : EntityBase
     {

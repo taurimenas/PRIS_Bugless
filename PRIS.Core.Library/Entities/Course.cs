@@ -1,11 +1,7 @@
-﻿using PRIS.Core.Library;
-using PRIS.Web.Models.DbModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace PRIS.Web.Models
+namespace PRIS.Core.Library.Entities
 {
     public class Course : EntityBase
     {
@@ -16,7 +12,7 @@ namespace PRIS.Web.Models
         public int CityId { get; set; }
 
         public List<StudentCourse> StudentsCourses { get; set; }
-        public List<Models.Program> Programs { get; set; }
+        public List<Entities.Program> Programs { get; set; }
         public List<City> Cities { get; set; }
     }
 }
