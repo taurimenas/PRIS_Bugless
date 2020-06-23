@@ -5,9 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using PRIS.Web.Models;
-using PRIS.Web.Models.DbModels;
-using PRIS.Web.Models.Entity;
+using PRIS.Core.Library.Entities;
 
 namespace PRIS.Web.Data
 {
@@ -21,7 +19,7 @@ namespace PRIS.Web.Data
         public DbSet<City> Cities { get; set; }
         public DbSet<ConversationResult> ConversationResults { get; set; }
         public DbSet<Course> Courses { get; set; }
-        public DbSet<Models.Program> Programs { get; set; }
+        public DbSet<Core.Library.Entities.Program> Programs { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<StudentCourse> StudentsCourses { get; set; }
         public DbSet<Result> Results { get; set; }
@@ -34,7 +32,7 @@ namespace PRIS.Web.Data
             modelBuilder.Entity<City>().ToTable("City");
             modelBuilder.Entity<ConversationResult>().ToTable("ConversationResult");
             modelBuilder.Entity<Course>().ToTable("Course");
-            modelBuilder.Entity<Models.Program>().ToTable("Program");
+            modelBuilder.Entity<Core.Library.Entities.Program>().ToTable("Program");
             modelBuilder.Entity<Student>().ToTable("Student");
             modelBuilder.Entity<StudentCourse>().ToTable("StudentsCourse");
             modelBuilder.Entity<Result>().ToTable("Result");

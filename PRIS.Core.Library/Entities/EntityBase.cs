@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
 
-namespace PRIS.Core.Library
+namespace PRIS.Core.Library.Entities
 {
     public class EntityBase
     {
