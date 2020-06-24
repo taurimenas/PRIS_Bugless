@@ -5,6 +5,22 @@
     ViewData["Title"] = "Log in";
 }
 
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
+        <div class="container">
+            <div class="text-white col-5"><h1 class="h4">Priėmimo proceso valdymo sistema</h1></div>
+
+            <div class="col-5 collapse d-sm-inline-flex flex-sm-row-reverse nav-margin">
+                @*<ul class="navbar-nav flex-grow-1">
+                    </ul>*@
+            </div>
+            <div class="col-2 text-right"><img src="http://akademija.it/file/2016/11/14/it_akademija.png" alt="akademija_it_logo" /></div>
+        </div>
+    </nav>
+
+
+</header>
+
 <div class="row justify-content-center align-content-center login-center">
     <div>
         <section>
@@ -31,47 +47,18 @@
             </form>
         </section>
     </div>
-
-    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Age</th>
-                <th>Start date</th>
-                <th>Salary</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Age</th>
-                <th>Start date</th>
-                <th>Salary</th>
-            </tr>
-        </tfoot>
-        <tbody>
-            <tr>
-                <td>Tiger Nixon</td>
-                <td>System Architect</td>
-                <td>Edinburgh</td>
-                <td>61</td>
-                <td>2011/04/25</td>
-                <td>$320,800</td>
-            </tr>
-            <tr>
-                <td>Garrett Winters</td>
-                <td>Accountant</td>
-                <td>Tokyo</td>
-                <td>63</td>
-                <td>2011/07/25</td>
-                <td>$170,750</td>
-            </tr>
 </div>
 
+<div class="container">
+    <main role="main" class="pb-3">
+    </main>
+</div>
+
+<footer class="border-top footer text-muted">
+    <div class="container text-right text-white">
+        &copy; 2020 - Bugless, Inc. All rights reserved <a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
+    </div>
+</footer>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
