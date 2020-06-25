@@ -1,40 +1,9 @@
-﻿@model IEnumerable<PRIS.Web.Models.Program>
+﻿@model IEnumerable<PRIS.Web.Models.ProgramViewModel>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-@*<p>
-    <a asp-action="Create">Sukurti naują programą</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayName("Programos pavadinimas")
-            </th>
-            <th>
-                @Html.DisplayName("Sukurta")
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                <a asp-action="Delete" asp-route-id="@item.Id">Ištrinti</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>*@
 
 <div class="container">
     <div class="row justify-content-center">
@@ -46,10 +15,10 @@
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Name)
+                                @Html.DisplayFor(modelItem => item.ProgramName)
                             </td>
                             <td>
-                                <a asp-action="Delete" asp-route-id="@item.Id">Ištrinti</a>
+                                <a asp-action="Delete" asp-route-id="@item.ProgramId">Ištrinti</a>
                             </td>
                         </tr>
                     }
@@ -61,6 +30,21 @@
         </div>
         <div class="col-4 text-center">
             <h2>Miestai</h2>
+            <table class="table">
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CityName)
+                            </td>
+                            <td>
+                                <a asp-action="Delete" asp-route-id="@item.CityId">Ištrinti</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

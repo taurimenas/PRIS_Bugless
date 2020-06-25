@@ -1,4 +1,4 @@
-﻿@model PRIS.Web.Models.Program
+﻿@model PRIS.Web.Models.ProgramViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -11,16 +11,10 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.ProgramName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Created)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Created)
+            @Html.DisplayFor(model => model.ProgramName)
         </dd>
     </dl>
 </div>

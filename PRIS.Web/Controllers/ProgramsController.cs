@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PRIS.Web.Data;
+using PRIS.Web.Mappings;
+using PRIS.Web.Models;
+using PRIS.Core.Library.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace PRIS.Web.Controllers
 {
@@ -21,26 +25,33 @@ namespace PRIS.Web.Controllers
         // GET: Programs
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Programs.ToListAsync());
-        }
+            var programResult = await _context.Programs.ToListAsync();
+            var cityResult = await _context.Cities.ToListAsync();
+            List<ProgramViewModel> programViewModels = new List<ProgramViewModel>();
 
-        // GET: Programs/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
+            foreach (var programEntity in programResult)
             {
-                return NotFound();
+                foreach (var cityEntity in cityResult)
+                {
+                    programViewModels.Add(ProgramMappings.ToProgramViewModel(programEntity, cityEntity));
+                }
+                
             }
-
-            var program = await _context.Programs
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (program == null)
-            {
-                return NotFound();
-            }
-
-            return View(program);
+            return View(programViewModels);
         }
+        //public async Task<IActionResult> Index1()
+        //{
+        //    var result = await _context.Programs.ToListAsync();
+        //    var result2 = await _context.Cities.ToListAsync();
+        //    List<ProgramViewModel> programViewModels = new List<ProgramViewModel>();
+
+        //    foreach (var item in result)
+        //    {
+        //        programViewModels.Add(ProgramMappings.ToProgramViewModel(item));
+
+        //    }
+        //    return View(programViewModels);
+        //}
 
         // GET: Programs/Create
         public IActionResult Create()
@@ -53,69 +64,19 @@ namespace PRIS.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Id")] Models.Program program)
+        public async Task<IActionResult> Create([Bind("ProgramName,ProgramId")] ProgramViewModel programViewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(program);
+                var result = ProgramMappings.ToProgramEntity(programViewModel);
+                _context.Add(result);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(program);
+            return View(programViewModel);
         }
 
-        // GET: Programs/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var program = await _context.Programs.FindAsync(id);
-            if (program == null)
-            {
-                return NotFound();
-            }
-            return View(program);
-        }
-
-        // POST: Programs/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Id,Created")] Models.Program program)
-        {
-            if (id != program.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(program);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProgramExists(program.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(program);
-        }
-
-        // GET: Programs/Delete/5
+        //GET: Programs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -125,12 +86,13 @@ namespace PRIS.Web.Controllers
 
             var program = await _context.Programs
                 .FirstOrDefaultAsync(m => m.Id == id);
+            var city = await _context.Cities.FirstOrDefaultAsync(m => m.Id == id);
             if (program == null)
             {
                 return NotFound();
             }
 
-            return View(program);
+            return View(ProgramMappings.ToProgramViewModel(program, city));
         }
 
         // POST: Programs/Delete/5
@@ -148,5 +110,6 @@ namespace PRIS.Web.Controllers
         {
             return _context.Programs.Any(e => e.Id == id);
         }
+
     }
 }

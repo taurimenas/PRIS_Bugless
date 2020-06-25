@@ -1,4 +1,4 @@
-﻿@model PRIS.Web.Models.Program
+﻿@model PRIS.Web.Models.ProgramViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -13,18 +13,12 @@
             @Html.DisplayName("Programos pavadinimas")
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayName("Sukurta")
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Created)
+            @Html.DisplayFor(model => model.ProgramName)
         </dd>
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ProgramId" />
         <input type="submit" value="Ištrinti" class="btn btn-danger" /> |
         <a asp-action="Index">Grižti</a>
     </form>
