@@ -21,16 +21,23 @@ namespace PRIS.Web.Mappings
                 Name = model.CityName
             };
         }
-        public static ProgramViewModel ToProgramViewModel(Core.Library.Entities.Program programEntity, City cityEntity)
+        public static ProgramViewModel ToProgramViewModel(Core.Library.Entities.Program programEntity)
         {
             return new ProgramViewModel
             {
                 ProgramId = programEntity.Id,
                 ProgramName = programEntity.Name,
+            };
+        }
+        public static ProgramViewModel ToCityViewModel(City cityEntity)
+        {
+            return new ProgramViewModel
+            {
                 CityId = cityEntity.Id,
                 CityName = cityEntity.Name
-                
             };
+
+            
         }
         //public static ProgramViewModel ToCityViewModel(City entity)
         //{

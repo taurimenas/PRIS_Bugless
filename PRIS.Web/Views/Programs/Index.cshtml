@@ -39,12 +39,18 @@
                                 @Html.DisplayFor(modelItem => item.CityName)
                             </td>
                             <td>
-                                <a asp-action="Delete" asp-route-id="@item.CityId">Ištrinti</a>
+                                <a asp-action="DeleteCity" asp-route-id="@item.CityId">Ištrinti</a>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
+            <p>
+                <a asp-action="CreateNewCity">Sukurti naują miestą</a>
+            </p>
         </div>
     </div>
 </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

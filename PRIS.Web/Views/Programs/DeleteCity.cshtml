@@ -1,0 +1,25 @@
+﻿@model PRIS.Web.Models.ProgramViewModel
+@{
+    ViewData["Title"] = "DeleteCity";
+}
+
+<h3>Ar tikrai norite ištrinti?</h3>
+<div>
+    <h4>Program</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayName("Miesto pavadinimas")
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CityName)
+        </dd>
+    </dl>
+
+    <form asp-action="DeleteCity">
+        <input type="hidden" asp-for="CityId" />
+        <input type="submit" value="Ištrinti" class="btn btn-danger" /> |
+        <a asp-action="Index">Grižti</a>
+    </form>
+</div>
+
