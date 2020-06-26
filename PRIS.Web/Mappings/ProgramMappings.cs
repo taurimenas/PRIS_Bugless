@@ -7,11 +7,12 @@ namespace PRIS.Web.Mappings
 {
     public static class ProgramMappings
     {
-        public static Core.Library.Entities.Program ToProgramEntity(ProgramViewModel model)
+        public static Core.Library.Entities.Program ToProgramEntity(ProgramCreateModel model)
         {
             return new Core.Library.Entities.Program
             {
-                Name = model.ProgramNames.LastOrDefault().Name
+                Name = model.Name
+                
                 //Id = model.CityNames.LastOrDefault().Id
                 
             };
@@ -39,9 +40,7 @@ namespace PRIS.Web.Mappings
             return new ProgramViewModel
             {
                 CityNames = cityEntity
-            };
-
-            
+            };   
         }
         //public static ProgramViewModel ToCityViewModel(City entity)
         //{

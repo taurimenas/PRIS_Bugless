@@ -10,6 +10,5 @@ namespace PRIS.Web.Models
     {
         public List<PRIS.Core.Library.Entities.Program> ProgramNames { get; set; }
         public List<City> CityNames { get; set; }
-
     }
 }

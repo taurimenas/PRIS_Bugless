@@ -39,7 +39,8 @@ namespace PRIS.Web.Controllers
         // GET: Programs/Create
         public IActionResult Create()
         {
-            return View();
+            var model = new ProgramCreateModel();
+            return View(model);
         }
 
         // POST: Programs/Create
@@ -47,17 +48,16 @@ namespace PRIS.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProgramNames")] ProgramViewModel programViewModel)
+        public async Task<IActionResult> Create([Bind("Name")] ProgramCreateModel programCreateModel)
         {
             if (ModelState.IsValid)
             {
-
-                var result = ProgramMappings.ToProgramEntity(programViewModel);
+                var result = ProgramMappings.ToProgramEntity(programCreateModel);
                 _context.Programs.Add(result);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(programViewModel);
+            return View(programCreateModel);
         }
         //Create new city
         public IActionResult CreateNewCity()
@@ -78,14 +78,13 @@ namespace PRIS.Web.Controllers
             return View(programViewModel);
         }
 
-        //GET: Programs/Delete/5
+        ////GET: Programs/Delete/5
         //public async Task<IActionResult> Delete(int? id)
         //{
         //    if (id == null)
         //    {
         //        return NotFound();
         //    }
-
         //    var program = await _context.Programs
         //        .FirstOrDefaultAsync(m => m.Id == id);
         //    if (program == null)
@@ -95,7 +94,7 @@ namespace PRIS.Web.Controllers
 
         //    return View(ProgramMappings.ToProgramViewModel(program));
         //}
-        //delete city
+        ////delete city
         //public async Task<IActionResult> DeleteCity(int? id)
         //{
         //    if (id == null)
@@ -145,4 +144,4 @@ namespace PRIS.Web.Controllers
         //}
 
     }
-}
+    }
