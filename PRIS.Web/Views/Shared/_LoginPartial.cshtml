@@ -5,23 +5,26 @@
     <ul class="navbar-nav pb-3">
         @if (SignInManager.IsSignedIn(User))
         {
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Studentai</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Kursai</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">Registracija</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Nustatymai</a>
-            </li>
-            <li class="nav-item">
-                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    <button type="submit" class="nav-link btn btn-link text-white">Atsijungti</button>
-                </form>
-            </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-area="" asp-controller="Main" asp-action="Index">Pagrindinis</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Studentai</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Kursai</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">Registracija</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Nustatymai</a>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-white">Atsijungti</button>
+            </form>
+        </li>
         }
 
     </ul>

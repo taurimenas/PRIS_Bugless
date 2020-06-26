@@ -1,0 +1,56 @@
+﻿@model PRIS.Web.Models.ProgramViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-4 text-center">
+            <h2>Programos</h2>
+            <table class="table">
+                <tbody>
+                    @foreach (var item in Model.ProgramNames)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                <a asp-action="Delete" asp-route-id="@item.Id">Ištrinti</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p>
+                <a asp-action="Create">Sukurti naują programą</a>
+            </p>
+        </div>
+        <div class="col-4 text-center">
+            <h2>Miestai</h2>
+            <table class="table">
+                <tbody>
+                    @foreach (var item in Model.CityNames)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                <a asp-action="DeleteCity" asp-route-id="@item.Id">Ištrinti</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p>
+                <a asp-action="CreateNewCity">Sukurti naują miestą</a>
+            </p>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
