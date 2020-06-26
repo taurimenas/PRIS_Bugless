@@ -14,7 +14,8 @@ namespace PRIS.Web.Models
         public int Id { get; set; }
         public int CityId { get; set; }
         [Display(Name = "Data")]
-        //[DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; } = DateTime.UtcNow;
         [Display(Name = "Komentaras")]
         public string Comment { get; set; }

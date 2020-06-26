@@ -18,7 +18,6 @@
                 </div>
             </div>
             <div class="form-group">
-                @Html.TextBoxFor(m => m.Date, "{0:yyyy/MM/dd}", new { @class = "form-control default-date-picker" })
                 <label asp-for="Date" class="control-label"></label>
                 <input asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
