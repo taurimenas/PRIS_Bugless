@@ -30,34 +30,45 @@ namespace PRIS.Web.Controllers
             var result = await _context.Results.ToListAsync();
             var student = await _context.Students.ToListAsync();
 
-            //var studentsResults = await (from s in _context.Students
-            //                     join r in _context.Results on
-            //                     s.Result.Id equals r.Id
-            //                     select new ResultViewModel
-            //                     {
-            //                     FirstName = s.FirstName,
-            //                      LastName = s.LastName,
-            //                      Email = s.Email,
-            //                      PhoneNumber = s.PhoneNumber,
-            //                      Id = r.Id
-            //                     }).ToListAsync();
+            var studentsResults = await (from s in _context.Students
+                                         join r in _context.Results on
+                                         s.Result.Id equals r.Id
+                                         select new ResultViewModel
+                                         {
+                                             FirstName = s.FirstName,
+                                             LastName = s.LastName,
+                                             Email = s.Email,
+                                             PhoneNumber = s.PhoneNumber,
+                                             Task1_1 = r.Task1_1,
+                                             Task1_2 = r.Task1_2,
+                                             Task1_3 = r.Task1_3,
+                                             Task2_1 = r.Task2_1,
+                                             Task2_2 = r.Task2_2,
+                                             Task2_3 = r.Task2_3,
+                                             Task3_1 = r.Task3_1,
+                                             Task3_2 = r.Task3_2,
+                                             Task3_3 = r.Task3_3,
+                                             Task3_4 = r.Task3_4,
+                                             Id = s.Result.Id
+                                             
+                                         }).ToListAsync();
 
-            List<ResultViewModel> resultViewModels = new List<ResultViewModel>();
-            foreach (var item in result)
+          //  List<ResultViewModel> resultViewModels = new List<ResultViewModel>();
+            foreach (var item in student)
             {
-                resultViewModels.Add(ResultMappings.ToResultViewModel(item));
-                foreach (var resultViewModel in resultViewModels)
+                //studentsResults.Add(ResultMappings.ToResultViewModel(item));
+                foreach (var resultViewModel in studentsResults)
                 {
                     resultViewModel.FinalPoints = resultViewModel.Task1_1 + resultViewModel.Task1_2 + resultViewModel.Task1_3 + resultViewModel.Task2_1 + resultViewModel.Task2_2 + resultViewModel.Task2_3 + resultViewModel.Task3_1 + resultViewModel.Task3_2 + resultViewModel.Task3_3 + resultViewModel.Task3_4;
                 }
             }
-            foreach (var item in student)
-            {
-                resultViewModels.Add(ResultMappings.ToResultViewModel(item));
-            }
+            //foreach (var item in student)
+            //{
+            //    studentsResults.Add(ResultMappings.ToResultViewModel(item));
+            //}
 
 
-            return View(resultViewModels);
+            return View(studentsResults);
 
         }
         // GET: Result/Details/5
@@ -168,6 +179,8 @@ namespace PRIS.Web.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var result = await _context.Results.FindAsync(id);
+         //   var student = await _context.Students.FindAsync(result.Id);
+         //   _context.Students.Update(student.Result.Id == null);
             _context.Results.Remove(result);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
