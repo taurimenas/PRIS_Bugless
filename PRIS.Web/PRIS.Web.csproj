@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>aspnet-PRIS.Web-542135F0-D62A-48B3-8B6D-544AF0D1247F</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

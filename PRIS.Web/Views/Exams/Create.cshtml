@@ -4,21 +4,21 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Sukurti testą</h1>
 
-<h4>ExamViewModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div class="form-group">
-                @Html.LabelFor(x => Model.SelectedCity, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-5">
+                @Html.LabelFor(x => Model.SelectedCity, htmlAttributes: new { @class = "control-label" })
+                <div>
                     @Html.DropDownListFor(x => Model.SelectedCity, new SelectList(Model.Cities, "Value", "Text"), htmlAttributes: new { @class = "form-control", id = "City" })
                     @Html.ValidationMessageFor(x => x.SelectedCity, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-group">
+                @Html.TextBoxFor(m => m.Date, "{0:yyyy/MM/dd}", new { @class = "form-control default-date-picker" })
                 <label asp-for="Date" class="control-label"></label>
                 <input asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
@@ -29,14 +29,14 @@
                 <span asp-validation-for="Comment" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Sukurti" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Grįžti</a>
 </div>
 
 @section Scripts {

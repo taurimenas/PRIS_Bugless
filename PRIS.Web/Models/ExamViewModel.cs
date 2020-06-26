@@ -13,8 +13,12 @@ namespace PRIS.Web.Models
         public IEnumerable<SelectListItem> Cities { get; set; }
         public int Id { get; set; }
         public int CityId { get; set; }
-        public DateTime Date { get; set; }
+        [Display(Name = "Data")]
+        //[DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime Date { get; set; } = DateTime.UtcNow;
+        [Display(Name = "Komentaras")]
         public string Comment { get; set; }
+        [Display(Name = "Miestas")]
         public string SelectedCity { get; set; }
     }
 }
