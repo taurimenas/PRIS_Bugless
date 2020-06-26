@@ -19,6 +19,7 @@ namespace PRIS.Web.Models
         public DateTime Date { get; set; } = DateTime.UtcNow;
         [Display(Name = "Komentaras")]
         public string Comment { get; set; }
+        [Required]
         [Display(Name = "Miestas")]
         public string SelectedCity { get; set; }
     }

@@ -84,7 +84,7 @@ namespace PRIS.Web.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(examViewModel);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Exams/Delete/5
