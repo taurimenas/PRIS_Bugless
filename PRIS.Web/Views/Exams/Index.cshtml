@@ -4,24 +4,19 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h3>Testai</h3>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
+<h4>
+    <a asp-action="Create">Sukurti naują</a>
+</h4>
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.SelectedCity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Comment)
-            </th>
-            <th></th>
+            <th>Miestas</th>
+            <th>Data</th>
+            <th>Komentaras</th>
+            <th class="borderless-cell" width="50px"></th>
         </tr>
     </thead>
     <tbody>
@@ -37,10 +32,8 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Comment)
                 </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                <td class="borderless-cell">
+                    @Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" })
                 </td>
             </tr>
         }

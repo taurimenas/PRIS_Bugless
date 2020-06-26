@@ -16,6 +16,5 @@ namespace PRIS.Web.Models
         public DateTime Date { get; set; }
         public string Comment { get; set; }
         public string SelectedCity { get; set; }
-        public string CityName { get; set; }
     }
 }

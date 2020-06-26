@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using PRIS.Web.Models;
 
 namespace PRIS.Web.Controllers
 {
+    [Authorize]
     public class ExamsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -85,59 +87,6 @@ namespace PRIS.Web.Controllers
             return View(examViewModel);
         }
 
-        // GET: Exams/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var exam = await _context.Exams.FindAsync(id);
-            if (exam == null)
-            {
-                return NotFound();
-            }
-            return View(ExamMappings.ToViewModel(exam));
-        }
-
-        // POST: Exams/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CityId,Date,Comment,Id,Created")] ExamViewModel examViewModel)
-        {
-            var exam = ExamMappings.ToEntity(examViewModel);
-
-            if (id != exam.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(exam);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ExamExists(exam.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(exam);
-        }
-
         // GET: Exams/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -152,17 +101,8 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-
-            return View(ExamMappings.ToViewModel(exam));
-        }
-
-        // POST: Exams/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var exam = await _context.Exams.FindAsync(id);
-            _context.Exams.Remove(exam);
+            var exams = await _context.Exams.FindAsync(id);
+            _context.Exams.Remove(exams);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
