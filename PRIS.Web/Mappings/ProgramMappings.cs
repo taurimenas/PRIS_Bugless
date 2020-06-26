@@ -12,9 +12,7 @@ namespace PRIS.Web.Mappings
             return new Core.Library.Entities.Program
             {
                 Name = model.ProgramName,
-                Id = model.ProgramNameId
-                //Id = model.CityNames.LastOrDefault().Id
-                
+                Id = model.ProgramNameId  
             };
         }
         public static City ToCityEntity(CityCreateModel model)
@@ -23,8 +21,6 @@ namespace PRIS.Web.Mappings
             {
                 Name = model.CityName,
                 Id = model.CityNameId
-                
-                //Id = model.CityNames.LastOrDefault().Id
             };
         }
         public static ProgramViewModel ToProgramViewModel(List<Core.Library.Entities.Program> programEntity)
@@ -32,17 +28,14 @@ namespace PRIS.Web.Mappings
             return new ProgramViewModel
             {
                 ProgramNames = programEntity,
-                
             };
         }
-
 
         public static ProgramViewModel ToCityViewModel(List<City> cityEntity)
         {
             return new ProgramViewModel
             {
-                CityNames = cityEntity,
-                
+                CityNames = cityEntity,   
             };
         }
     }
