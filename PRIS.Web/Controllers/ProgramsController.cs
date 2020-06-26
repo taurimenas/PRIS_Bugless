@@ -10,9 +10,11 @@ using PRIS.Web.Mappings;
 using PRIS.Web.Models;
 using PRIS.Core.Library.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PRIS.Web.Controllers
 {
+    [Authorize]
     public class ProgramsController : Controller
     {
         private readonly ApplicationDbContext _context;
