@@ -1,0 +1,110 @@
+﻿@model PRIS.Web.Models.ResultViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>ResultViewModel</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Task1_1)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Task1_1)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Task1_2)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Task1_2)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Task1_3)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Task1_3)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Task2_1)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Task2_1)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Task2_2)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Task2_2)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Task2_3)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Task2_3)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Task3_1)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Task3_1)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Task3_2)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Task3_2)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Task3_3)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Task3_3)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Task3_4)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Task3_4)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FinalPoints)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FinalPoints)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Comment)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Comment)
+        </dd>
+     
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id})
+    <a asp-action="Index">Back to List</a>
+</div>

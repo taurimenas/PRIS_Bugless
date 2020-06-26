@@ -1,15 +1,5 @@
 {
   "dependencies": {
-    "mssql1": {
-      "type": "mssql.onprem",
-      "connectionId": "AzureConnection",
-      "secretStore": "LocalSecretsFile"
-    },
-    "mssql2": {
-      "type": "mssql.local",
-      "connectionId": "LocalConnection",
-      "secretStore": "LocalSecretsFile"
-    },
     "mssql3": {
       "type": "mssql",
       "connectionId": "DefaultConnection",
