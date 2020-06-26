@@ -26,7 +26,7 @@ namespace PRIS.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            
+
             var result = await _context.Results.ToListAsync();
             var student = await _context.Students.ToListAsync();
 
@@ -50,10 +50,10 @@ namespace PRIS.Web.Controllers
                                              Task3_3 = r.Task3_3,
                                              Task3_4 = r.Task3_4,
                                              Id = s.Result.Id
-                                             
+
                                          }).ToListAsync();
 
-          //  List<ResultViewModel> resultViewModels = new List<ResultViewModel>();
+            //  List<ResultViewModel> resultViewModels = new List<ResultViewModel>();
             foreach (var item in student)
             {
                 //studentsResults.Add(ResultMappings.ToResultViewModel(item));
@@ -84,8 +84,6 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-
-
             var model = ResultMappings.ToResultViewModel(result);
             return View(model);
         }
@@ -159,32 +157,9 @@ namespace PRIS.Web.Controllers
             return View(result);
         }
         // GET: Result/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var result = await _context.Results
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            return View(ResultMappings.ToResultViewModel(result));
-        }
+
         // POST: Result/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var result = await _context.Results.FindAsync(id);
-         //   var student = await _context.Students.FindAsync(result.Id);
-         //   _context.Students.Update(student.Result.Id == null);
-            _context.Results.Remove(result);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+
         private bool ResultExists(int id)
         {
             return _context.Results.Any(e => e.Id == id);
