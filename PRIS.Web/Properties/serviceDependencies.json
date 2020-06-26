@@ -1,12 +1,3 @@
 {
-  "dependencies": {
-    "mssql1": {
-      "type": "mssql",
-      "connectionId": "AzureConnection"
-    },
-    "mssql2": {
-      "type": "mssql",
-      "connectionId": "LocalConnection"
-    }
-  }
+  "dependencies": {}
 }

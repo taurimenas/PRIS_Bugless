@@ -1,0 +1,41 @@
+﻿@model IEnumerable<PRIS.Web.Models.ExamViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>Testai</h3>
+
+
+<h4>
+    <a asp-action="Create">Sukurti naują</a>
+</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Miestas</th>
+            <th>Data</th>
+            <th>Komentaras</th>
+            <th class="borderless-cell" width="50px"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SelectedCity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td class="borderless-cell">
+                    @Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
