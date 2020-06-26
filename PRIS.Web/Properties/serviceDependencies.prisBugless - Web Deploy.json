@@ -5,16 +5,6 @@
       "connectionId": "DefaultConnection",
       "suggestion": "true",
       "ignored": "true"
-    },
-    "mssql1": {
-      "type": "mssql.onprem",
-      "connectionId": "AzureConnection",
-      "secretStore": "AzureAppSettings"
-    },
-    "mssql2": {
-      "type": "mssql.onprem",
-      "connectionId": "LocalConnection",
-      "secretStore": "AzureAppSettings"
     }
   }
 }

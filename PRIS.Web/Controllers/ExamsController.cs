@@ -25,13 +25,10 @@ namespace PRIS.Web.Controllers
         // GET: Exams
         public async Task<IActionResult> Index()
         {
-            var result = await _context.Exams.ToListAsync();
+            var result = await _context.Exams.Include(exam => exam.City).ToListAsync();
             List<ExamViewModel> examViewModels = new List<ExamViewModel>();
-            foreach (var item in result)
-            {
-                examViewModels.Add(ExamMappings.ToViewModel(item));
-            }
-
+            result.ForEach(x => examViewModels.Add(ExamMappings.ToViewModel(x)));
+            examViewModels.ForEach(x => x.SelectedCity = result.FirstOrDefault(y => y.Id == x.Id).City.Name);
             return View(examViewModels);
         }
 
@@ -54,9 +51,20 @@ namespace PRIS.Web.Controllers
         }
 
         // GET: Exams/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            ExamViewModel examViewModel = new ExamViewModel();
+            List<City> cities = await _context.Cities.ToListAsync();
+
+            var stringCities = new List<SelectListItem>();
+            foreach (var city in cities)
+            {
+                stringCities.Add(new SelectListItem { Value = city.Name, Text = city.Name });
+                //stringCities.Add(city.Name.ToString());
+            }
+            examViewModel.Cities = stringCities;
+
+            return View(examViewModel);
         }
 
         // POST: Exams/Create
@@ -64,11 +72,12 @@ namespace PRIS.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CityId,Date,Task1_1,Task1_2,Task1_3,Task2_1,Task2_2,Task2_3,Task3_1,Task3_2,Task3_3,Task3_4,Comment,Id,Created")] ExamViewModel examViewModel)
+        public async Task<IActionResult> Create([Bind("CityId,Date,Comment,Id,Created,SelectedCity")] ExamViewModel examViewModel)
         {
             if (ModelState.IsValid)
             {
                 var result = ExamMappings.ToEntity(examViewModel);
+                result.CityId = _context.Cities.FirstOrDefault(x => x.Name == examViewModel.SelectedCity).Id;
                 _context.Add(result);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -97,7 +106,7 @@ namespace PRIS.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CityId,Date,Task1_1,Task1_2,Task1_3,Task2_1,Task2_2,Task2_3,Task3_1,Task3_2,Task3_3,Task3_4,Comment,Id,Created")] ExamViewModel examViewModel)
+        public async Task<IActionResult> Edit(int id, [Bind("CityId,Date,Comment,Id,Created")] ExamViewModel examViewModel)
         {
             var exam = ExamMappings.ToEntity(examViewModel);
 

@@ -20,6 +20,6 @@ namespace PRIS.Core.Library.Entities
         public string Comment { get; set; }
 
         public List<Result> Results { get; set; }
-        public List<City> Cities { get; set; }
+        public City City { get; set; }
     }
 }

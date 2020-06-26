@@ -9,9 +9,12 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table table-bordered">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SelectedCity)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Date)
             </th>
@@ -25,6 +28,9 @@
         @foreach (var item in Model)
         {
             <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SelectedCity)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Date)
                 </td>
