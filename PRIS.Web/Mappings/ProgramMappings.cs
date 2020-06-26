@@ -1,5 +1,7 @@
 ﻿using PRIS.Web.Models;
 using PRIS.Core.Library.Entities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PRIS.Web.Mappings
 {
@@ -9,32 +11,34 @@ namespace PRIS.Web.Mappings
         {
             return new Core.Library.Entities.Program
             {
-                Id = model.ProgramId,
-                Name = model.ProgramName
+                Name = model.ProgramNames.LastOrDefault().Name
+                //Id = model.CityNames.LastOrDefault().Id
+                
             };
         }
         public static City ToCityEntity(ProgramViewModel model)
         {
             return new City
             {
-                Id = model.CityId,
-                Name = model.CityName
+                Name = model.CityNames.LastOrDefault().Name
+                
+                //Id = model.CityNames.LastOrDefault().Id
             };
         }
-        public static ProgramViewModel ToProgramViewModel(Core.Library.Entities.Program programEntity)
+        public static ProgramViewModel ToProgramViewModel(List<Core.Library.Entities.Program> programEntity)
         {
             return new ProgramViewModel
             {
-                ProgramId = programEntity.Id,
-                ProgramName = programEntity.Name,
+                ProgramNames = programEntity
             };
         }
-        public static ProgramViewModel ToCityViewModel(City cityEntity)
+        
+        
+        public static ProgramViewModel ToCityViewModel(List<City> cityEntity)
         {
             return new ProgramViewModel
             {
-                CityId = cityEntity.Id,
-                CityName = cityEntity.Name
+                CityNames = cityEntity
             };
 
             

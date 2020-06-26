@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PRIS.Web.Models.ProgramViewModel>
+﻿@model PRIS.Web.Models.ProgramViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -11,14 +11,14 @@
             <h2>Programos</h2>
             <table class="table">
                 <tbody>
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.ProgramNames)
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.ProgramName)
+                                @Html.DisplayFor(modelItem => item.Name)
                             </td>
                             <td>
-                                <a asp-action="Delete" asp-route-id="@item.ProgramId">Ištrinti</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id">Ištrinti</a>
                             </td>
                         </tr>
                     }
@@ -32,14 +32,14 @@
             <h2>Miestai</h2>
             <table class="table">
                 <tbody>
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.CityNames)
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.CityName)
+                                @Html.DisplayFor(modelItem => item.Name)
                             </td>
                             <td>
-                                <a asp-action="DeleteCity" asp-route-id="@item.CityId">Ištrinti</a>
+                                <a asp-action="DeleteCity" asp-route-id="@item.Id">Ištrinti</a>
                             </td>
                         </tr>
                     }

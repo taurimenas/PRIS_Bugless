@@ -13,13 +13,13 @@
             @Html.DisplayName("Programos pavadinimas")
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProgramName)
+            @Html.DisplayFor(model => model.ProgramNames)
         </dd>
     </dl>
     
-    <form asp-action="Delete">
+    @*<form asp-action="Delete">
         <input type="hidden" asp-for="ProgramId" />
         <input type="submit" value="Ištrinti" class="btn btn-danger" /> |
         <a asp-action="Index">Grižti</a>
-    </form>
+    </form>*@
 </div>

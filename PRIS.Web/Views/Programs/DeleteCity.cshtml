@@ -12,14 +12,14 @@
             @Html.DisplayName("Miesto pavadinimas")
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CityName)
+            @Html.DisplayFor(model => model.CityNames)
         </dd>
     </dl>
 
-    <form asp-action="DeleteCity">
+    @*<form asp-action="DeleteCity">
         <input type="hidden" asp-for="CityId" />
         <input type="submit" value="Ištrinti" class="btn btn-danger" /> |
         <a asp-action="Index">Grižti</a>
-    </form>
+    </form>*@
 </div>
 

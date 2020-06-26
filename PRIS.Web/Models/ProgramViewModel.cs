@@ -8,10 +8,8 @@ namespace PRIS.Web.Models
 {
     public class ProgramViewModel
     {
-        public int ProgramId { get; set; }
-        public string ProgramName { get; set; }
-        public int CityId { get; set; }
-        public string CityName { get; set; }
+        public List<PRIS.Core.Library.Entities.Program> ProgramNames { get; set; }
+        public List<City> CityNames { get; set; }
 
     }
 }
