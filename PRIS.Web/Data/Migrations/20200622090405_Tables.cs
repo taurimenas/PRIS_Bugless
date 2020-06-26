@@ -41,24 +41,29 @@ namespace PRIS.Web.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "City",
+                name: "Exam",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Created = table.Column<DateTime>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    CourseId = table.Column<int>(nullable: true)
+                    CityId = table.Column<int>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    Task1_1 = table.Column<double>(nullable: false),
+                    Task1_2 = table.Column<double>(nullable: false),
+                    Task1_3 = table.Column<double>(nullable: false),
+                    Task2_1 = table.Column<double>(nullable: false),
+                    Task2_2 = table.Column<double>(nullable: false),
+                    Task2_3 = table.Column<double>(nullable: false),
+                    Task3_1 = table.Column<double>(nullable: false),
+                    Task3_2 = table.Column<double>(nullable: false),
+                    Task3_3 = table.Column<double>(nullable: false),
+                    Task3_4 = table.Column<double>(nullable: false),
+                    Comment = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_City", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_City_Course_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Course",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                    table.PrimaryKey("PK_Exam", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,35 +88,31 @@ namespace PRIS.Web.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Exam",
+                name: "City",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Created = table.Column<DateTime>(nullable: false),
-                    CityId = table.Column<int>(nullable: false),
-                    Date = table.Column<DateTime>(nullable: false),
-                    Task1_1 = table.Column<double>(nullable: false),
-                    Task1_2 = table.Column<double>(nullable: false),
-                    Task1_3 = table.Column<double>(nullable: false),
-                    Task2_1 = table.Column<double>(nullable: false),
-                    Task2_2 = table.Column<double>(nullable: false),
-                    Task2_3 = table.Column<double>(nullable: false),
-                    Task3_1 = table.Column<double>(nullable: false),
-                    Task3_2 = table.Column<double>(nullable: false),
-                    Task3_3 = table.Column<double>(nullable: false),
-                    Task3_4 = table.Column<double>(nullable: false),
-                    Comment = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: true),
+                    CourseId = table.Column<int>(nullable: true),
+                    ExamId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Exam", x => x.Id);
+                    table.PrimaryKey("PK_City", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Exam_City_CityId",
-                        column: x => x.CityId,
-                        principalTable: "City",
+                        name: "FK_City_Course_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Course",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_City_Exam_ExamId",
+                        column: x => x.ExamId,
+                        principalTable: "Exam",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -210,9 +211,9 @@ namespace PRIS.Web.Data.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Exam_CityId",
-                table: "Exam",
-                column: "CityId");
+                name: "IX_City_ExamId",
+                table: "City",
+                column: "ExamId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Program_CourseId",
@@ -243,10 +244,16 @@ namespace PRIS.Web.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "City");
+
+            migrationBuilder.DropTable(
                 name: "Program");
 
             migrationBuilder.DropTable(
                 name: "StudentsCourse");
+
+            migrationBuilder.DropTable(
+                name: "Course");
 
             migrationBuilder.DropTable(
                 name: "Student");
@@ -259,12 +266,6 @@ namespace PRIS.Web.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Exam");
-
-            migrationBuilder.DropTable(
-                name: "City");
-
-            migrationBuilder.DropTable(
-                name: "Course");
         }
     }
 }

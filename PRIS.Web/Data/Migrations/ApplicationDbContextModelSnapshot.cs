@@ -15,7 +15,7 @@ namespace PRIS.Web.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.5")
+                .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -219,30 +219,7 @@ namespace PRIS.Web.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("PRIS.Core.Library.Entities.City", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.ToTable("City");
-                });
-
-            modelBuilder.Entity("PRIS.Core.Library.Entities.ConversationResult", b =>
+            modelBuilder.Entity("PRIS.Web.Models.ConversationResult", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -263,7 +240,7 @@ namespace PRIS.Web.Data.Migrations
                     b.ToTable("ConversationResult");
                 });
 
-            modelBuilder.Entity("PRIS.Core.Library.Entities.Course", b =>
+            modelBuilder.Entity("PRIS.Web.Models.Course", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -293,7 +270,35 @@ namespace PRIS.Web.Data.Migrations
                     b.ToTable("Course");
                 });
 
-            modelBuilder.Entity("PRIS.Core.Library.Entities.Exam", b =>
+            modelBuilder.Entity("PRIS.Web.Models.DbModels.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ExamId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("ExamId");
+
+                    b.ToTable("City");
+                });
+
+            modelBuilder.Entity("PRIS.Web.Models.Entity.Exam", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -344,12 +349,10 @@ namespace PRIS.Web.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CityId");
-
                     b.ToTable("Exam");
                 });
 
-            modelBuilder.Entity("PRIS.Core.Library.Entities.Program", b =>
+            modelBuilder.Entity("PRIS.Web.Models.Program", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -372,7 +375,7 @@ namespace PRIS.Web.Data.Migrations
                     b.ToTable("Program");
                 });
 
-            modelBuilder.Entity("PRIS.Core.Library.Entities.Result", b =>
+            modelBuilder.Entity("PRIS.Web.Models.Result", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -425,7 +428,7 @@ namespace PRIS.Web.Data.Migrations
                     b.ToTable("Result");
                 });
 
-            modelBuilder.Entity("PRIS.Core.Library.Entities.Student", b =>
+            modelBuilder.Entity("PRIS.Web.Models.Student", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -471,7 +474,7 @@ namespace PRIS.Web.Data.Migrations
                     b.ToTable("Student");
                 });
 
-            modelBuilder.Entity("PRIS.Core.Library.Entities.StudentCourse", b =>
+            modelBuilder.Entity("PRIS.Web.Models.StudentCourse", b =>
                 {
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
@@ -540,56 +543,51 @@ namespace PRIS.Web.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PRIS.Core.Library.Entities.City", b =>
+            modelBuilder.Entity("PRIS.Web.Models.DbModels.City", b =>
                 {
-                    b.HasOne("PRIS.Core.Library.Entities.Course", "Course")
+                    b.HasOne("PRIS.Web.Models.Course", "Course")
                         .WithMany("Cities")
                         .HasForeignKey("CourseId");
+
+                    b.HasOne("PRIS.Web.Models.Entity.Exam", "Exam")
+                        .WithMany("Cities")
+                        .HasForeignKey("ExamId");
                 });
 
-            modelBuilder.Entity("PRIS.Core.Library.Entities.Exam", b =>
+            modelBuilder.Entity("PRIS.Web.Models.Program", b =>
                 {
-                    b.HasOne("PRIS.Core.Library.Entities.City", "City")
-                        .WithMany("Exam")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PRIS.Core.Library.Entities.Program", b =>
-                {
-                    b.HasOne("PRIS.Core.Library.Entities.Course", "Course")
+                    b.HasOne("PRIS.Web.Models.Course", "Course")
                         .WithMany("Programs")
                         .HasForeignKey("CourseId");
                 });
 
-            modelBuilder.Entity("PRIS.Core.Library.Entities.Result", b =>
+            modelBuilder.Entity("PRIS.Web.Models.Result", b =>
                 {
-                    b.HasOne("PRIS.Core.Library.Entities.Exam", "Exam")
+                    b.HasOne("PRIS.Web.Models.Entity.Exam", "Exam")
                         .WithMany("Results")
                         .HasForeignKey("ExamId");
                 });
 
-            modelBuilder.Entity("PRIS.Core.Library.Entities.Student", b =>
+            modelBuilder.Entity("PRIS.Web.Models.Student", b =>
                 {
-                    b.HasOne("PRIS.Core.Library.Entities.ConversationResult", "ConversationResult")
+                    b.HasOne("PRIS.Web.Models.ConversationResult", "ConversationResult")
                         .WithMany("Students")
                         .HasForeignKey("ConversationResultId");
 
-                    b.HasOne("PRIS.Core.Library.Entities.Result", "Result")
+                    b.HasOne("PRIS.Web.Models.Result", "Result")
                         .WithMany("Students")
                         .HasForeignKey("ResultId");
                 });
 
-            modelBuilder.Entity("PRIS.Core.Library.Entities.StudentCourse", b =>
+            modelBuilder.Entity("PRIS.Web.Models.StudentCourse", b =>
                 {
-                    b.HasOne("PRIS.Core.Library.Entities.Course", "Course")
+                    b.HasOne("PRIS.Web.Models.Course", "Course")
                         .WithMany("StudentsCourses")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PRIS.Core.Library.Entities.Student", "Student")
+                    b.HasOne("PRIS.Web.Models.Student", "Student")
                         .WithMany("StudentCourses")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
