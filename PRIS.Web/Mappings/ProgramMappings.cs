@@ -12,7 +12,6 @@ namespace PRIS.Web.Mappings
             return new Core.Library.Entities.Program
             {
                 Name = model.ProgramName,
-                Id = model.ProgramNameId  
             };
         }
         public static City ToCityEntity(CityCreateModel model)

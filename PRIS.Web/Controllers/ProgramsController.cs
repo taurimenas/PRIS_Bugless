@@ -30,8 +30,7 @@ namespace PRIS.Web.Controllers
             var programResult = await _context.Programs.ToListAsync();
             programViewModel.ProgramNames = programResult;
 
-            var cityResult = await _context.Cities.ToListAsync();
-            programViewModel.CityNames = cityResult;
+            programViewModel.CityNames = await _context.Cities.ToListAsync();
 
             return View(programViewModel);
         }

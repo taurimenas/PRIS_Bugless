@@ -9,9 +9,5 @@ namespace PRIS.Web.Models
     {
         public string CityName { get; set; }
         public int CityNameId { get; set; }
-        public CityCreateModel()
-        {
-
-        }
     }
 }
