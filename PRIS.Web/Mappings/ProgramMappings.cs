@@ -11,17 +11,18 @@ namespace PRIS.Web.Mappings
         {
             return new Core.Library.Entities.Program
             {
-                Name = model.Name
-                
+                Name = model.ProgramName,
+                Id = model.ProgramNameId
                 //Id = model.CityNames.LastOrDefault().Id
                 
             };
         }
-        public static City ToCityEntity(ProgramViewModel model)
+        public static City ToCityEntity(CityCreateModel model)
         {
             return new City
             {
-                Name = model.CityNames.LastOrDefault().Name
+                Name = model.CityName,
+                Id = model.CityNameId
                 
                 //Id = model.CityNames.LastOrDefault().Id
             };
@@ -30,26 +31,19 @@ namespace PRIS.Web.Mappings
         {
             return new ProgramViewModel
             {
-                ProgramNames = programEntity
+                ProgramNames = programEntity,
+                
             };
         }
-        
-        
+
+
         public static ProgramViewModel ToCityViewModel(List<City> cityEntity)
         {
             return new ProgramViewModel
             {
-                CityNames = cityEntity
-            };   
+                CityNames = cityEntity,
+                
+            };
         }
-        //public static ProgramViewModel ToCityViewModel(City entity)
-        //{
-        //    return new ProgramViewModel
-        //    {
-        //        CityName = entity.Name,
-        //        CityId = entity.CityId
-        //    };
-        //}
-
     }
 }

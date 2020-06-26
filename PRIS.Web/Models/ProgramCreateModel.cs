@@ -7,7 +7,8 @@ namespace PRIS.Web.Models
 {
     public class ProgramCreateModel
     {
-        public string Name { get; set; }
+        public string ProgramName { get; set; }
+        public int ProgramNameId { get; set; }
 
         public ProgramCreateModel()
         {

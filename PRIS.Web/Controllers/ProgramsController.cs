@@ -28,7 +28,6 @@ namespace PRIS.Web.Controllers
             ProgramViewModel programViewModel = new ProgramViewModel();
             var programResult = await _context.Programs.ToListAsync();
             programViewModel.ProgramNames = programResult;
-            ////List<ProgramViewModel> programViewModels = new List<ProgramViewModel>();
 
             var cityResult = await _context.Cities.ToListAsync();
             programViewModel.CityNames = cityResult;
@@ -48,7 +47,7 @@ namespace PRIS.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] ProgramCreateModel programCreateModel)
+        public async Task<IActionResult> Create([Bind("ProgramName")] ProgramCreateModel programCreateModel)
         {
             if (ModelState.IsValid)
             {
@@ -62,71 +61,76 @@ namespace PRIS.Web.Controllers
         //Create new city
         public IActionResult CreateNewCity()
         {
-            return View();
+            var model = new CityCreateModel();
+            return View(model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateNewCity([Bind("CityNames")] ProgramViewModel programViewModel)
+        public async Task<IActionResult> CreateNewCity([Bind("CityName")] CityCreateModel cityCreateModel)
         {
             if (ModelState.IsValid)
             {
-                var result = ProgramMappings.ToCityEntity(programViewModel);
+                var result = ProgramMappings.ToCityEntity(cityCreateModel);
                 _context.Cities.Add(result);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(programViewModel);
+            return View(cityCreateModel);
         }
 
-        ////GET: Programs/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    var program = await _context.Programs
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (program == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(ProgramMappings.ToProgramViewModel(program));
-        //}
+        //GET: Programs/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var program = await _context.Programs
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (program == null)
+            {
+                return NotFound();
+            }
+            var programs = await _context.Programs.FindAsync(id);
+            _context.Programs.Remove(programs);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+            //return View(ProgramMappings.ToProgramViewModel(Index));
+        }
         ////delete city
-        //public async Task<IActionResult> DeleteCity(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        public async Task<IActionResult> DeleteCity(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //    var city = await _context.Cities
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (city == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var city = await _context.Cities.FirstOrDefaultAsync(m => m.Id == id);
+            if (city == null)
+            {
+                return NotFound();
+            }
+            var cities = await _context.Cities.FindAsync(id);
+            _context.Cities.Remove(cities);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
 
-        //    return View(ProgramMappings.ToCityViewModel(city));
-        //}
+        //POST: Programs/Delete/5
+        /*        [HttpPost, ActionName("Delete")]
+                [ValidateAntiForgeryToken]
+                public async Task<IActionResult> DeleteConfirmed(int id)
+                {
+                    var program = await _context.Programs.FindAsync(id);
+                    _context.Programs.Remove(program);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }*/
 
-        // POST: Programs/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var program = await _context.Programs.FindAsync(id);
-        //    _context.Programs.Remove(program);
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-        //private bool ProgramExists(int id)
-        //{
-        //    return _context.Programs.Any(e => e.Id == id);
-        //}
+        private bool ProgramExists(int id)
+        {
+            return _context.Programs.Any(e => e.Id == id);
+        }
         ////delete city comfirmed
         //[HttpPost, ActionName("DeleteCity")]
         //[ValidateAntiForgeryToken]
@@ -138,10 +142,10 @@ namespace PRIS.Web.Controllers
         //    return RedirectToAction(nameof(Index));
         //}
 
-        //private bool CityExists(int id)
-        //{
-        //    return _context.Cities.Any(e => e.Id == id);
-        //}
+        private bool CityExists(int id)
+        {
+            return _context.Cities.Any(e => e.Id == id);
+        }
 
     }
     }
