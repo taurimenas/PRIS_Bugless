@@ -16,11 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Programs\Details.cshtml" />
-    <Content Remove="Views\Programs\Edit.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\PRIS.Core.Library\PRIS.Core.Library.csproj" />
   </ItemGroup>
 
