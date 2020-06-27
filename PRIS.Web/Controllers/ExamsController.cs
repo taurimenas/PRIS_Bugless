@@ -87,10 +87,5 @@ namespace PRIS.Web.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
-        private bool ExamExists(int id)
-        {
-            return _context.Exams.Any(e => e.Id == id);
-        }
     }
 }

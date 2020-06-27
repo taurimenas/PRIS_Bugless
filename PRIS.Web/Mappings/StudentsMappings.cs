@@ -13,6 +13,7 @@ namespace PRIS.Web.Mappings
         {
             return new Student
             {
+                Id = model.Id,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Email = model.Email,
@@ -25,13 +26,13 @@ namespace PRIS.Web.Mappings
         {
             return new StudentViewModel
             {
+                Id = entity.Id,
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
                 Email = entity.Email,
                 PhoneNumber = entity.PhoneNumber,
                 Gender = entity.Gender,
-                Comment = entity.Comment,
-                Id = entity.Id
+                Comment = entity.Comment
             };
         }
     }

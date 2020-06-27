@@ -12,21 +12,21 @@ namespace PRIS.Web.Models
     {
         public int Id { get; set; }
         [Required]
-        [Display(Name = "Vardas")]
+        [Display(Name = "Vardas", Prompt = "Vardas")]
         public string FirstName { get; set; }
         [Required]
-        [Display(Name = "Pavardė")]
+        [Display(Name = "Pavardė", Prompt = "Pavardė")]
         public string LastName { get; set; }
         [Required]
-        [Display(Name = "El. paštas")]
+        [Display(Name = "El. paštas", Prompt = "Studentas@email.com")]
         public string Email { get; set; }
         [Required]
-        [Display(Name = "Tel. numeris")]
+        [Display(Name = "Tel. numeris", Prompt = "Tel. numeris")]
         public string PhoneNumber { get; set; }
         [Required]
         [Display(Name = "Lytis")]
         public Gender Gender { get; set; }
-        [Display(Name = "Komentaras")]
+        [Display(Name = "Komentaras", Prompt = "Komentaras")]
         public string Comment { get; set; }
     }
 }
