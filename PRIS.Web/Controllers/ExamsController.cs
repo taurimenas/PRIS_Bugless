@@ -34,24 +34,6 @@ namespace PRIS.Web.Controllers
             return View(examViewModels);
         }
 
-        // GET: Exams/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var exam = await _context.Exams
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (exam == null)
-            {
-                return NotFound();
-            }
-            var model = ExamMappings.ToViewModel(exam);
-            return View(model);
-        }
-
         // GET: Exams/Create
         public async Task<IActionResult> Create()
         {
@@ -62,7 +44,6 @@ namespace PRIS.Web.Controllers
             foreach (var city in cities)
             {
                 stringCities.Add(new SelectListItem { Value = city.Name, Text = city.Name });
-                //stringCities.Add(city.Name.ToString());
             }
             examViewModel.Cities = stringCities;
 
@@ -78,9 +59,9 @@ namespace PRIS.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = ExamMappings.ToEntity(examViewModel);
-                result.CityId = _context.Cities.FirstOrDefault(x => x.Name == examViewModel.SelectedCity).Id;
-                _context.Add(result);
+                var exam = ExamMappings.ToEntity(examViewModel);
+                exam.CityId = _context.Cities.FirstOrDefault(x => x.Name == examViewModel.SelectedCity).Id;
+                _context.Add(exam);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
