@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PRIS.Web.Data;
 
 namespace PRIS.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200627211451_AddedPassedExamPropertyToStudent")]
+    partial class AddedPassedExamPropertyToStudent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -388,9 +390,6 @@ namespace PRIS.Web.Data.Migrations
                     b.Property<int?>("ExamId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StudentForeignKey")
-                        .HasColumnType("int");
-
                     b.Property<double>("Task1_1")
                         .HasColumnType("float");
 
@@ -424,10 +423,6 @@ namespace PRIS.Web.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ExamId");
-
-                    b.HasIndex("StudentForeignKey")
-                        .IsUnique()
-                        .HasFilter("[StudentForeignKey] IS NOT NULL");
 
                     b.ToTable("Result");
                 });
@@ -469,12 +464,14 @@ namespace PRIS.Web.Data.Migrations
                     b.Property<int?>("ResultId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StudentsCourseId")
+                    b.Property<int>("StudentsCourseId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ConversationResultId");
+
+                    b.HasIndex("ResultId");
 
                     b.ToTable("Student");
                 });
@@ -576,10 +573,6 @@ namespace PRIS.Web.Data.Migrations
                     b.HasOne("PRIS.Core.Library.Entities.Exam", "Exam")
                         .WithMany("Results")
                         .HasForeignKey("ExamId");
-
-                    b.HasOne("PRIS.Core.Library.Entities.Student", "Student")
-                        .WithOne("Result")
-                        .HasForeignKey("PRIS.Core.Library.Entities.Result", "StudentForeignKey");
                 });
 
             modelBuilder.Entity("PRIS.Core.Library.Entities.Student", b =>
@@ -587,6 +580,10 @@ namespace PRIS.Web.Data.Migrations
                     b.HasOne("PRIS.Core.Library.Entities.ConversationResult", "ConversationResult")
                         .WithMany("Students")
                         .HasForeignKey("ConversationResultId");
+
+                    b.HasOne("PRIS.Core.Library.Entities.Result", "Result")
+                        .WithMany("Students")
+                        .HasForeignKey("ResultId");
                 });
 
             modelBuilder.Entity("PRIS.Core.Library.Entities.StudentCourse", b =>

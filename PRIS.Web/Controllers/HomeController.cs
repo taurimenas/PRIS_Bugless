@@ -24,7 +24,10 @@ namespace PRIS.Web.Controllers
         {
             return View();
         }
-
+        public IActionResult Main()
+        {
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();

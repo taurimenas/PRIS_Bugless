@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PRIS.Core.Library.Entities;
+using PRIS.Web.Models;
 
 namespace PRIS.Web.Data
 {
@@ -15,6 +16,7 @@ namespace PRIS.Web.Data
             : base(options)
         {
         }
+
 
         public DbSet<City> Cities { get; set; }
         public DbSet<ConversationResult> ConversationResults { get; set; }
@@ -50,6 +52,12 @@ namespace PRIS.Web.Data
                 .HasOne(sc => sc.Course)
                 .WithMany(c => c.StudentsCourses)
                 .HasForeignKey(sc => sc.CourseId);
+
+            modelBuilder.Entity<Student>()
+            .HasOne(s => s.Result)
+            .WithOne(r => r.Student)
+            .HasForeignKey<Result>(s => s.StudentForeignKey);
         }
+
     }
 }
