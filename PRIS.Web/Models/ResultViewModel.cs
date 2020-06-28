@@ -19,9 +19,10 @@ namespace PRIS.Web.Models
         public double Task3_2 { get; set; }
         public double Task3_3 { get; set; }
         public double Task3_4 { get; set; }
-        public double FinalPoints { get; set; }
+        public double? FinalPoints { get; set; }
         public string Comment { get; set; }
 
+        public int StudentId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }

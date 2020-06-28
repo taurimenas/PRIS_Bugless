@@ -5,15 +5,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Įrašykite testo rezultatus</h1>
-
-<h4>ResultViewModel</h4>
+<h3>Įrašykite testo rezultatus</h3>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-           
+            <div class="form-group">
+                <label asp-for="Task1_1" class="control-label"></label>
+                <input asp-for="Task1_1" class="form-control" />
+                <span asp-validation-for="Task1_1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Task1_1" class="control-label"></label>
+                <input asp-for="Task1_1" class="form-control" />
+                <span asp-validation-for="Task1_1" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Task1_1" class="control-label"></label>
                 <input asp-for="Task1_1" class="form-control" />

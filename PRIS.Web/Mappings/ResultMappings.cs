@@ -49,6 +49,7 @@ namespace PRIS.Web.Mappings
         {
             return new Student
             {
+                Id = model.StudentId,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Email = model.Email,
@@ -61,6 +62,7 @@ namespace PRIS.Web.Mappings
         {
             return new ResultViewModel
             {
+                StudentId = entity.Id,
                 FirstName = entity.FirstName,
                 LastName = entity.LastName,
                 Email = entity.Email,
