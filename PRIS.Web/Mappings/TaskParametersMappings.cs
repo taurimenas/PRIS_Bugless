@@ -25,11 +25,20 @@ namespace PRIS.Web.Mappings
                 Task3_4 = model.Task3_4
             };
         }
-        public static TaskParameterViewModel ToTaskParameterViewModel(List<Exam> examEntity)
+        public static SetTaskParameterModel ToTaskParameterViewModel(Exam examEntity)
         {
-            return new TaskParameterViewModel
+            return new SetTaskParameterModel
             {
-                Tasks = examEntity
+                Task1_1 = examEntity.Task1_1,
+                Task1_2 = examEntity.Task1_2,
+                Task1_3 = examEntity.Task1_3,
+                Task2_1 = examEntity.Task2_1,
+                Task2_2 = examEntity.Task2_2,
+                Task2_3 = examEntity.Task2_3,
+                Task3_1 = examEntity.Task3_1,
+                Task3_2 = examEntity.Task3_2,
+                Task3_3 = examEntity.Task3_3,
+                Task3_4 = examEntity.Task3_4
             };
         }
     }

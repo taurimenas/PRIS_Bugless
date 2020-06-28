@@ -18,28 +18,63 @@ namespace PRIS.Web.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            TaskParameterViewModel taskParameterViewModel = new TaskParameterViewModel();
+            var taskParameterResult = await _context.Exams.ToListAsync();
+            taskParameterViewModel.Tasks = taskParameterResult;
+            return View(taskParameterViewModel);
         }
-        public IActionResult SetTaskParameters()
+        // GET: vvv/Edit/5
+        public async Task<ActionResult> Edit(int? id)
         {
-            var model = new SetTaskParameterModel();
-            return View(model);
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var tasks = await _context.Exams.FindAsync(id);
+            if(tasks == null)
+            {
+                return NotFound();
+            }
+            return View(TaskParametersMappings.ToTaskParameterViewModel(tasks));
         }
-
+        // POST: vvv/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SetTaskParameters([Bind("Task1.1, Task1.2, Task1.3, Task2.1, Task2.2, Task2.3, Task3.1, Task3.2, Task3.3, Task3.4")] SetTaskParameterModel setTaskParameterModel)
+        public async Task<ActionResult> Edit(int id, [Bind("Task1_1,Task1_2,Task1_3,Task2_1,Task2_2,Task2_3,Task3_1,Task3_2,Task3_3,Task3_4")]SetTaskParameterModel setTaskParameterModel)
         {
+            var tasks = TaskParametersMappings.ToTaskParametersEntity(setTaskParameterModel);
+
+            if(id != tasks.Id)
+            {
+                return NotFound();
+            }
             if (ModelState.IsValid)
             {
-                var result = TaskParametersMappings.ToTaskParametersEntity(setTaskParameterModel);
-                _context.Exams.Add(result);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Update(tasks);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TasksExists(tasks.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
-            return View(setTaskParameterModel);
+            return View(tasks);
+        }
+        private bool TasksExists(int id)
+        {
+            return _context.Results.Any(e => e.Id == id);
         }
     }
 }
