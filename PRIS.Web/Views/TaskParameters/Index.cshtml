@@ -1,0 +1,34 @@
+﻿@model PRIS.Web.Models.SetTaskParameterModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<h1>Nustatyti testo balų parametrus</h1>
+<hr />
+
+<form class="form-inline" asp-action="SetTaskParameters">
+    <div class="form-group">
+        <label asp-for="Task1_1" class="control-label">1.1</label>
+        <input asp-for="Task1_1" class="form-control" />
+        <span asp-validation-for="Task1_1" class="text-danger"></span>
+    </div>
+    @*<div class="form-group">
+        <label asp-for="Task1_2" class="control-label">1.2</label>
+        <input asp-for="Task1_2" class="form-control" />
+        <span asp-validation-for="Task1_2" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Task1_3" class="control-label">1.3</label>
+        <input asp-for="Task1_3" class="form-control" />
+        <span asp-validation-for="Task1_3" class="text-danger"></span>
+    </div>*@
+    <div class="form-group">
+        <input type="submit" value="Nustatyti" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a  asp-controller="Exams" asp-action="Index">Grižti</a>
+</div>

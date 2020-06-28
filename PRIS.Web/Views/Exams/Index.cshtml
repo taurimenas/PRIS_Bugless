@@ -35,6 +35,11 @@
                 <td class="borderless-cell">
                     @Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" })
                 </td>
+                <td class="borderless-cell">
+                    <div class="col-6">
+                        <a class="btn btn-info form-control text-white" asp-area="" asp-controller="TaskParameters" asp-action="Index">Testo Nustatymai</a>
+                    </div>
+                </td>
             </tr>
         }
     </tbody>

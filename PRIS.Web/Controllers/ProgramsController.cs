@@ -106,14 +106,5 @@ namespace PRIS.Web.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        private bool ProgramExists(int id)
-        {
-            return _context.Programs.Any(e => e.Id == id);
-        }
-        private bool CityExists(int id)
-        {
-            return _context.Cities.Any(e => e.Id == id);
-        }
-
     }
-    }
+}
