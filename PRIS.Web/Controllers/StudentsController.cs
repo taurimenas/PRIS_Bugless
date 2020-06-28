@@ -44,22 +44,33 @@ namespace PRIS.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, bool examPassed)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
-            var student = await _context.Students.FirstOrDefaultAsync(m => m.Id == id);
-            if (student == null)
+            if (!examPassed)
             {
-                return NotFound();
+                var student = await _context.Students.FirstOrDefaultAsync(m => m.Id == id);
+                if (student == null)
+                {
+                    return NotFound();
+                }
+                var students = await _context.Students.FindAsync(id);
+                _context.Students.Remove(students);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            var students = await _context.Students.FindAsync(id);
-            _context.Students.Remove(students);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            else
+            {
+                var result = await _context.Students.ToListAsync();
+                var studentViewModels = new List<StudentViewModel>();
+                result.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x)));
+                ModelState.AddModelError("StudentDelete", "Į pokalbį pakviesto kandidato ištrinti negalima."); // TODO: Pabandyt padaryt be delete puslapio
+                return View(studentViewModels);
+            }
+
         }
 
         public async Task<IActionResult> Edit(int? id)

@@ -28,5 +28,7 @@ namespace PRIS.Web.Models
         public Gender Gender { get; set; }
         [Display(Name = "Komentaras", Prompt = "Komentaras")]
         public string Comment { get; set; }
+        public bool PassedExam { get; set; } = false;
+        public string ErrorMessage { get; set; }
     }
 }

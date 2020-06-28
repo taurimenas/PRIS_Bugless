@@ -19,7 +19,8 @@ namespace PRIS.Web.Mappings
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
                 Gender = model.Gender,
-                Comment = model.Comment
+                Comment = model.Comment,
+                PassedExam = model.PassedExam
             };
         }
         public static StudentViewModel ToViewModel(Student entity)
@@ -32,7 +33,8 @@ namespace PRIS.Web.Mappings
                 Email = entity.Email,
                 PhoneNumber = entity.PhoneNumber,
                 Gender = entity.Gender,
-                Comment = entity.Comment
+                Comment = entity.Comment,
+                PassedExam = entity.PassedExam
             };
         }
     }

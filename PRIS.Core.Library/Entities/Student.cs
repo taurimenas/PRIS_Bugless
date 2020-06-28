@@ -10,7 +10,9 @@ namespace PRIS.Core.Library.Entities
         public string PhoneNumber { get; set; }
         public Gender Gender { get; set; }
         public string Comment { get; set; }
-        public int StudentsCourseId { get; set; }
+        public bool PassedExam { get; set; }
+        public int? StudentsCourseId { get; set; }
+        public int? ResultId { get; set; }
 
         public Result Result { get; set; }
         public ConversationResult ConversationResult { get; set; }

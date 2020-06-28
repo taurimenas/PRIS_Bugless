@@ -82,8 +82,29 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-            var exams = await _context.Exams.FindAsync(id);
-            _context.Exams.Remove(exams);
+            var examById = await _context.Exams.FindAsync(id);
+            var result = await _context.Results.FirstOrDefaultAsync(x => x.ExamId == examById.Id);
+
+            if (result != null)
+            {
+                var studentById = await _context.Students.FindAsync(result.StudentForeignKey);
+                if (studentById != null)
+                    ModelState.AddModelError("AssignedStudent", "Programos negalima ištrinti, nes prie jos jau yra priskirta kandidatų.");
+                else
+                {
+                    return await RemoveFromExams(examById);
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return await RemoveFromExams(examById);
+            }
+        }
+
+        private async Task<IActionResult> RemoveFromExams(Exam examById)
+        {
+            _context.Exams.Remove(examById);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
