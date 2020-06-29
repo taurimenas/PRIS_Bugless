@@ -10,6 +10,10 @@
         <div class="col">
             <form asp-action="Edit">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input name="Id" value="@Model.Id" type="hidden" asp-for="Id" />
+                <input name="CityId" value="@Model.CityId" type="hidden" asp-for="CityId" />
+                <input name="Date" value="@Model.Date" type="hidden" asp-for="Date" />
+
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text">1.1</span>

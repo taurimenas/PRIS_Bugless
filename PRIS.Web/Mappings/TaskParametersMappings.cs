@@ -13,6 +13,8 @@ namespace PRIS.Web.Mappings
         {
             return new Exam
             {
+                Date = model.Date,
+                CityId = model.CityId,
                 Task1_1 = model.Task1_1,
                 Task1_2 = model.Task1_2,
                 Task1_3 = model.Task1_3,
@@ -29,6 +31,9 @@ namespace PRIS.Web.Mappings
         {
             return new SetTaskParameterModel
             {
+                Id = examEntity.Id,
+                CityId = examEntity.CityId,
+                Date = examEntity.Date,
                 Task1_1 = examEntity.Task1_1,
                 Task1_2 = examEntity.Task1_2,
                 Task1_3 = examEntity.Task1_3,
