@@ -15,8 +15,10 @@ namespace PRIS.Core.Library.Entities
         public double Task3_3 { get; set; }
         public double Task3_4 { get; set; }
         public string Comment { get; set; }
+        public int? ExamId { get; set; }
 
-        public List<Student> Students { get; set; }
+        public int? StudentForeignKey { get; set; }
+        public Student Student { get; set; }
         public Exam Exam { get; set; }
     }
 }
