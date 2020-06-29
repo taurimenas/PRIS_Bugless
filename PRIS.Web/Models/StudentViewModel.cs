@@ -30,5 +30,33 @@ namespace PRIS.Web.Models
         public string Comment { get; set; }
         public bool PassedExam { get; set; } = false;
         public string ErrorMessage { get; set; }
+        
+
+        public int ResultId { get; set; }
+        [Required(ErrorMessage ="Įrašykite užduoties įvertinimą")]
+        public double Task1_1 { get; set; }
+        [Required(ErrorMessage = "Įrašykite užduoties įvertinimą")]
+        public double Task1_2 { get; set; }
+        [Required(ErrorMessage = "Įrašykite užduoties įvertinimą")]
+        public double Task1_3 { get; set; }
+        [Required(ErrorMessage = "Įrašykite užduoties įvertinimą")]
+        public double Task2_1 { get; set; }
+        [Required(ErrorMessage = "Įrašykite užduoties įvertinimą")]
+        public double Task2_2 { get; set; }
+        [Required(ErrorMessage = "Įrašykite užduoties įvertinimą")]
+        public double Task2_3 { get; set; }
+        [Required(ErrorMessage = "Įrašykite užduoties įvertinimą")]
+        public double Task3_1 { get; set; }
+        [Required(ErrorMessage = "Įrašykite užduoties įvertinimą")]
+        public double Task3_2 { get; set; }
+        [Required(ErrorMessage = "Įrašykite užduoties įvertinimą")]
+        public double Task3_3 { get; set; }
+        [Required(ErrorMessage = "Įrašykite užduoties įvertinimą")]
+        public double Task3_4 { get; set; }
+        [Display(Name = "Testo balai")]
+        public double? FinalPoints { get; set; }
+        public double? PercentageGrade { get; set; }
+        public string CommentResult { get; set; }
+        public int? StudentForeignKey { get; set; }
     }
 }

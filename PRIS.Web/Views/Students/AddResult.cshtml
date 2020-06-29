@@ -1,7 +1,7 @@
-﻿@model PRIS.Web.Models.ResultViewModel
-
+﻿@model PRIS.Web.Models.StudentViewModel
+@using PRIS.Core.Library
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "AddResult";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,18 +9,18 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <div>
+            
+            @Html.DisplayNameFor(model => model.FirstName)
+            @Html.DisplayFor(model => model.FirstName)
+        </div>
+        <div>
+            @Html.DisplayNameFor(model => model.LastName)
+            @Html.DisplayFor(model => model.LastName)
+        </div>
+        <form asp-action="AddResult">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Task1_1" class="control-label"></label>
-                <input asp-for="Task1_1" class="form-control" />
-                <span asp-validation-for="Task1_1" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Task1_1" class="control-label"></label>
-                <input asp-for="Task1_1" class="form-control" />
-                <span asp-validation-for="Task1_1" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="Task1_1" class="control-label"></label>
                 <input asp-for="Task1_1" class="form-control" />
@@ -86,4 +86,3 @@
 <div>
     <a asp-action="Index">Grįžti į sąrašą</a>
 </div>
-
