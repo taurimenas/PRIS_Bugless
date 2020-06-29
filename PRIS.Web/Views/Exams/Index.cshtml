@@ -10,32 +10,39 @@
 <h4>
     <a asp-action="Create">Sukurti naują</a>
 </h4>
+
+<div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
+
 <table class="table table-bordered">
     <thead>
         <tr>
             <th>Miestas</th>
             <th>Data</th>
             <th>Komentaras</th>
+            <th id="demo" class="collapse borderless-cell"></th>
             <th class="borderless-cell" width="50px"></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SelectedCity)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Comment)
-                </td>
-                <td class="borderless-cell">
-                    @Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" })
-                </td>
-            </tr>
+        <tr>
+            <td class="view overlay zoom ">
+                <div class="mask flex-center" data-toggle="collapse" data-target="#demo">@Html.DisplayFor(modelItem => item.SelectedCity)</div>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td id="demo" class="collapse borderless-cell">
+                @Html.ActionLink("Kandidatai", "Create", "Students", new { id = item.Id }, new { @class = "btn btn-info form-control text-white" })
+            </td>
+            <td class="borderless-cell">
+                @Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" })
+            </td>
+        </tr>
         }
     </tbody>
 </table>

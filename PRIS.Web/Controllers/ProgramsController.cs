@@ -88,7 +88,7 @@ namespace PRIS.Web.Controllers
             var course = await _context.Courses.FirstOrDefaultAsync(x => x.ProgramId == programById.Id);
             if (course != null)
             {
-                return await BadRequest(course);
+                return await BadRequest(course, "Programos negalima ištrinti, nes prie jos jau yra priskirta kandidatų.");
             }
             else
             {
@@ -115,7 +115,7 @@ namespace PRIS.Web.Controllers
             var course = await _context.Courses.FirstOrDefaultAsync(x => x.CityId == cityById.Id);
             if (course != null)
             {
-                return await BadRequest(course);
+                return await BadRequest(course, "Miesto negalima ištrinti, nes prie jo jau yra priskirta kandidatų.");
             }
             else
             {
@@ -133,14 +133,14 @@ namespace PRIS.Web.Controllers
             return _context.Cities.Any(e => e.Id == id);
         }
 
-        private async Task<IActionResult> BadRequest(Course course)
+        private async Task<IActionResult> BadRequest(Course course, string errorMessage)
         {
             var studentsCourses = await _context.StudentsCourses.ToListAsync();
             var studentCourse = studentsCourses.Where(x => x.CourseId == course.Id);
             if (studentCourse.Any())
             {
-                ModelState.AddModelError("AssignedStudent", "Programos negalima ištrinti, nes prie jos jau yra priskirta kandidatų.");
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("AssignedStudent", errorMessage);
+                TempData["ErrorMessage"] = errorMessage;
             }
             return RedirectToAction(nameof(Index));
         }
