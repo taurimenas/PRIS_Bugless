@@ -68,19 +68,19 @@ namespace PRIS.Web.Controllers
             if (ModelState.IsValid)
             {
                 _context.Exams.Single(u => u.Id == id).Task1_1 = setTaskParameterModel.Task1_1;
-                _context.Exams.Single(u => u.Id == id).Task1_2 = setTaskParameterModel.Task1_1;
-                _context.Exams.Single(u => u.Id == id).Task1_3 = setTaskParameterModel.Task1_1;
-                _context.Exams.Single(u => u.Id == id).Task2_1 = setTaskParameterModel.Task1_1;
-                _context.Exams.Single(u => u.Id == id).Task2_2 = setTaskParameterModel.Task1_1;
-                _context.Exams.Single(u => u.Id == id).Task2_3 = setTaskParameterModel.Task1_1;
-                _context.Exams.Single(u => u.Id == id).Task3_1 = setTaskParameterModel.Task1_1;
-                _context.Exams.Single(u => u.Id == id).Task3_2 = setTaskParameterModel.Task1_1;
-                _context.Exams.Single(u => u.Id == id).Task3_3 = setTaskParameterModel.Task1_1;
-                _context.Exams.Single(u => u.Id == id).Task3_4 = setTaskParameterModel.Task1_1;
+                _context.Exams.Single(u => u.Id == id).Task1_2 = setTaskParameterModel.Task1_2;
+                _context.Exams.Single(u => u.Id == id).Task1_3 = setTaskParameterModel.Task1_3;
+                _context.Exams.Single(u => u.Id == id).Task2_1 = setTaskParameterModel.Task2_1;
+                _context.Exams.Single(u => u.Id == id).Task2_2 = setTaskParameterModel.Task2_2;
+                _context.Exams.Single(u => u.Id == id).Task2_3 = setTaskParameterModel.Task2_3;
+                _context.Exams.Single(u => u.Id == id).Task3_1 = setTaskParameterModel.Task3_1;
+                _context.Exams.Single(u => u.Id == id).Task3_2 = setTaskParameterModel.Task3_2;
+                _context.Exams.Single(u => u.Id == id).Task3_3 = setTaskParameterModel.Task3_3;
+                _context.Exams.Single(u => u.Id == id).Task3_4 = setTaskParameterModel.Task3_4;
 
                 await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Exams");
+                //return RedirectToAction(nameof(Index));
             }
             return View(fullModel);
         }
