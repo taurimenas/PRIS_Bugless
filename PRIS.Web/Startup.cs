@@ -47,7 +47,7 @@ namespace PRIS.Web
             {
                 options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
             }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddScoped<Storage.IRepository<Student>, Storage.StudentRepository>();
+            services.AddScoped<Storage.Repository<Student>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

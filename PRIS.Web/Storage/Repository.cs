@@ -8,55 +8,49 @@ using System.Threading.Tasks;
 
 namespace PRIS.Web.Storage
 {
-    public class Repository<TEntity, TContext> : IRepository<TEntity>, IDisposable
-        where TEntity : class, IEntity
-        where TContext : ApplicationDbContext
+    public class Repository<T> : IRepository<T>, IDisposable
+        where T : class, IEntity
     {
-        private readonly TContext _context;
-        public Repository(TContext context)
+        private readonly ApplicationDbContext _context;
+        public Repository(ApplicationDbContext context)
         {
             _context = context;
         }
-        public virtual async Task<List<TEntity>> GetAllAsync()
+        public IQueryable<TEntity> Query<TEntity>() where TEntity : class, IEntity
         {
-            return await _context.Set<TEntity>().OrderBy(x => x.Id).ToListAsync();
+            return _context.Set<TEntity>();
         }
 
-        public async Task<TEntity> InsertAsync(TEntity entity)
+        public async Task<T> InsertAsync(T entity)
         {
-            await _context.Set<TEntity>().AddAsync(entity);
+            await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
             return entity;
         }
-        public async Task<TEntity> DeleteAsync(int? id)
+        public async Task<T> DeleteAsync(int? id)
         {
-            var entity = await _context.Set<TEntity>().FindAsync(id);
+            var entity = await _context.Set<T>().FindAsync(id);
             if (entity == null)
             {
                 return entity;
             }
-            _context.Set<TEntity>().Remove(entity);
+            _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
             return entity;
         }
-        public async Task<TEntity> UpdateAsync(TEntity entity)
+        public async Task<T> UpdateAsync(T entity)
         {
             _context.Update(entity);
             await _context.SaveChangesAsync();
             return entity;
         }
-        public async Task<TEntity> FindByIdAsync(int? id)
+        public async Task<T> FindByIdAsync(int? id)
         {
-            return await _context.Set<TEntity>().FirstOrDefaultAsync(m => m.Id == id);
+            return await _context.Set<T>().FirstOrDefaultAsync(m => m.Id == id);
         }
-        public bool CheckIfExists(int? id)
+        public bool Exists(int? id)
         {
-            return _context.Set<TEntity>().Any(e => e.Id == id);
-        }
-
-        public virtual async Task<List<TEntity>> GetAllWithIncludingAsync(IEntity entity)
-        {
-            return await _context.Set<TEntity>().Include(x => entity.Id).OrderBy(x => x.Id).ToListAsync();
+            return _context.Set<T>().Any(e => e.Id == id);
         }
 
         public void Dispose()

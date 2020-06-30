@@ -14,25 +14,19 @@ namespace PRIS.Web.Controllers
 {
     public class StudentsController : Controller
     {
-        private readonly IRepository<Student> _repository;
+        private readonly Repository<Student> _repository;
 
-        public StudentsController(IRepository<Student> repository)
+        public StudentsController(Repository<Student> repository)
         {
             _repository = repository;
         }
 
-        //public StudentsController(StudentRepository repository) : base(repository)
-        //{
-
-        //}
-
-
         public async Task<IActionResult> Index()
         {
-            var result = await _repository.GetAllAsync();
-            //var result = await _context.Students.ToListAsync();
+            var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id > 0);
+            var students = await studentRequest.ToListAsync();
             var studentViewModels = new List<StudentViewModel>();
-            result.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x)));
+            students.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x)));
             return View(studentViewModels);
         }
         public IActionResult Create()
@@ -48,8 +42,6 @@ namespace PRIS.Web.Controllers
             {
                 var student = StudentsMappings.ToEntity(studentViewModel);
                 await _repository.InsertAsync(student);
-                //_context.Add(student);
-                //await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return RedirectToAction(nameof(Index));
@@ -63,16 +55,15 @@ namespace PRIS.Web.Controllers
             }
             if (!examPassed)
             {
-                //var student = await _repository.FindByIdAsync(id);
-                //var student = await _context.Students.FirstOrDefaultAsync(m => m.Id == id);
-                //if (student == null)
-                //{
-                //    return NotFound();
-                //}
-                await _repository.DeleteAsync(id);
-                //var students = await _context.Students.FindAsync(id);
-                //_context.Students.Remove(students);
-                //await _context.SaveChangesAsync();
+                if (_repository.Exists(id))
+                    await _repository.DeleteAsync(id);
+                else
+                {
+                    ModelState.AddModelError("StudentDelete", "Toks studentas neegzistuoja.");
+                    TempData["ErrorMessage"] = "Toks studentas neegzistuoja.";
+                    return RedirectToAction(nameof(Index));
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -91,7 +82,6 @@ namespace PRIS.Web.Controllers
                 return NotFound();
             }
             var student = await _repository.FindByIdAsync(id);
-            //var student = await _context.Students.FindAsync(id);
             if (student == null)
             {
                 return NotFound();
@@ -114,12 +104,10 @@ namespace PRIS.Web.Controllers
                 try
                 {
                     await _repository.UpdateAsync(student);
-                    //_context.Update(student);
-                    //await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_repository.CheckIfExists(student.Id))
+                    if (!_repository.Exists(student.Id))
                     {
                         return NotFound();
                     }
