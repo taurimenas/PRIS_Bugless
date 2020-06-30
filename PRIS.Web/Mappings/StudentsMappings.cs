@@ -73,34 +73,6 @@ namespace PRIS.Web.Mappings
             };
         }
 
-        public static StudentsResultViewModel ToViewModel(Student studentEntity, StudentsResultViewModel studentResultViewModel)
-        {
-            return new StudentsResultViewModel
-            {
-                Id = studentEntity.Id,
-                FirstName = studentEntity.FirstName,
-                LastName = studentEntity.LastName,
-                Email = studentEntity.Email,
-                PhoneNumber = studentEntity.PhoneNumber,
-                Gender = studentEntity.Gender,
-                Comment = studentEntity.Comment,
-                PassedExam = studentEntity.PassedExam,
-                ResultId = studentResultViewModel.Id,
-                Task1_1 = studentResultViewModel.Task1_1,
-                Task1_2 = studentResultViewModel.Task1_2,
-                Task1_3 = studentResultViewModel.Task1_3,
-                Task2_1 = studentResultViewModel.Task2_1,
-                Task2_2 = studentResultViewModel.Task2_2,
-                Task2_3 = studentResultViewModel.Task2_3,
-                Task3_1 = studentResultViewModel.Task3_1,
-                Task3_2 = studentResultViewModel.Task3_2,
-                Task3_3 = studentResultViewModel.Task3_3,
-                Task3_4 = studentResultViewModel.Task3_4,
-                CommentResult = studentResultViewModel.Comment,
-                StudentForeignKey = studentResultViewModel.StudentForeignKey
-            };
-        }
-
         public static StudentsResultViewModel ToViewModel(Student studentEntity, Result resultEntity)
         {
             return new StudentsResultViewModel
@@ -128,25 +100,5 @@ namespace PRIS.Web.Mappings
                 StudentForeignKey = resultEntity.StudentForeignKey
             };
         }
-
-        //public static StudentViewModel ToResultViewModel(Result entity)
-        //{
-        //    return new StudentViewModel
-        //    {
-        //        ResultId = entity.Id,
-        //        Task1_1 = entity.Task1_1,
-        //        Task1_2 = entity.Task1_2,
-        //        Task1_3 = entity.Task1_3,
-        //        Task2_1 = entity.Task2_1,
-        //        Task2_2 = entity.Task2_2,
-        //        Task2_3 = entity.Task2_3,
-        //        Task3_1 = entity.Task3_1,
-        //        Task3_2 = entity.Task3_2,
-        //        Task3_3 = entity.Task3_3,
-        //        Task3_4 = entity.Task3_4,
-        //        CommentResult = entity.Comment,
-        //        StudentForeignKey = entity.StudentForeignKey
-        //    };
-        //}
     }
 }
