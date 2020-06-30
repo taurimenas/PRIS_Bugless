@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PRIS.Web.Storage
 {
-    public class Repository<TEntity, TContext> : IRepository<TEntity>
+    public class Repository<TEntity, TContext> : IRepository<TEntity>, IDisposable
         where TEntity : class, IEntity
         where TContext : ApplicationDbContext
     {
@@ -17,9 +17,9 @@ namespace PRIS.Web.Storage
         {
             _context = context;
         }
-        public async Task<List<TEntity>> GetAllAsync()
+        public virtual async Task<List<TEntity>> GetAllAsync()
         {
-            return await _context.Set<TEntity>().OrderByDescending(x => x.Id).ToListAsync();
+            return await _context.Set<TEntity>().OrderBy(x => x.Id).ToListAsync();
         }
 
         public async Task<TEntity> InsertAsync(TEntity entity)
@@ -52,6 +52,16 @@ namespace PRIS.Web.Storage
         public bool CheckIfExists(int? id)
         {
             return _context.Set<TEntity>().Any(e => e.Id == id);
+        }
+
+        public virtual async Task<List<TEntity>> GetAllWithIncludingAsync(IEntity entity)
+        {
+            return await _context.Set<TEntity>().Include(x => entity.Id).OrderBy(x => x.Id).ToListAsync();
+        }
+
+        public void Dispose()
+        {
+            _context?.Dispose();
         }
     }
 }
