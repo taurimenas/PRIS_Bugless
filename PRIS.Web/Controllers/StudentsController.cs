@@ -8,123 +8,129 @@ using PRIS.Core.Library.Entities;
 using PRIS.Web.Data;
 using PRIS.Web.Mappings;
 using PRIS.Web.Models;
+using PRIS.Web.Storage;
 
 namespace PRIS.Web.Controllers
 {
-    public class StudentsController : Controller
+    public class StudentsController : PrisController<Student, StudentRepository>
     {
-        private readonly ApplicationDbContext _context;
+        //private readonly StudentRepository _repository;
 
-        public StudentsController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-        public async Task<IActionResult> Index()
-        {
-            var result = await _context.Students.ToListAsync();
-            var studentViewModels = new List<StudentViewModel>();
-            result.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x)));
-            return View(studentViewModels);
-        }
-        public IActionResult Create()
-        {
-            return View();
-        }
+        //public StudentsController(StudentRepository repository)
+        //{
+        //    _repository = repository;
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
+        public StudentsController(StudentRepository repository) : base(repository)
         {
-            if (ModelState.IsValid)
-            {
-                var student = StudentsMappings.ToEntity(studentViewModel);
-                _context.Add(student);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return RedirectToAction(nameof(Index));
-        }
-
-        public async Task<IActionResult> Delete(int? id, bool examPassed)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            if (!examPassed)
-            {
-                var student = await _context.Students.FirstOrDefaultAsync(m => m.Id == id);
-                if (student == null)
-                {
-                    return NotFound();
-                }
-                var students = await _context.Students.FindAsync(id);
-                _context.Students.Remove(students);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                var result = await _context.Students.ToListAsync();
-                var studentViewModels = new List<StudentViewModel>();
-                result.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x)));
-                ModelState.AddModelError("StudentDelete", "Į pokalbį pakviesto kandidato ištrinti negalima.");
-                TempData["ErrorMessage"] = "Į pokalbį pakviesto kandidato ištrinti negalima.";
-                return RedirectToAction(nameof(Index));
-            }
 
         }
 
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var student = await _context.Students.FindAsync(id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-            return View(StudentsMappings.ToViewModel(student));
-        }
+        //public async Task<IActionResult> Index()
+        //{
+        //     var result = await Get();
+        //    //var result = await _repository.GetAllAsync();
+        //    //var result = await _context.Students.ToListAsync();
+        //    var studentViewModels = new List<StudentViewModel>();
+        //    result.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x)));
+        //    return View(studentViewModels);
+        //}
+        //public IActionResult Create()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
-        {
-            var student = StudentsMappings.ToEntity(studentViewModel);
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var student = StudentsMappings.ToEntity(studentViewModel);
+        //        await _repository.SaveAsync(student);
+        //        //_context.Add(student);
+        //        //await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return RedirectToAction(nameof(Index));
+        //}
 
-            if (id != student.Id)
-            {
-                return NotFound();
-            }
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(student);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StudentExists(student.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(student);
-        }
+        //public async Task<IActionResult> Delete(int? id, bool examPassed)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    if (!examPassed)
+        //    {
+        //        var student = await _repository.FindByIdAsync(id);
+        //        //var student = await _context.Students.FirstOrDefaultAsync(m => m.Id == id);
+        //        if (student == null)
+        //        {
+        //            return NotFound();
+        //        }
+        //        _repository.DeleteAsync(student);
+        //        //var students = await _context.Students.FindAsync(id);
+        //        //_context.Students.Remove(students);
+        //        //await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    else
+        //    {
+        //        ModelState.AddModelError("StudentDelete", "Į pokalbį pakviesto kandidato ištrinti negalima.");
+        //        TempData["ErrorMessage"] = "Į pokalbį pakviesto kandidato ištrinti negalima.";
+        //        return RedirectToAction(nameof(Index));
+        //    }
 
-        private bool StudentExists(int id)
-        {
-            return _context.Students.Any(e => e.Id == id);
-        }
+        //}
+
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var student = await _repository.FindByIdAsync(id);
+        //    //var student = await _context.Students.FindAsync(id);
+        //    if (student == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(StudentsMappings.ToViewModel(student));
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
+        //{
+        //    var student = StudentsMappings.ToEntity(studentViewModel);
+
+        //    if (id != student.Id)
+        //    {
+        //        return NotFound();
+        //    }
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            await _repository.UpdateAsync(student);
+        //            //_context.Update(student);
+        //            //await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!_repository.StudentExists(student.Id))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(student);
+        //}
     }
 }
