@@ -25,27 +25,27 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                <div class="mask flex-center" data-toggle="collapse" data-target="#demo">@Html.DisplayFor(modelItem => item.SelectedCity)</div>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comment)
-            </td>
-            <td class="borderless-cell">
-                <span class="dropdown">
-                    <a type="button" data-toggle="dropdown"><i class="fa fa-cog" style="color: slategray"></i></a>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        @Html.ActionLink("Kandidatai", "Index", "Students", new { id = item.Id }, new { @class = "dropdown-item" })
-                        @Html.ActionLink("Balų šablonas", "Edit", "TaskParameters", new { id = item.Id }, new { @class = "dropdown-item" })
-                    </div>
-                </span>
-                @Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" })
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    <div class="mask flex-center" data-toggle="collapse" data-target="#demo">@Html.DisplayFor(modelItem => item.SelectedCity)</div>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td class="borderless-cell">
+                    <span class="dropdown">
+                        <a data-toggle="dropdown"><i class="fa fa-cog" style="color: slategray"></i></a>
+                        <span class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            @Html.ActionLink("Kandidatai", "Index", "Students", new { id = item.Id }, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Balų šablonas", "Edit", "TaskParameters", new { id = item.Id }, new { @class = "dropdown-item" })
+                        </span>
+                    </span>
+                    @Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" })
+                </td>
+            </tr>
         }
     </tbody>
 </table>
