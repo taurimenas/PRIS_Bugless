@@ -37,5 +37,99 @@ namespace PRIS.Web.Mappings
                 PassedExam = entity.PassedExam
             };
         }
+        public static Result ToResultEntity(StudentViewModel model)
+        {
+            return new Result
+            {
+                Id = model.ResultId,
+                Task1_1 = model.Task1_1,
+                Task1_2 = model.Task1_2,
+                Task1_3 = model.Task1_3,
+                Task2_1 = model.Task2_1,
+                Task2_2 = model.Task2_2,
+                Task2_3 = model.Task2_3,
+                Task3_1 = model.Task3_1,
+                Task3_2 = model.Task3_2,
+                Task3_3 = model.Task3_3,
+                Task3_4 = model.Task3_4,
+                Comment = model.CommentResult,
+                StudentForeignKey = model.StudentForeignKey
+            };
+
+        }
+
+        public static StudentViewModel ToResultViewModel(Result entity)
+        {
+            return new StudentViewModel
+            {
+                ResultId = entity.Id,
+                Task1_1 = entity.Task1_1,
+                Task1_2 = entity.Task1_2,
+                Task1_3 = entity.Task1_3,
+                Task2_1 = entity.Task2_1,
+                Task2_2 = entity.Task2_2,
+                Task2_3 = entity.Task2_3,
+                Task3_1 = entity.Task3_1,
+                Task3_2 = entity.Task3_2,
+                Task3_3 = entity.Task3_3,
+                Task3_4 = entity.Task3_4,
+                CommentResult = entity.Comment,
+                StudentForeignKey = entity.StudentForeignKey
+            };
+        } 
+        public static StudentViewModel ToResultViewModel(Result resultEntity, Student studentEntity)
+        {
+            return new StudentViewModel
+            {
+                Id = studentEntity.Id,
+                FirstName = studentEntity.FirstName,
+                LastName = studentEntity.LastName,
+                Email = studentEntity.Email,
+                PhoneNumber = studentEntity.PhoneNumber,
+                Gender = studentEntity.Gender,
+                Comment = studentEntity.Comment,
+                PassedExam = studentEntity.PassedExam,
+                ResultId = resultEntity.Id,
+                Task1_1 = resultEntity.Task1_1,
+                Task1_2 = resultEntity.Task1_2,
+                Task1_3 = resultEntity.Task1_3,
+                Task2_1 = resultEntity.Task2_1,
+                Task2_2 = resultEntity.Task2_2,
+                Task2_3 = resultEntity.Task2_3,
+                Task3_1 = resultEntity.Task3_1,
+                Task3_2 = resultEntity.Task3_2,
+                Task3_3 = resultEntity.Task3_3,
+                Task3_4 = resultEntity.Task3_4,
+                CommentResult = resultEntity.Comment,
+                StudentForeignKey = resultEntity.StudentForeignKey
+            };
+        }
+        public static StudentViewModel ToResultViewModel(Student studentEntity, StudentViewModel studentViewModel)
+        {
+            return new StudentViewModel
+            {
+                Id = studentEntity.Id,
+                FirstName = studentEntity.FirstName,
+                LastName = studentEntity.LastName,
+                Email = studentEntity.Email,
+                PhoneNumber = studentEntity.PhoneNumber,
+                Gender = studentEntity.Gender,
+                Comment = studentEntity.Comment,
+                PassedExam = studentEntity.PassedExam,
+                ResultId = studentViewModel.Id,
+                Task1_1 = studentViewModel.Task1_1,
+                Task1_2 = studentViewModel.Task1_2,
+                Task1_3 = studentViewModel.Task1_3,
+                Task2_1 = studentViewModel.Task2_1,
+                Task2_2 = studentViewModel.Task2_2,
+                Task2_3 = studentViewModel.Task2_3,
+                Task3_1 = studentViewModel.Task3_1,
+                Task3_2 = studentViewModel.Task3_2,
+                Task3_3 = studentViewModel.Task3_3,
+                Task3_4 = studentViewModel.Task3_4,
+                CommentResult = studentViewModel.Comment,
+                StudentForeignKey = studentViewModel.StudentForeignKey
+            };
+        }
     }
 }
