@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
@@ -12,6 +13,7 @@ using PRIS.Web.Models;
 
 namespace PRIS.Web.Controllers
 {
+    [Authorize]
     public class StudentsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -131,6 +133,11 @@ namespace PRIS.Web.Controllers
                     return NotFound();
                 }
                 var students = await _context.Students.FindAsync(id);
+                if (student.ResultId != null)
+                {
+                    TempData["ErrorMessage"] = "Kandidato negalima ištrinti, nes jis turi priskirtus rezultatus.";
+                    return RedirectToAction(nameof(Index));
+                }
                 _context.Students.Remove(students);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
