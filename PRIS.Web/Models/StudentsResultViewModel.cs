@@ -50,6 +50,5 @@ namespace PRIS.Web.Models
         public string Comment { get; set; }
         public bool PassedExam { get; set; } = false;
         public string ErrorMessage { get; set; }
-
     }
 }

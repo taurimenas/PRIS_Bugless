@@ -20,15 +20,15 @@ namespace PRIS.Web.Controllers
         {
             _context = context;
         }
+
         public async Task<IActionResult> Index()
         {
             var result = await _context.Results.ToListAsync();
             var student = await _context.Students.ToListAsync();
-
             var studentsResults = await (from s in _context.Students
                                          join r in _context.Results on
-                                         s.Result.Id equals r.Id into gj
-                                         from studRes in gj.DefaultIfEmpty()
+                                         s.Result.Id equals r.Id into sr
+                                         from studRes in sr.DefaultIfEmpty()
                                          select new StudentsResultViewModel
                                          {
                                              FirstName = s.FirstName,
@@ -62,6 +62,7 @@ namespace PRIS.Web.Controllers
             return View(studentsResults);
 
         }
+
         public IActionResult Create()
         {
             return View();
@@ -83,6 +84,11 @@ namespace PRIS.Web.Controllers
         public IActionResult AddResult(int? id)
         {
             var studentEntity = _context.Students.FindAsync(id).Result;
+            if (studentEntity.ResultId != null)
+            {
+                TempData["ErrorMessage"] = "Rezultatai kandidatui jau yra pridėti";
+                return RedirectToAction(nameof(Index));
+            }
             var studentViewModel = StudentsMappings.ToStudentsResultViewModel(studentEntity);
             return View(studentViewModel);
         }
@@ -94,21 +100,16 @@ namespace PRIS.Web.Controllers
             if (ModelState.IsValid)
             {
                 var studentEntity = _context.Students.FindAsync(id).Result;
+
                 var result = StudentsMappings.ToResultEntity(studentResultViewModel);
                 _context.Add(result);
                 await _context.SaveChangesAsync();
 
-
-                var studentIdforResult = (from p in _context.Results
-                                          where p.Id == result.Id
-                                          select p).FirstOrDefault();
+                var studentIdforResult = _context.Results.Where(s => s.Id == result.Id).FirstOrDefault();
                 studentIdforResult.StudentForeignKey = id;
-                var resultIdForStudent = (from s in _context.Students
-                                          where s.Id == id
-                                          select s).FirstOrDefault();
+                var resultIdForStudent = _context.Students.Where(r => r.Id == id).FirstOrDefault();
                 resultIdForStudent.ResultId = result.Id;
                 await _context.SaveChangesAsync();
-
 
                 return RedirectToAction(nameof(Index));
             }
@@ -116,34 +117,34 @@ namespace PRIS.Web.Controllers
         }
 
 
-        //public async Task<IActionResult> Delete(int? id, bool examPassed)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    if (!examPassed)
-        //    {
-        //        var student = await _context.Students.FirstOrDefaultAsync(m => m.Id == id);
-        //        if (student == null)
-        //        {
-        //            return NotFound();
-        //        }
-        //        var students = await _context.Students.FindAsync(id);
-        //        _context.Students.Remove(students);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    else
-        //    {
-        //        var result = await _context.Students.ToListAsync();
-        //        var studentViewModels = new List<StudentViewModel>();
-        //        result.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x)));
-        //        ModelState.AddModelError("StudentDelete", "Į pokalbį pakviesto kandidato ištrinti negalima."); // TODO: Pabandyt padaryt be delete puslapio
-        //        return View(studentViewModels);
-        //    }
+        public async Task<IActionResult> Delete(int? id, bool examPassed)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            if (!examPassed)
+            {
+                var student = await _context.Students.FirstOrDefaultAsync(m => m.Id == id);
+                if (student == null)
+                {
+                    return NotFound();
+                }
+                var students = await _context.Students.FindAsync(id);
+                _context.Students.Remove(students);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                var result = await _context.Students.ToListAsync();
+                var studentViewModels = new List<StudentViewModel>();
+                result.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x)));
+                ModelState.AddModelError("StudentDelete", "Į pokalbį pakviesto kandidato ištrinti negalima."); // TODO: Pabandyt padaryt be delete puslapio
+                return View(studentViewModels);
+            }
 
-        //}
+        }
 
         public async Task<IActionResult> Edit(int? id)
         {
@@ -198,27 +199,29 @@ namespace PRIS.Web.Controllers
         public async Task<IActionResult> EditResult(int? id)
         {
             var studentEntity = _context.Students.FindAsync(id).Result;
-            var resultEntity = _context.Results.FindAsync(studentEntity.ResultId).Result;
-            StudentsMappings.ToViewModel(studentEntity, resultEntity);
+            if (studentEntity.ResultId == null)
+            {
+                TempData["ErrorMessage"] = "Negalima redaguoti. Pridėkite kandidatui rezultatus.";
+                return RedirectToAction(nameof(Index));
+            }
+
+
+            var resultEntity = await _context.Results.FindAsync(studentEntity.ResultId);
 
             if (id == null)
             {
                 return NotFound();
             }
 
-
             if (studentEntity == null)
             {
                 return NotFound();
             }
+
             return View(StudentsMappings.ToViewModel(studentEntity, resultEntity));
-
-
         }
 
         // POST: Exams/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditResult(int id, [Bind("Task1_1,Task1_2,Task1_3,Task2_1,Task2_2,Task2_3,Task3_1,Task3_2,Task3_3,Task3_4, CommentResult, StudentForeignKey")] StudentsResultViewModel studentResultViewModel)
@@ -232,6 +235,7 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
+
             if (ModelState.IsValid)
             {
                 try

@@ -8,80 +8,80 @@
 <h3>Įrašykite testo rezultatus</h3>
 <hr />
 <div class="row">
-    <div class="col-md-4">
         <div>
-            
-            @Html.DisplayNameFor(model => model.FirstName)
+Kandidatas:
             @Html.DisplayFor(model => model.FirstName)
-        </div>
-        <div>
-            @Html.DisplayNameFor(model => model.LastName)
             @Html.DisplayFor(model => model.LastName)
         </div>
+    <br/>
         <form asp-action="AddResult">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <div class="form-group">
-                <label asp-for="Task1_1" class="control-label"></label>
-                <input asp-for="Task1_1" class="form-control" />
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">1.1</span>
+                </div>
+                <input type="text" asp-for="Task1_1" class="form-control">
                 <span asp-validation-for="Task1_1" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Task1_2" class="control-label"></label>
-                <input asp-for="Task1_2" class="form-control" />
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">1.2</span>
+                </div>
+                <input asp-for="Task1_2" class="form-control">
                 <span asp-validation-for="Task1_2" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Task1_3" class="control-label"></label>
-                <input asp-for="Task1_3" class="form-control" />
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">1.3</span>
+                </div>
+                <input asp-for="Task1_3" class="form-control">
                 <span asp-validation-for="Task1_3" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Task2_1" class="control-label"></label>
-                <input asp-for="Task2_1" class="form-control" />
-                <span asp-validation-for="Task2_1" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Task2_2" class="control-label"></label>
-                <input asp-for="Task2_2" class="form-control" />
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">2.1</span>
+                </div>
+                <input asp-for="Task2_1" class="form-control">
                 <span asp-validation-for="Task2_2" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Task2_3" class="control-label"></label>
-                <input asp-for="Task2_3" class="form-control" />
-                <span asp-validation-for="Task2_3" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Task3_1" class="control-label"></label>
-                <input asp-for="Task3_1" class="form-control" />
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">2.2</span>
+                </div>
+                <input asp-for="Task2_2" class="form-control">
+                <span asp-validation-for="Task2_2" class="text-danger"></span>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">2.3</span>
+                </div>
+                <input asp-for="Task2_3" class="form-control">
+                <span asp-validation-for="Task1_3" class="text-danger"></span>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">3.1</span>
+                </div>
+                <input asp-for="Task3_1" class="form-control">
                 <span asp-validation-for="Task3_1" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Task3_2" class="control-label"></label>
-                <input asp-for="Task3_2" class="form-control" />
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">3.2</span>
+                </div>
+                <input asp-for="Task3_2" class="form-control">
                 <span asp-validation-for="Task3_2" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Task3_3" class="control-label"></label>
-                <input asp-for="Task3_3" class="form-control" />
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">3.3</span>
+                </div>
+                <input asp-for="Task3_3" class="form-control">
                 <span asp-validation-for="Task3_3" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Task3_4" class="control-label"></label>
-                <input asp-for="Task3_4" class="form-control" />
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text">3.4</span>
+                </div>
+                <input asp-for="Task3_4" class="form-control">
                 <span asp-validation-for="Task3_4" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Comment" class="control-label"></label>
-                <input asp-for="Comment" class="form-control" />
-                <span asp-validation-for="Comment" class="text-danger"></span>
-            </div>
+            <br/>
             <div class="form-group">
                 <input type="submit" value="Pridėti" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
 
 <div>
     <a asp-action="Index">Grįžti į sąrašą</a>
