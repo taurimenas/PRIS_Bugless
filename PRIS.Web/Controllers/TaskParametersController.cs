@@ -80,13 +80,8 @@ namespace PRIS.Web.Controllers
 
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Exams");
-                //return RedirectToAction(nameof(Index));
             }
             return View(fullModel);
-        }
-        private bool TasksExists(int id)
-        {
-            return _context.Results.Any(e => e.Id == id);
         }
     }
 }
