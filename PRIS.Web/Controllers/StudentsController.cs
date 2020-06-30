@@ -68,8 +68,9 @@ namespace PRIS.Web.Controllers
                 var result = await _context.Students.ToListAsync();
                 var studentViewModels = new List<StudentViewModel>();
                 result.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x)));
-                ModelState.AddModelError("StudentDelete", "Į pokalbį pakviesto kandidato ištrinti negalima."); // TODO: Pabandyt padaryt be delete puslapio
-                return View(studentViewModels);
+                ModelState.AddModelError("StudentDelete", "Į pokalbį pakviesto kandidato ištrinti negalima.");
+                TempData["ErrorMessage"] = "Į pokalbį pakviesto kandidato ištrinti negalima.";
+                return RedirectToAction(nameof(Index));
             }
 
         }

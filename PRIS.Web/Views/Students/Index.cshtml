@@ -9,6 +9,9 @@
 <h4>
     <a asp-action="Create">Pridėti naują kandidatą</a>
 </h4>
+
+<div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
+
 <table class="table table-bordered">
     <thead>
         <tr>

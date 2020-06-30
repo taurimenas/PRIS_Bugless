@@ -17,12 +17,11 @@ namespace PRIS.Web.Models
         [Required]
         [Display(Name = "Pavardė", Prompt = "Pavardė")]
         public string LastName { get; set; }
-        [Required(ErrorMessage = "Klaida")]
+        [Required(ErrorMessage = "Neteisingas el. paštas")]
         [Display(Name = "El. paštas", Prompt = "Studentas@email.com")]
         public string Email { get; set; }
         [Required]
         [Display(Name = "Tel. numeris", Prompt = "Tel. numeris")]
-        [Range(0, 10, ErrorMessage = "Klaida")]
         public string PhoneNumber { get; set; }
         [Required]
         [Display(Name = "Lytis")]
