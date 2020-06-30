@@ -49,10 +49,9 @@ namespace PRIS.Web.Storage
         {
             return await _context.Set<TEntity>().FirstOrDefaultAsync(m => m.Id == id);
         }
-        public bool StudentExists(int id)
+        public bool CheckIfExists(int? id)
         {
-            return _context.Students.Any(e => e.Id == id);
+            return _context.Set<TEntity>().Any(e => e.Id == id);
         }
-
     }
 }

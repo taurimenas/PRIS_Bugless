@@ -13,5 +13,6 @@ namespace PRIS.Web.Storage
         Task<T> InsertAsync(T entity);
         Task<T> UpdateAsync(T entity);
         Task<T> DeleteAsync(int? id);
+        bool CheckIfExists(int? id);
     }
 }

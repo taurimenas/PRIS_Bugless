@@ -18,7 +18,7 @@ namespace PRIS.Web.Controllers
             _repository = repository;
         }
 
-        public async Task<ActionResult<List<TEntity>>> Index()
+        public virtual async Task<ActionResult<List<TEntity>>> Index()
         {
             return await _repository.GetAllAsync();
         }
