@@ -17,7 +17,7 @@ namespace PRIS.Web.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; } = DateTime.UtcNow;
-        [Display(Name = "Komentaras")]
+        [Display(Name = "Komentaras", Prompt = "Komentaras")]
         public string Comment { get; set; }
         [Required]
         [Display(Name = "Miestas")]

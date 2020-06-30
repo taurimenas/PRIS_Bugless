@@ -34,24 +34,6 @@ namespace PRIS.Web.Controllers
             return View(examViewModels);
         }
 
-        // GET: Exams/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var exam = await _context.Exams
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (exam == null)
-            {
-                return NotFound();
-            }
-            var model = ExamMappings.ToViewModel(exam);
-            return View(model);
-        }
-
         // GET: Exams/Create
         public async Task<IActionResult> Create()
         {
@@ -62,7 +44,6 @@ namespace PRIS.Web.Controllers
             foreach (var city in cities)
             {
                 stringCities.Add(new SelectListItem { Value = city.Name, Text = city.Name });
-                //stringCities.Add(city.Name.ToString());
             }
             examViewModel.Cities = stringCities;
 
@@ -78,9 +59,9 @@ namespace PRIS.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = ExamMappings.ToEntity(examViewModel);
-                result.CityId = _context.Cities.FirstOrDefault(x => x.Name == examViewModel.SelectedCity).Id;
-                _context.Add(result);
+                var exam = ExamMappings.ToEntity(examViewModel);
+                exam.CityId = _context.Cities.FirstOrDefault(x => x.Name == examViewModel.SelectedCity).Id;
+                _context.Add(exam);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -101,15 +82,36 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-            var exams = await _context.Exams.FindAsync(id);
-            _context.Exams.Remove(exams);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var examById = await _context.Exams.FindAsync(id);
+            var result = await _context.Results.FirstOrDefaultAsync(x => x.ExamId == examById.Id);
+
+            if (result.ExamId != null)
+            {
+                TempData["ErrorMessage"] = "Testo negalima ištrinti. Jis turi priskirtų rezultatų.";
+                return RedirectToAction(nameof(Index));
+            }
+            if (result != null)
+            {
+                var studentById = await _context.Students.FindAsync(result.StudentForeignKey);
+                if (studentById != null)
+                    ModelState.AddModelError("AssignedStudent", "Programos negalima ištrinti, nes prie jos jau yra priskirta kandidatų.");
+                else
+                {
+                    return await RemoveFromExams(examById);
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return await RemoveFromExams(examById);
+            }
         }
 
-        private bool ExamExists(int id)
+        private async Task<IActionResult> RemoveFromExams(Exam examById)
         {
-            return _context.Exams.Any(e => e.Id == id);
+            _context.Exams.Remove(examById);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

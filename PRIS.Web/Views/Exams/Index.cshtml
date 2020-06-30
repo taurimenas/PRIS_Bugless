@@ -10,6 +10,9 @@
 <h4>
     <a asp-action="Create">Sukurti naują</a>
 </h4>
+
+<div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
+<br/>
 <table class="table table-bordered">
     <thead>
         <tr>

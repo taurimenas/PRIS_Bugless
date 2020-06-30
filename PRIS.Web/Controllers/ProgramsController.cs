@@ -84,11 +84,20 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-            var programs = await _context.Programs.FindAsync(id);
-            _context.Programs.Remove(programs);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var programById = await _context.Programs.FindAsync(id);
+            var course = await _context.Courses.FirstOrDefaultAsync(x => x.ProgramId == programById.Id);
+            if (course != null)
+            {
+                return await BadRequest(course);
+            }
+            else
+            {
+                _context.Programs.Remove(programById);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
         }
+
         public async Task<IActionResult> DeleteCity(int? id)
         {
             if (id == null)
@@ -101,10 +110,19 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-            var cities = await _context.Cities.FindAsync(id);
-            _context.Cities.Remove(cities);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            var cityById = await _context.Cities.FindAsync(id);
+            var course = await _context.Courses.FirstOrDefaultAsync(x => x.CityId == cityById.Id);
+            if (course != null)
+            {
+                return await BadRequest(course);
+            }
+            else
+            {
+                _context.Cities.Remove(cityById);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
         }
         private bool ProgramExists(int id)
         {
@@ -115,5 +133,17 @@ namespace PRIS.Web.Controllers
             return _context.Cities.Any(e => e.Id == id);
         }
 
+        private async Task<IActionResult> BadRequest(Course course)
+        {
+            var studentsCourses = await _context.StudentsCourses.ToListAsync();
+            var studentCourse = studentsCourses.Where(x => x.CourseId == course.Id);
+            if (studentCourse.Any())
+            {
+                ModelState.AddModelError("AssignedStudent", "Programos negalima ištrinti, nes prie jos jau yra priskirta kandidatų.");
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
     }
-    }
+}
