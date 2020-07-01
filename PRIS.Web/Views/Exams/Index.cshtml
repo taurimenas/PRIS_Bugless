@@ -19,15 +19,14 @@
             <th>Miestas</th>
             <th>Data</th>
             <th>Komentaras</th>
-            <th id="demo" class="collapse borderless-cell"></th>
-            <th class="borderless-cell" width="50px"></th>
+            <th class="borderless-cell" width="100px"></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
         <tr>
-            <td class="view overlay zoom ">
+            <td>
                 <div class="mask flex-center" data-toggle="collapse" data-target="#demo">@Html.DisplayFor(modelItem => item.SelectedCity)</div>
             </td>
             <td>
@@ -36,10 +35,14 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Comment)
             </td>
-            <td id="demo" class="collapse borderless-cell">
-                @Html.ActionLink("Kandidatai", "Create", "Students", new { id = item.Id }, new { @class = "btn btn-info form-control text-white" })
-            </td>
             <td class="borderless-cell">
+                <span class="dropdown">
+                    <a type="button" data-toggle="dropdown"><i class="fa fa-cog" style="color: slategray"></i></a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        @Html.ActionLink("Kandidatai", "Index", "Students", new { id = item.Id }, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Balų šablonas", "Edit", "TaskParameters", new { id = item.Id }, new { @class = "dropdown-item" })
+                    </div>
+                </span>
                 @Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" })
             </td>
         </tr>
