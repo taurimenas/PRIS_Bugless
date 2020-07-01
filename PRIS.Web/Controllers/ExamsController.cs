@@ -90,8 +90,8 @@ namespace PRIS.Web.Controllers
                 var studentById = await _context.Students.FindAsync(result.StudentForeignKey);
                 if (studentById != null)
                 {
-                    TempData["ErrorMessage"] = "Testo negalima ištrinti, nes prie jos jau yra priskirta testą išlaikiusių kandidatų.";
-                    ModelState.AddModelError("AssignedStudent", "Testo negalima ištrinti, nes prie jos jau yra priskirta testą išlaikiusių kandidatų.");
+                    TempData["ErrorMessage"] = "Testo negalima ištrinti, nes prie jo jau yra priskirta testą išlaikiusių kandidatų.";
+                    ModelState.AddModelError("AssignedStudent", "Testo negalima ištrinti, nes prie jo jau yra priskirta testą išlaikiusių kandidatų.");
                 }
                 else
                 {

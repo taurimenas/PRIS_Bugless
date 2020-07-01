@@ -15,20 +15,40 @@ namespace PRIS.Web.Controllers
     public class StudentsController : Controller
     {
         private readonly Repository<Student> _repository;
+        private readonly Repository<Result> _resultRepository;
 
-        public StudentsController(Repository<Student> repository)
+        public StudentsController(Repository<Student> repository, Repository<Result> resultRepository)
         {
             _repository = repository;
+            _resultRepository = resultRepository;
         }
+        //public async Task<IActionResult> Index()
+        //{
+        //    var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id > 0);
+        //    var students = await studentRequest.ToListAsync();
+        //    var studentViewModels = new List<StudentViewModel>();
+        //    students.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x)));
+        //    return View(studentViewModels);
+        //}
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            TempData["ExamId"] = id;
             var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id > 0);
-            var students = await studentRequest.ToListAsync();
+            var students = await studentRequest.Where(x => x.Result.Exam.Id == id).ToListAsync();
+            if (students == null)
+            {
+                return NotFound();
+            }
             var studentViewModels = new List<StudentViewModel>();
             students.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x)));
             return View(studentViewModels);
         }
+
         public IActionResult Create()
         {
             return View();
@@ -38,13 +58,20 @@ namespace PRIS.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
         {
+            int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
             if (ModelState.IsValid)
             {
                 var student = StudentsMappings.ToEntity(studentViewModel);
+                Result result = new Result
+                {
+                    ExamId = ExamId
+                };
+                result = await _resultRepository.InsertAsync(result);
+                student.Result = result;
                 await _repository.InsertAsync(student);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Students", new { id = ExamId });
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Students", new { id = ExamId });
         }
 
         public async Task<IActionResult> Delete(int? id, bool examPassed)
