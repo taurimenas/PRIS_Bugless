@@ -63,7 +63,6 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.FinalPoints)
                     <span class="float-right">
-                        @Html.ActionLink("", "AddResult", new { id = item.Id }, new { @class = "far fa-file-alt" })
 
                         @Html.ActionLink("", "EditResult", new { id = item.Id, resultId = item.ResultId }, new { @class = "fas fa-pen-square" })
                     </span>
