@@ -23,6 +23,27 @@ namespace PRIS.Web.Mappings
                 PassedExam = model.PassedExam
             };
         }
+
+        public static Result ToResultEntity(StudentsResultViewModel model)
+        {
+            return new Result
+            {
+                Id = model.ResultId,
+                Task1_1 = model.Task1_1,
+                Task1_2 = model.Task1_2,
+                Task1_3 = model.Task1_3,
+                Task2_1 = model.Task2_1,
+                Task2_2 = model.Task2_2,
+                Task2_3 = model.Task2_3,
+                Task3_1 = model.Task3_1,
+                Task3_2 = model.Task3_2,
+                Task3_3 = model.Task3_3,
+                Task3_4 = model.Task3_4,
+                Comment = model.CommentResult,
+                StudentForeignKey = model.StudentForeignKey
+            };
+
+        }
         public static StudentViewModel ToViewModel(Student entity)
         {
             return new StudentViewModel
@@ -35,6 +56,48 @@ namespace PRIS.Web.Mappings
                 Gender = entity.Gender,
                 Comment = entity.Comment,
                 PassedExam = entity.PassedExam
+            };
+        }
+        public static StudentsResultViewModel ToStudentsResultViewModel(Student entity)
+        {
+            return new StudentsResultViewModel
+            {
+                Id = entity.Id,
+                FirstName = entity.FirstName,
+                LastName = entity.LastName,
+                Email = entity.Email,
+                PhoneNumber = entity.PhoneNumber,
+                Gender = entity.Gender,
+                Comment = entity.Comment,
+                PassedExam = entity.PassedExam
+            };
+        }
+
+        public static StudentsResultViewModel ToViewModel(Student studentEntity, Result resultEntity)
+        {
+            return new StudentsResultViewModel
+            {
+                Id = studentEntity.Id,
+                FirstName = studentEntity.FirstName,
+                LastName = studentEntity.LastName,
+                Email = studentEntity.Email,
+                PhoneNumber = studentEntity.PhoneNumber,
+                Gender = studentEntity.Gender,
+                Comment = studentEntity.Comment,
+                PassedExam = studentEntity.PassedExam,
+                ResultId = resultEntity.Id,
+                Task1_1 = resultEntity.Task1_1,
+                Task1_2 = resultEntity.Task1_2,
+                Task1_3 = resultEntity.Task1_3,
+                Task2_1 = resultEntity.Task2_1,
+                Task2_2 = resultEntity.Task2_2,
+                Task2_3 = resultEntity.Task2_3,
+                Task3_1 = resultEntity.Task3_1,
+                Task3_2 = resultEntity.Task3_2,
+                Task3_3 = resultEntity.Task3_3,
+                Task3_4 = resultEntity.Task3_4,
+                CommentResult = resultEntity.Comment,
+                StudentForeignKey = resultEntity.StudentForeignKey
             };
         }
     }

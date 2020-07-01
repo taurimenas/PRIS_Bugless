@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PRIS.Web.Models.StudentViewModel>
+﻿@model IEnumerable<PRIS.Web.Models.StudentsResultViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,9 +6,11 @@
 
 <h3>Kandidatų sąrašas</h3>
 
-<h4>
+<h5>
     <a asp-action="Create">Pridėti naują kandidatą</a>
-</h4>
+</h5>
+<div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
+<br />
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -29,6 +31,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th id="showButtons">
+                @Html.DisplayNameFor(model => model.FinalPoints)
             </th>
             <th class="borderless-cell" width="75px"></th>
         </tr>
@@ -55,9 +60,18 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Comment)
                 </td>
+                <td >
+                    @Html.DisplayFor(modelItem => item.FinalPoints)
+                    <span class="float-right" >
+                        @Html.ActionLink("", "AddResult", new { id = item.Id }, new { @class = "far fa-file-alt" })
+
+                        @Html.ActionLink("", "EditResult", new { id = item.Id }, new { @class = "fas fa-pen-square" })
+                    </span>
+                </td>
                 <td class="borderless-cell">
                     @Html.ActionLink("", "Edit", new { id = item.Id }, new { @class = "fa fa-pencil-square-o" })
                     @Html.ActionLink("", "Delete", new { id = item.Id, examPassed = item.PassedExam }, new { @class = "fa fa-trash" })
+
                 </td>
             </tr>
         }

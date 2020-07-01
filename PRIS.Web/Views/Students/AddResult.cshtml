@@ -1,0 +1,88 @@
+﻿@model PRIS.Web.Models.StudentsResultViewModel
+@using PRIS.Core.Library
+@{
+    ViewData["Title"] = "AddResult";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Įrašykite testo rezultatus</h3>
+<hr />
+<div class="row">
+    <div>
+        Kandidatas:
+        @Html.DisplayFor(model => model.FirstName)
+        @Html.DisplayFor(model => model.LastName)
+    </div>
+    <br />
+    <form asp-action="AddResult">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">@Html.DisplayNameFor(model => model.Task1_1)</span>
+            </div>
+            <input type="text" asp-for="Task1_1" class="form-control">
+            <span asp-validation-for="Task1_1" class="text-danger"></span>
+
+            <div class="input-group-prepend">
+                <span class="input-group-text">@Html.DisplayNameFor(model => model.Task1_2)</span>
+            </div>
+            <input asp-for="Task1_2" class="form-control">
+            <span asp-validation-for="Task1_2" class="text-danger"></span>
+
+            <div class="input-group-prepend">
+                <span class="input-group-text">@Html.DisplayNameFor(model => model.Task1_3)</span>
+            </div>
+            <input asp-for="Task1_3" class="form-control">
+            <span asp-validation-for="Task1_3" class="text-danger"></span>
+
+            <div class="input-group-prepend">
+                <span class="input-group-text">@Html.DisplayNameFor(model => model.Task2_1)</span>
+            </div>
+            <input asp-for="Task2_1" class="form-control">
+            <span asp-validation-for="Task2_2" class="text-danger"></span>
+
+            <div class="input-group-prepend">
+                <span class="input-group-text">@Html.DisplayNameFor(model => model.Task2_2)</span>
+            </div>
+            <input asp-for="Task2_2" class="form-control">
+            <span asp-validation-for="Task2_2" class="text-danger"></span>
+
+            <div class="input-group-prepend">
+                <span class="input-group-text">@Html.DisplayNameFor(model => model.Task2_3)</span>
+            </div>
+            <input asp-for="Task2_3" class="form-control">
+            <span asp-validation-for="Task1_3" class="text-danger"></span>
+
+            <div class="input-group-prepend">
+                <span class="input-group-text">@Html.DisplayNameFor(model => model.Task3_1)</span>
+            </div>
+            <input asp-for="Task3_1" class="form-control">
+            <span asp-validation-for="Task3_1" class="text-danger"></span>
+
+            <div class="input-group-prepend">
+                <span class="input-group-text">@Html.DisplayNameFor(model => model.Task3_2)</span>
+            </div>
+            <input asp-for="Task3_2" class="form-control">
+            <span asp-validation-for="Task3_2" class="text-danger"></span>
+
+            <div class="input-group-prepend">
+                <span class="input-group-text">@Html.DisplayNameFor(model => model.Task3_3)</span>
+            </div>
+            <input asp-for="Task3_3" class="form-control">
+            <span asp-validation-for="Task3_3" class="text-danger"></span>
+
+            <div class="input-group-prepend">
+                <span class="input-group-text">@Html.DisplayNameFor(model => model.Task3_4)</span>
+            </div>
+            <input asp-for="Task3_4" class="form-control">
+            <span asp-validation-for="Task3_4" class="text-danger"></span>
+        </div>
+        <br />
+        <div class="form-group">
+            <input type="submit" value="Pridėti" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+<div>
+    <a asp-action="Index">Grįžti į sąrašą</a>
+</div>
