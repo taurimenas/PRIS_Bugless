@@ -89,9 +89,12 @@ namespace PRIS.Web.Controllers
             {
                 if (_repository.Exists(id))
                 {
-                    var student = await _repository.FindByIdAsync(id);
-                    await _resultRepository.DeleteAsync(student.ResultId);
+                    var student = await _repository.Query<Student>()
+                                                     .Include(x => x.Result)
+                                                     .SingleOrDefaultAsync(x => x.Id == id);
                     await _repository.DeleteAsync(id);
+                    if (student.ResultId != null)
+                        await _resultRepository.DeleteAsync(student.ResultId);
                 }
                 else
                 {
