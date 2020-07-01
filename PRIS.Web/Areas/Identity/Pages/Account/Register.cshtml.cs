@@ -45,13 +45,13 @@ namespace PRIS.Web.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage ="Įveskite el. pašto adresą")]
+            [EmailAddress(ErrorMessage = "Įvestas neteisingas el. pašto adresas")]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Įveskite slaptažodį")]
+            [StringLength(100, ErrorMessage = " {0} turi būti nuo {2} iki {1} charakterių ilgio.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }

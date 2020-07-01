@@ -48,7 +48,9 @@ namespace PRIS.Web.Controllers
                 foreach (var y in studentViewModels)
                 {
                     y.FinalPoints = y.Task1_1 + y.Task1_2 + y.Task1_3 + y.Task2_1 + y.Task2_2 + y.Task2_3 + y.Task3_1 + y.Task3_2 + y.Task3_3 + y.Task3_4;
-                   // var examDraft = _examRepository.Query<Exam>().Where(e => e.Id == );
+                   var examDraft = _examRepository.Query<Exam>().Where(e => e.Id == y.ExamId).FirstOrDefault();
+                    double maxPoints = examDraft.Task1_1 + examDraft.Task1_2 + examDraft.Task1_3 + examDraft.Task2_1 + examDraft.Task2_2 + examDraft.Task2_3 + examDraft.Task3_1 + examDraft.Task3_2 + examDraft.Task3_3 + examDraft.Task3_4;
+                    y.PercentageGrade = y.FinalPoints * 100 / maxPoints;
                 }
             }
 

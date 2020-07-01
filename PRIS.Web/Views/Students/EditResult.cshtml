@@ -95,7 +95,7 @@
 
 
 <div>
-    <a asp-action="Index">Grįžti į sąrašą</a>
+    @Html.ActionLink("Grįžti", "Index", "Students", new { id = Model.ExamId })
 </div>
 
 @section Scripts {

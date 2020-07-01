@@ -42,8 +42,8 @@ namespace PRIS.Web.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required(ErrorMessage = "Įveskite el.paštą")]
-            [EmailAddress(ErrorMessage = "Įveskite teisingą el.paštą")]
+            [Required(ErrorMessage = "Įveskite el.pašto adresą")]
+            [EmailAddress(ErrorMessage = "Įveskite teisingą el.pašto adresą")]
             public string Email { get; set; }
 
             [Required(ErrorMessage = "Įveskite slaptažodį")]
