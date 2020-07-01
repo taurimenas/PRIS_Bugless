@@ -88,7 +88,11 @@ namespace PRIS.Web.Controllers
             if (!examPassed)
             {
                 if (_repository.Exists(id))
+                {
+                    var student = await _repository.FindByIdAsync(id);
+                    await _resultRepository.DeleteAsync(student.ResultId);
                     await _repository.DeleteAsync(id);
+                }
                 else
                 {
                     ModelState.AddModelError("StudentDelete", "Toks studentas neegzistuoja.");
