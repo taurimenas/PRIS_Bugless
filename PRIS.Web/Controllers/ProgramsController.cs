@@ -124,14 +124,6 @@ namespace PRIS.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
-        private bool ProgramExists(int id)
-        {
-            return _context.Programs.Any(e => e.Id == id);
-        }
-        private bool CityExists(int id)
-        {
-            return _context.Cities.Any(e => e.Id == id);
-        }
 
         private async Task<IActionResult> BadRequest(Course course, string errorMessage)
         {
