@@ -3,11 +3,12 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+@Html.ActionLink("Grįžti", "Index", "Exams", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
 <h3>Kandidatų sąrašas</h3>
 
 <h4>
-    <a asp-action="Create">Pridėti naują kandidatą</a>
+    <a asp-action="Create">Pridėti naują kandidatą </a>
+
 </h4>
 
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
@@ -33,7 +34,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Comment)
             </th>
-            <th class="borderless-cell" width="200px"></th>
+            <th class="borderless-cell" width="100px"></th>
         </tr>
     </thead>
     <tbody>
@@ -61,6 +62,7 @@
                 <td class="borderless-cell">
                     @Html.ActionLink("", "Edit", new { id = item.Id }, new { @class = "fa fa-pencil-square-o" })
                     @Html.ActionLink("", "Delete", new { id = item.Id, examPassed = item.PassedExam }, new { @class = "fa fa-trash" })
+
                 </td>
             </tr>
         }

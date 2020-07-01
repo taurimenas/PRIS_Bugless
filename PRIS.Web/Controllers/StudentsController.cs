@@ -76,6 +76,7 @@ namespace PRIS.Web.Controllers
 
         public async Task<IActionResult> Delete(int? id, bool examPassed)
         {
+            int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
             if (id == null)
             {
                 return NotFound();
@@ -88,18 +89,16 @@ namespace PRIS.Web.Controllers
                 {
                     ModelState.AddModelError("StudentDelete", "Toks studentas neegzistuoja.");
                     TempData["ErrorMessage"] = "Toks studentas neegzistuoja.";
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Index", "Students", new { id = ExamId });
                 }
-
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Students", new { id = ExamId });
             }
             else
             {
                 ModelState.AddModelError("StudentDelete", "Į pokalbį pakviesto kandidato ištrinti negalima.");
                 TempData["ErrorMessage"] = "Į pokalbį pakviesto kandidato ištrinti negalima.";
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Students", new { id = ExamId });
             }
-
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -120,6 +119,7 @@ namespace PRIS.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
         {
+            int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
             var student = StudentsMappings.ToEntity(studentViewModel);
 
             if (id != student.Id)
@@ -143,7 +143,7 @@ namespace PRIS.Web.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Students", new { id = ExamId });
             }
             return View(student);
         }
