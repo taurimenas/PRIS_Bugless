@@ -38,6 +38,7 @@ namespace PRIS.Web.Mappings
                 Task3_2 = model.Task3_2,
                 Task3_3 = model.Task3_3,
                 Task3_4 = model.Task3_4,
+                ExamId = model.ExamId,
                 Comment = model.CommentResult,
                 StudentForeignKey = model.StudentForeignKey
             };
@@ -110,6 +111,7 @@ namespace PRIS.Web.Mappings
                 Task3_3 = resultEntity.Task3_3,
                 Task3_4 = resultEntity.Task3_4,
                 CommentResult = resultEntity.Comment,
+                ExamId = resultEntity.ExamId,
                 StudentForeignKey = resultEntity.StudentForeignKey
             };
         }

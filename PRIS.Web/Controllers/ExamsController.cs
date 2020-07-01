@@ -85,11 +85,6 @@ namespace PRIS.Web.Controllers
             var examById = await _context.Exams.FindAsync(id);
             var result = await _context.Results.FirstOrDefaultAsync(x => x.ExamId == examById.Id);
 
-            if (result.ExamId != null)
-            {
-                TempData["ErrorMessage"] = "Testo negalima ištrinti. Jis turi priskirtų rezultatų.";
-                return RedirectToAction(nameof(Index));
-            }
             if (result != null)
             {
                 var studentById = await _context.Students.FindAsync(result.StudentForeignKey);
