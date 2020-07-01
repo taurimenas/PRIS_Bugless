@@ -59,8 +59,28 @@ namespace PRIS.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                var latestDate = _context.Exams
+                                .OrderByDescending(x => x.Date)
+                                .LastOrDefault();
+
                 var exam = ExamMappings.ToEntity(examViewModel);
                 exam.CityId = _context.Cities.FirstOrDefault(x => x.Name == examViewModel.SelectedCity).Id;
+                if (latestDate != null)
+                {
+                    exam.Task1_1 = latestDate.Task1_1;
+                    exam.Task1_2 = latestDate.Task1_2;
+                    exam.Task1_3 = latestDate.Task1_3;
+                    exam.Task2_1 = latestDate.Task2_1;
+                    exam.Task2_2 = latestDate.Task2_2;
+                    exam.Task2_3 = latestDate.Task2_3;
+                    exam.Task3_1 = latestDate.Task3_1;
+                    exam.Task3_2 = latestDate.Task3_2;
+                    exam.Task3_3 = latestDate.Task3_3;
+                    exam.Task3_4 = latestDate.Task3_4;
+                    _context.Add(exam); 
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
                 _context.Add(exam);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

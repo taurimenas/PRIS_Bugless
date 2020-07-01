@@ -96,7 +96,11 @@ namespace PRIS.Web.Controllers
             if (!examPassed)
             {
                 if (_repository.Exists(id))
+                {
+                    var student = await _repository.FindByIdAsync(id);
+                    await _resultRepository.DeleteAsync(student.ResultId);
                     await _repository.DeleteAsync(id);
+                }
                 else
                 {
                     ModelState.AddModelError("StudentDelete", "Toks studentas neegzistuoja.");
@@ -132,7 +136,8 @@ namespace PRIS.Web.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
         {
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
-            var student = StudentsMappings.ToEntity(studentViewModel);
+            var student = await _repository.FindByIdAsync(id);
+            StudentsMappings.ToEntity(student, studentViewModel);
 
             if (id != student.Id)
             {
@@ -142,7 +147,7 @@ namespace PRIS.Web.Controllers
             {
                 try
                 {
-                    await _repository.UpdateAsync(student);
+                    await _repository.SaveAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {

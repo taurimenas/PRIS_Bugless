@@ -24,6 +24,16 @@ namespace PRIS.Web.Mappings
             };
         }
 
+        public static void ToEntity(Student student, StudentViewModel model)
+        {
+            student.FirstName = model.FirstName;
+            student.LastName = model.LastName;
+            student.Email = model.Email;
+            student.PhoneNumber = model.PhoneNumber;
+            student.Gender = model.Gender;
+            student.Comment = model.Comment;
+        }
+
         public static Result ToResultEntity(StudentsResultViewModel model)
         {
             return new Result
