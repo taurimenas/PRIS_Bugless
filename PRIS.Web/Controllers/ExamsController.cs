@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using PRIS.Core.Library.Entities;
 using PRIS.Web.Data;
+using PRIS.Web.Mappings;
+using PRIS.Web.Models;
 
 namespace PRIS.Web.Controllers
 {
+    [Authorize]
     public class ExamsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,31 +27,27 @@ namespace PRIS.Web.Controllers
         // GET: Exams
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Exams.ToListAsync());
-        }
-
-        // GET: Exams/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var exam = await _context.Exams
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (exam == null)
-            {
-                return NotFound();
-            }
-
-            return View(exam);
+            var result = await _context.Exams.Include(exam => exam.City).ToListAsync();
+            List<ExamViewModel> examViewModels = new List<ExamViewModel>();
+            result.ForEach(x => examViewModels.Add(ExamMappings.ToViewModel(x)));
+            examViewModels.ForEach(x => x.SelectedCity = result.FirstOrDefault(y => y.Id == x.Id).City.Name);
+            return View(examViewModels);
         }
 
         // GET: Exams/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            ExamViewModel examViewModel = new ExamViewModel();
+            List<City> cities = await _context.Cities.ToListAsync();
+
+            var stringCities = new List<SelectListItem>();
+            foreach (var city in cities)
+            {
+                stringCities.Add(new SelectListItem { Value = city.Name, Text = city.Name });
+            }
+            examViewModel.Cities = stringCities;
+
+            return View(examViewModel);
         }
 
         // POST: Exams/Create
@@ -54,66 +55,37 @@ namespace PRIS.Web.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CityId,Date,Task1_1,Task1_2,Task1_3,Task2_1,Task2_2,Task2_3,Task3_1,Task3_2,Task3_3,Task3_4,Comment,Id,Created")] Exam exam)
+        public async Task<IActionResult> Create([Bind("CityId,Date,Comment,Id,Created,SelectedCity")] ExamViewModel examViewModel)
         {
             if (ModelState.IsValid)
             {
+                var latestDate = _context.Exams
+                                .OrderByDescending(x => x.Date)
+                                .LastOrDefault();
+
+                var exam = ExamMappings.ToEntity(examViewModel);
+                exam.CityId = _context.Cities.FirstOrDefault(x => x.Name == examViewModel.SelectedCity).Id;
+                if (latestDate != null)
+                {
+                    exam.Task1_1 = latestDate.Task1_1;
+                    exam.Task1_2 = latestDate.Task1_2;
+                    exam.Task1_3 = latestDate.Task1_3;
+                    exam.Task2_1 = latestDate.Task2_1;
+                    exam.Task2_2 = latestDate.Task2_2;
+                    exam.Task2_3 = latestDate.Task2_3;
+                    exam.Task3_1 = latestDate.Task3_1;
+                    exam.Task3_2 = latestDate.Task3_2;
+                    exam.Task3_3 = latestDate.Task3_3;
+                    exam.Task3_4 = latestDate.Task3_4;
+                    _context.Add(exam); 
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
                 _context.Add(exam);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(exam);
-        }
-
-        // GET: Exams/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var exam = await _context.Exams.FindAsync(id);
-            if (exam == null)
-            {
-                return NotFound();
-            }
-            return View(exam);
-        }
-
-        // POST: Exams/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CityId,Date,Task1_1,Task1_2,Task1_3,Task2_1,Task2_2,Task2_3,Task3_1,Task3_2,Task3_3,Task3_4,Comment,Id,Created")] Exam exam)
-        {
-            if (id != exam.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(exam);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ExamExists(exam.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(exam);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Exams/Delete/5
@@ -130,24 +102,34 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
+            var examById = await _context.Exams.FindAsync(id);
+            var result = await _context.Results.FirstOrDefaultAsync(x => x.ExamId == examById.Id);
 
-            return View(exam);
+            if (result != null)
+            {
+                var studentById = await _context.Students.FindAsync(result.StudentForeignKey);
+                if (studentById != null)
+                {
+                    TempData["ErrorMessage"] = "Testo negalima ištrinti, nes prie jo jau yra priskirta testą išlaikiusių kandidatų.";
+                    ModelState.AddModelError("AssignedStudent", "Testo negalima ištrinti, nes prie jo jau yra priskirta testą išlaikiusių kandidatų.");
+                }
+                else
+                {
+                    return await RemoveFromExams(examById);
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return await RemoveFromExams(examById);
+            }
         }
 
-        // POST: Exams/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        private async Task<IActionResult> RemoveFromExams(Exam examById)
         {
-            var exam = await _context.Exams.FindAsync(id);
-            _context.Exams.Remove(exam);
+            _context.Exams.Remove(examById);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ExamExists(int id)
-        {
-            return _context.Exams.Any(e => e.Id == id);
         }
     }
 }

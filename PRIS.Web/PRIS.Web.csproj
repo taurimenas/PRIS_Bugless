@@ -2,26 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>aspnet-PRIS.Web-542135F0-D62A-48B3-8B6D-544AF0D1247F</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\Migrations\20200621180841_Tables.cs" />
-    <Compile Remove="Data\Migrations\20200621180841_Tables.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200621191920_Tables.cs" />
-    <Compile Remove="Data\Migrations\20200621191920_Tables.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200622070214_Tables.cs" />
-    <Compile Remove="Data\Migrations\20200622070214_Tables.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200622070737_Tables.cs" />
-    <Compile Remove="Data\Migrations\20200622070737_Tables.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200622071443_Tables.cs" />
-    <Compile Remove="Data\Migrations\20200622071443_Tables.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200622072303_Tables.cs" />
-    <Compile Remove="Data\Migrations\20200622072303_Tables.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200622075913_Tables.cs" />
-    <Compile Remove="Data\Migrations\20200622075913_Tables.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200622082543_Tables.cs" />
-    <Compile Remove="Data\Migrations\20200622082543_Tables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200628080536_ChamgedResultStudentRelashionshipToOneToOne.cs" />
+    <Compile Remove="Data\Migrations\20200628080536_ChamgedResultStudentRelashionshipToOneToOne.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Controllers\ProgramsController.cs~RF2e7bcc63.TMP" />
   </ItemGroup>
 
   <ItemGroup>
