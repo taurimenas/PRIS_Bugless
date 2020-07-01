@@ -8,7 +8,7 @@ namespace PRIS.Web.Models
 {
     public class ProgramCreateModel
     {
-        [Required]
+        [Required(ErrorMessage = "Įveskite programos pavadinimą")]
         [Display(Name = "Programa", Prompt = "Programa")]
         public string ProgramName { get; set; }
         public int ProgramNameId { get; set; }

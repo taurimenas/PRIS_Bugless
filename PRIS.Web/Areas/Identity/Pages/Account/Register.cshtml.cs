@@ -47,18 +47,18 @@ namespace PRIS.Web.Areas.Identity.Pages.Account
         {
             [Required(ErrorMessage ="Įveskite el. pašto adresą")]
             [EmailAddress(ErrorMessage = "Įvestas neteisingas el. pašto adresas")]
-            [Display(Name = "Email")]
+            [Display(Name = "El.paštas")]
             public string Email { get; set; }
 
             [Required(ErrorMessage = "Įveskite slaptažodį")]
-            [StringLength(100, ErrorMessage = " {0} turi būti nuo {2} iki {1} charakterių ilgio.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = " {0} turi būti nuo {2} iki {1} ženklų ilgio.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Slaptažodis")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Pakartokite slaptažodį")]
+            [Compare("Password", ErrorMessage = "Slaptažodžiai nesutampa")]
             public string ConfirmPassword { get; set; }
         }
 

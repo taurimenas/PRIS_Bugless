@@ -11,24 +11,34 @@ namespace PRIS.Web.Models
     {
         public int ResultId { get; set; }
         [Display(Name = "1.1")]
+        [Required(ErrorMessage = "Įveskite {0} užduoties balą")]
         public double Task1_1 { get; set; }
         [Display(Name = "1.2")]
+        [Required(ErrorMessage = "Įveskite {0} užduoties balą")]
         public double Task1_2 { get; set; }
         [Display(Name = "1.3")]
+        [Required(ErrorMessage = "Įveskite {0} užduoties balą")]
         public double Task1_3 { get; set; }
         [Display(Name = "2.1")]
+        [Required(ErrorMessage = "Įveskite {0} užduoties balą")]
         public double Task2_1 { get; set; }
         [Display(Name = "2.2")]
+        [Required(ErrorMessage = "Įveskite {0} užduoties balą")]
         public double Task2_2 { get; set; }
         [Display(Name = "2.3")]
+        [Required(ErrorMessage = "Įveskite {0} užduoties balą")]
         public double Task2_3 { get; set; }
         [Display(Name = "3.1")]
+        [Required(ErrorMessage = "Įveskite {0} užduoties balą")]
         public double Task3_1 { get; set; }
         [Display(Name = "3.2")]
+        [Required(ErrorMessage = "Įveskite {0} užduoties balą")]
         public double Task3_2 { get; set; }
         [Display(Name = "3.3")]
+        [Required(ErrorMessage = "Įveskite {0} užduoties balą")]
         public double Task3_3 { get; set; }
         [Display(Name = "3.4")]
+        [Required(ErrorMessage = "Įveskite {0} užduoties balą")]
         public double Task3_4 { get; set; }
         [Display(Name = "Testo balai")]
         public double? FinalPoints { get; set; }
