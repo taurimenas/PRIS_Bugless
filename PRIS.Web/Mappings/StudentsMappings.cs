@@ -28,7 +28,6 @@ namespace PRIS.Web.Mappings
         {
             return new Result
             {
-                Id = model.ResultId,
                 Task1_1 = model.Task1_1,
                 Task1_2 = model.Task1_2,
                 Task1_3 = model.Task1_3,
@@ -43,6 +42,20 @@ namespace PRIS.Web.Mappings
                 StudentForeignKey = model.StudentForeignKey
             };
 
+        }
+        public static void ToResultEntity(Result result, StudentsResultViewModel model)
+        {
+            result.Task1_1 = model.Task1_1;
+            result.Task1_2 = model.Task1_2;
+            result.Task1_3 = model.Task1_3;
+            result.Task2_1 = model.Task2_1;
+            result.Task2_2 = model.Task2_2;
+            result.Task2_3 = model.Task2_3;
+            result.Task3_1 = model.Task3_1;
+            result.Task3_2 = model.Task3_2;
+            result.Task3_3 = model.Task3_3;
+            result.Task3_4 = model.Task3_4;
+            result.Comment = model.CommentResult;
         }
         public static StudentViewModel ToViewModel(Student entity)
         {

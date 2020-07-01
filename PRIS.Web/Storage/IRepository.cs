@@ -8,6 +8,7 @@ namespace PRIS.Web.Storage
 {
     public interface IRepository<T>
     {
+        Task SaveAsync();
         IQueryable<TEntity> Query<TEntity>() where TEntity : class, IEntity;
         Task<T> FindByIdAsync(int? id);
         Task<T> InsertAsync(T entity);

@@ -20,6 +20,10 @@ namespace PRIS.Web.Storage
         {
             return _context.Set<TEntity>();
         }
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
 
         public async Task<T> InsertAsync(T entity)
         {

@@ -39,8 +39,15 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-            var studentViewModels = new List<StudentViewModel>();
-            students.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x)));
+            var studentViewModels = new List<StudentsResultViewModel>();
+            students.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x, x.Result)));
+            foreach (var item in students)
+            {
+                studentViewModels.ForEach(y => y.FinalPoints = (y.Task1_1 + y.Task1_2 + y.Task1_3 + y.Task2_1 + y.Task2_2 + y.Task2_3 + y.Task3_1 + y.Task3_2 + y.Task3_3 + y.Task3_4));
+            }
+
+            studentViewModels = studentViewModels.OrderByDescending(x => x.FinalPoints).ToList();
+
             return View(studentViewModels);
         }
 
@@ -59,51 +66,17 @@ namespace PRIS.Web.Controllers
                 var student = StudentsMappings.ToEntity(studentViewModel);
                 Result result = new Result
                 {
-                    ExamId = ExamId
+                    ExamId = ExamId,
                 };
                 result = await _resultRepository.InsertAsync(result);
+                result.Student = student;
                 student.Result = result;
+                student.ResultId = result.Id;
                 await _repository.InsertAsync(student);
                 return RedirectToAction("Index", "Students", new { id = ExamId });
             }
             return RedirectToAction("Index", "Students", new { id = ExamId });
         }
-
-        public IActionResult AddResult(int? id)
-        {
-            var studentEntity = _context.Students.FindAsync(id).Result;
-            if (studentEntity.ResultId != null)
-            {
-                TempData["ErrorMessage"] = "Rezultatai kandidatui jau yra pridėti";
-                return RedirectToAction(nameof(Index));
-            }
-            var studentViewModel = StudentsMappings.ToStudentsResultViewModel(studentEntity);
-            return View(studentViewModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddResult(int id, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment, PassedExam, Task1_1,Task1_2,Task1_3,Task2_1,Task2_2,Task2_3,Task3_1,Task3_2,Task3_3,Task3_4, ResultComment, ResultExamId")] StudentsResultViewModel studentResultViewModel)
-        {
-            if (ModelState.IsValid)
-            {
-                var studentEntity = _context.Students.FindAsync(id).Result;
-
-                var result = StudentsMappings.ToResultEntity(studentResultViewModel);
-                _context.Add(result);
-                await _context.SaveChangesAsync();
-
-                var studentIdforResult = _context.Results.Where(s => s.Id == result.Id).FirstOrDefault();
-                studentIdforResult.StudentForeignKey = id;
-                var resultIdForStudent = _context.Students.Where(r => r.Id == id).FirstOrDefault();
-                resultIdForStudent.ResultId = result.Id;
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
-            }
-            return RedirectToAction(nameof(Index));
-        }
-
 
         public async Task<IActionResult> Delete(int? id, bool examPassed)
         {
@@ -177,6 +150,51 @@ namespace PRIS.Web.Controllers
                 return RedirectToAction("Index", "Students", new { id = ExamId });
             }
             return View(student);
+        }
+
+        public async Task<IActionResult> EditResult(int? id, int? resultId)
+        {
+            TempData["ResultId"] = resultId;
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id == id);
+            var studentEntity = await studentRequest.FirstOrDefaultAsync();
+            var resultEntity = await _resultRepository.FindByIdAsync(studentEntity.Result.Id);
+
+            if (studentEntity == null)
+            {
+                return NotFound();
+            }
+
+            return View(StudentsMappings.ToViewModel(studentEntity, resultEntity));
+        }
+
+        // POST: Exams/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditResult([Bind("Task1_1,Task1_2,Task1_3,Task2_1,Task2_2,Task2_3,Task3_1,Task3_2,Task3_3,Task3_4, CommentResult, StudentForeignKey")] StudentsResultViewModel studentResultViewModel)
+        {
+            int.TryParse(TempData["ResultId"].ToString(), out int resultId);
+            int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var result = await _resultRepository.FindByIdAsync(resultId);
+                    StudentsMappings.ToResultEntity(result, studentResultViewModel);
+                    await _resultRepository.SaveAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    throw;
+                }
+                return RedirectToAction("Index", "Students", new { id = ExamId });
+            }
+            return RedirectToAction("Index", "Students", new { id = ExamId });
         }
     }
 }
