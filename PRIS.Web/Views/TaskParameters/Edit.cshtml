@@ -10,72 +10,88 @@
         <div class="col">
             <form asp-action="Edit">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input name="Id" value="@Model.Id" type="hidden" asp-for="Id" />
-                <input name="CityId" value="@Model.CityId" type="hidden" asp-for="CityId" />
-                <input name="Date" value="@Model.Date" type="hidden" asp-for="Date" />
-
+                <span asp-validation-for="Task1_1" class="text-danger"></span>
+                <span asp-validation-for="Task1_2" class="text-danger"></span>
+                <span asp-validation-for="Task1_3" class="text-danger"></span>
+                <span asp-validation-for="Task2_1" class="text-danger"></span>
+                <span asp-validation-for="Task2_2" class="text-danger"></span>
+                <span asp-validation-for="Task2_3" class="text-danger"></span>
+                <span asp-validation-for="Task3_1" class="text-danger"></span>
+                <span asp-validation-for="Task3_2" class="text-danger"></span>
+                <span asp-validation-for="Task3_3" class="text-danger"></span>
+                <span asp-validation-for="Task3_4" class="text-danger"></span>
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text">1.1</span>
                     </div>
-                    <input type="number" step="0.5" min="0" asp-for="Task1_1" class="form-control">
-                    <span asp-validation-for="Task1_1" class="text-danger"></span>
+                    <input type="number" step="0.5" min="0.5" asp-for="Task1_1" class="form-control" required
+                           oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
+                           oninput="this.setCustomValidity('')">
 
                     <div class="input-group-prepend">
                         <span class="input-group-text">1.2</span>
                     </div>
-                    <input type="number" step="0.5" min="0" asp-for="Task1_2" class="form-control">
-                    <span asp-validation-for="Task1_2" class="text-danger"></span>
+                    <input type="number" step="0.5" min="0.5" asp-for="Task1_2" class="form-control" required
+                             oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
+                             oninput="this.setCustomValidity('')">
 
                     <div class="input-group-prepend">
                         <span class="input-group-text">1.3</span>
                     </div>
-                    <input type="number" step="0.5" min="0" asp-for="Task1_3" class="form-control">
-                    <span asp-validation-for="Task1_3" class="text-danger"></span>
+                    <input type="number" step="0.5" min="0.5" asp-for="Task1_3" class="form-control" required
+                             oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
+                             oninput="this.setCustomValidity('')">
 
                     <div class="input-group-prepend">
                         <span class="input-group-text">2.1</span>
                     </div>
-                    <input type="number" step="0.5" min="0" asp-for="Task2_1" class="form-control">
-                    <span asp-validation-for="Task2_2" class="text-danger"></span>
+                    <input type="number" step="0.5" min="0.5" asp-for="Task2_1" class="form-control" required
+                             oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
+                             oninput="this.setCustomValidity('')">
 
                     <div class="input-group-prepend">
                         <span class="input-group-text">2.2</span>
                     </div>
-                    <input type="number" step="0.5" min="0" asp-for="Task2_2" class="form-control">
-                    <span asp-validation-for="Task2_2" class="text-danger"></span>
+                    <input type="number" step="0.5" min="0.5" asp-for="Task2_2" class="form-control" required
+                             oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
+                             oninput="this.setCustomValidity('')">
 
                     <div class="input-group-prepend">
                         <span class="input-group-text">2.3</span>
                     </div>
-                    <input type="number" step="0.5" min="0" asp-for="Task2_3" class="form-control">
-                    <span asp-validation-for="Task1_3" class="text-danger"></span>
+                    <input type="number" step="0.5" min="0.5" asp-for="Task2_3" class="form-control" required
+                             oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
+                             oninput="this.setCustomValidity('')">
 
                     <div class="input-group-prepend">
                         <span class="input-group-text">3.1</span>
                     </div>
-                    <input type="number" step="0.5" min="0" asp-for="Task3_1" class="form-control">
-                    <span asp-validation-for="Task3_1" class="text-danger"></span>
+                    <input type="number" step="0.5" min="0.5" asp-for="Task3_1" class="form-control" required
+                             oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
+                             oninput="this.setCustomValidity('')">
 
                     <div class="input-group-prepend">
                         <span class="input-group-text">3.2</span>
                     </div>
-                    <input type="number" step="0.5" min="0" asp-for="Task3_2" class="form-control">
-                    <span asp-validation-for="Task3_2" class="text-danger"></span>
+                    <input type="number" step="0.5" min="0.5" asp-for="Task3_2" class="form-control" required
+                             oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
+                             oninput="this.setCustomValidity('')">
 
                     <div class="input-group-prepend">
                         <span class="input-group-text">3.3</span>
                     </div>
-                    <input type="number" step="0.5" min="0" asp-for="Task3_3" class="form-control">
-                    <span asp-validation-for="Task3_3" class="text-danger"></span>
+                    <input type="number" step="0.5" min="0.5" asp-for="Task3_3" class="form-control" required
+                             oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
+                             oninput="this.setCustomValidity('')">
 
                     <div class="input-group-prepend">
                         <span class="input-group-text">3.4</span>
                     </div>
-                    <input type="number" step="0.5" min="0" asp-for="Task3_4" class="form-control">
-                    <span asp-validation-for="Task3_4" class="text-danger"></span>
+                    <input type="number" step="0.5" min="0.5" asp-for="Task3_4" class="form-control" required
+                             oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
+                             oninput="this.setCustomValidity('')">
                 </div>
-            <br />
+                <br />
                 <div class="form-group">
                     <input type="submit" value="Atnaujinti" class="btn btn-primary" />
                 </div>

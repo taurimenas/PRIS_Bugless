@@ -61,7 +61,7 @@ namespace PRIS.Web.Controllers
             {
                 var latestDate = _context.Exams
                                 .OrderByDescending(x => x.Date)
-                                .FirstOrDefault();
+                                .LastOrDefault();
 
                 var exam = ExamMappings.ToEntity(examViewModel);
                 exam.CityId = _context.Cities.FirstOrDefault(x => x.Name == examViewModel.SelectedCity).Id;
