@@ -1,7 +1,17 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
+.logo {
+    align-content: flex-start;
+}
+.logo-name {
+    width: 130px;
+}
 
 .bg-gradient-primary {
+    background-image: url(../img/duk.png) !important;
+    background-position: center;
+}
+.bg-footer-header {
     background-image: url(../img/duk.png) !important;
 }
 
@@ -61,7 +71,7 @@ Provide sufficient contrast against white background a {
 }
 
 .nav-pills .nav-link.active,
-.nav-pills .show>.nav-link {
+.nav-pills .show > .nav-link {
     color: #fff;
     background-color: #1b6ec2;
     border-color: #1861ac;
@@ -113,7 +123,7 @@ body {
 }
 
 footer {
-/*    position: absolute;*/
+    /*    position: absolute;*/
     bottom: 0;
     width: 100%;
     white-space: nowrap;
@@ -121,6 +131,3 @@ footer {
     background-color: #502D54;
 }
 
-.img {
-    transform: rotate(0deg) !important;
-}
