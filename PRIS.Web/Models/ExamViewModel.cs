@@ -19,7 +19,7 @@ namespace PRIS.Web.Models
         public DateTime Date { get; set; } = DateTime.UtcNow;
         [Display(Name = "Komentaras", Prompt = "Komentaras")]
         public string Comment { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Būtinai turite pasirinkti miestą")]
         [Display(Name = "Miestas")]
         public string SelectedCity { get; set; }
     }

@@ -1,0 +1,21 @@
+﻿@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Registracijos patvirtinimas";
+}
+
+<h1>@ViewData["Title"]</h1>
+@{
+    if (@Model.DisplayConfirmAccountLink)
+    {
+	<p>
+		Paspauskite <a id="confirm-link" href="@Model.EmailConfirmationUrl">čia</a>, kad patvirtintumėt registraciją
+	</p>
+    }
+    else
+    {
+<p>
+        Please check your email to confirm your account.
+</p>
+    }
+}

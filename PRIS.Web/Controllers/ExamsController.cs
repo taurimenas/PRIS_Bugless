@@ -60,7 +60,7 @@ namespace PRIS.Web.Controllers
             if (ModelState.IsValid)
             {
                 var latestDate = _context.Exams
-                                .OrderByDescending(x => x.Date)
+                                .OrderBy(x => x.Created)
                                 .LastOrDefault();
 
                 var exam = ExamMappings.ToEntity(examViewModel);
