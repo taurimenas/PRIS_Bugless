@@ -1,0 +1,10 @@
+﻿@model IEnumerable<PRIS.Web.Models.ExamViewModel>
+@section Slider {
+
+    @foreach (var item in Model)
+    {
+        <a class="collapse-item" href='@Url.Action("Index", "Students", new { id = item.Id })'>@Html.DisplayFor(modelItem => item.Date)</a>
+    }
+}
+
+
