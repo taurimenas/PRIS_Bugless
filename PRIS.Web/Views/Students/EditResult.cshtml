@@ -101,6 +101,11 @@
                    oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0')"
                            oninput="this.setCustomValidity('')">
         </div>
+        
+            <div class="mt-3">@Html.DisplayNameFor(model => model.CommentResult)</div>
+        
+        <input asp-for="CommentResult" class="form-control">
+        <span asp-validation-for="CommentResult" class="text-danger"></span>
         <br />
         <div class="form-group">
             <input type="submit" value="Išsaugoti" class="btn btn-primary" />
@@ -110,7 +115,7 @@
 
 
 <div>
-    <a asp-action="Index">Grįžti į sąrašą</a>
+    @Html.ActionLink("Grįžti", "Index", "Students", new { id = Model.ExamId })
 </div>
 
 @section Scripts {

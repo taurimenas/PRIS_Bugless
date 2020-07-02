@@ -19,11 +19,13 @@ namespace PRIS.Web.Controllers
     {
         private readonly Repository<Student> _repository;
         private readonly Repository<Result> _resultRepository;
+        private readonly Repository<Exam> _examRepository;
 
-        public StudentsController(Repository<Student> repository, Repository<Result> resultRepository)
+        public StudentsController(Repository<Student> repository, Repository<Result> resultRepository, Repository<Exam> examRepository)
         {
             _repository = repository;
             _resultRepository = resultRepository;
+            _examRepository = examRepository;
         }
 
         public async Task<IActionResult> Index(int? id)
@@ -43,7 +45,13 @@ namespace PRIS.Web.Controllers
             students.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x, x.Result)));
             foreach (var item in students)
             {
-                studentViewModels.ForEach(y => y.FinalPoints = (y.Task1_1 + y.Task1_2 + y.Task1_3 + y.Task2_1 + y.Task2_2 + y.Task2_3 + y.Task3_1 + y.Task3_2 + y.Task3_3 + y.Task3_4));
+                foreach (var y in studentViewModels)
+                {
+                    y.FinalPoints = y.Task1_1 + y.Task1_2 + y.Task1_3 + y.Task2_1 + y.Task2_2 + y.Task2_3 + y.Task3_1 + y.Task3_2 + y.Task3_3 + y.Task3_4;
+                   var examDraft = _examRepository.Query<Exam>().Where(e => e.Id == y.ExamId).FirstOrDefault();
+                    double maxPoints = examDraft.Task1_1 + examDraft.Task1_2 + examDraft.Task1_3 + examDraft.Task2_1 + examDraft.Task2_2 + examDraft.Task2_3 + examDraft.Task3_1 + examDraft.Task3_2 + examDraft.Task3_3 + examDraft.Task3_4;
+                    y.PercentageGrade = y.FinalPoints * 100 / maxPoints;
+                }
             }
 
             studentViewModels = studentViewModels.OrderByDescending(x => x.FinalPoints).ToList();

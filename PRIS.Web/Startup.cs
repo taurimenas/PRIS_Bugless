@@ -49,6 +49,7 @@ namespace PRIS.Web
             }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddScoped<Storage.Repository<Student>>();
             services.AddScoped<Storage.Repository<Result>>();
+            services.AddScoped<Storage.Repository<Exam>>();
 
         }
 
