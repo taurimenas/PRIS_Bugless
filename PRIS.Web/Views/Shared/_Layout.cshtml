@@ -113,13 +113,15 @@
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                         <i class="fas fa-fw fa-cog"></i>
-                        <span>Components</span>
+                        <span>Miestai ir programos</span>
                     </a>
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Custom Components:</h6>
-                            <a class="collapse-item" href="buttons.html">Buttons</a>
-                            <a class="collapse-item" href="cards.html">Cards</a>
+                            <h6 class="collapse-header">Miestai ir programos:</h6>
+                            <a class="collapse-item" asp-controller="Programs" asp-action="Index">Sąrašas</a>
+                            <a class="collapse-item" asp-controller="Programs" asp-action="Create">Pridėti miestą</a>
+                            <a class="collapse-item" asp-controller="Programs" asp-action="CreateNewCity">Pridėti programą</a>
+
                         </div>
                     </div>
                 </li>
@@ -158,35 +160,30 @@
                     <div id="collapsePages" class="collapse show" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Testų sąrašas:</h6>
-                            @*@foreach (var item in Model)*@
-                            {
-                            @*<a class="collapse-item" href='@Url.Action("Index", "Students", new { id = item.Id })'>@Html.DisplayFor(modelItem => item.Date)</a>*@
+                            @{
+                                //TODO: Testu datu sarasas su foreach
                             }
-                            @*@Html.RenderPartial("ExamDeleteList", ViewBag.)*@
-                            @RenderSection("Slider", required: false)
-                            <a class="collapse-item" href="register.html">Register</a>
-                            <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+                            @*<a class="collapse-item" href="register.html">Register</a>
+                                <a class="collapse-item" href="forgot-password.html">Forgot Password</a>*@
                             <div class="collapse-divider"></div>
                         </div>
                     </div>
                 </li>
 
                 <!-- Nav Item - Charts -->
-                <li class="nav-item">
+                <!--<li class="nav-item">
                     <a class="nav-link" href="charts.html">
                         <i class="fas fa-fw fa-chart-area"></i>
                         <span>Charts</span>
                     </a>
-                </li>
-
+                </li>-->
                 <!-- Nav Item - Tables -->
-                <li class="nav-item">
+                <!--<li class="nav-item">
                     <a class="nav-link" href="tables.html">
                         <i class="fas fa-fw fa-table"></i>
                         <span>Tables</span>
                     </a>
-                </li>
-
+                </li>-->
                 <!-- Divider -->
                 <hr class="sidebar-divider d-none d-md-block">
 
@@ -263,9 +260,11 @@
                                         Nustatymai
                                     </a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" data-toggle="modal" data-target="#logoutModal">
-                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Atsijungti
+                                    <a class="dropdown-item">
+                                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                            <i type class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            <span><button type="submit" class="nav-link btn btn-link buttonWithoutStyle p-0 m-0 h-50">Atsijungti</button></span>
+                                        </form>
                                     </a>
                                 </div>
                             </li>
@@ -284,9 +283,10 @@
 
                         <li class="nav-item">
                             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                <button type="submit" class="nav-link btn btn-link text-black-50">Atsijungti</button>
+                                <span type="submit" class="nav-link btn btn-link text-black-50">Atsijungti</span>
                             </form>
                         </li>
+                        <a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">atsijungim</a>
 
                         <button class="btn-primary">8748</button>
                     </div>
@@ -327,7 +327,7 @@
                     <div class="modal-body">Spauskite "Atsijungti" below if you are ready to end your current session.</div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Atšaukti</button>
-                        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Logout">Atsijungti</a>
+                        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">Atsijungti</a>
                     </div>
                 </div>
             </div>
