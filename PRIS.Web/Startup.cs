@@ -49,7 +49,7 @@ namespace PRIS.Web
             }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddScoped<Storage.Repository<Student>>();
             services.AddScoped<Storage.Repository<Result>>();
-
+            services.AddScoped<Storage.Repository<Exam>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

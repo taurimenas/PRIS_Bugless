@@ -8,8 +8,9 @@
 
 <h4>Redaguoti testo rezultatus</h4>
 <hr />
+<div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 <div class="row">
-    
+
     <form asp-action="EditResult">
         <div>
 
@@ -35,78 +36,78 @@
                 <span class="input-group-text">@Html.DisplayNameFor(model => model.Task1_1)</span>
             </div>
             <input type="number" step="0.5" min="0" asp-for="Task1_1" class="form-control" required
-                           oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0')"
-                           oninput="this.setCustomValidity('')">
+                   oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0')"
+                   oninput="this.setCustomValidity('')">
 
             <div class="input-group-prepend">
                 <span class="input-group-text">@Html.DisplayNameFor(model => model.Task1_2)</span>
             </div>
             <input type="number" step="0.5" min="0" asp-for="Task1_2" class="form-control"
                    oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0')"
-                           oninput="this.setCustomValidity('')">
+                   oninput="this.setCustomValidity('')">
 
             <div class="input-group-prepend">
                 <span class="input-group-text">@Html.DisplayNameFor(model => model.Task1_3)</span>
             </div>
             <input type="number" step="0.5" min="0" asp-for="Task1_3" class="form-control"
                    oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0')"
-                           oninput="this.setCustomValidity('')">
+                   oninput="this.setCustomValidity('')">
 
             <div class="input-group-prepend">
                 <span class="input-group-text">@Html.DisplayNameFor(model => model.Task2_1)</span>
             </div>
             <input type="number" step="0.5" min="0" asp-for="Task2_1" class="form-control"
                    oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0')"
-                           oninput="this.setCustomValidity('')">
+                   oninput="this.setCustomValidity('')">
 
             <div class="input-group-prepend">
                 <span class="input-group-text">@Html.DisplayNameFor(model => model.Task2_2)</span>
             </div>
             <input type="number" step="0.5" min="0" asp-for="Task2_2" class="form-control"
                    oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0')"
-                           oninput="this.setCustomValidity('')">
+                   oninput="this.setCustomValidity('')">
 
             <div class="input-group-prepend">
                 <span class="input-group-text">@Html.DisplayNameFor(model => model.Task2_3)</span>
             </div>
             <input type="number" step="0.5" min="0" asp-for="Task2_3" class="form-control"
                    oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0')"
-                           oninput="this.setCustomValidity('')">
+                   oninput="this.setCustomValidity('')">
 
             <div class="input-group-prepend">
                 <span class="input-group-text">@Html.DisplayNameFor(model => model.Task3_1)</span>
             </div>
             <input type="number" step="0.5" min="0" asp-for="Task3_1" class="form-control"
                    oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0')"
-                           oninput="this.setCustomValidity('')">
+                   oninput="this.setCustomValidity('')">
 
             <div class="input-group-prepend">
                 <span class="input-group-text">@Html.DisplayNameFor(model => model.Task3_2)</span>
             </div>
             <input type="number" step="0.5" min="0" asp-for="Task3_2" class="form-control"
                    oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0')"
-                           oninput="this.setCustomValidity('')">
+                   oninput="this.setCustomValidity('')">
 
             <div class="input-group-prepend">
                 <span class="input-group-text">@Html.DisplayNameFor(model => model.Task3_3)</span>
             </div>
             <input type="number" step="0.5" min="0" asp-for="Task3_3" class="form-control"
                    oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0')"
-                           oninput="this.setCustomValidity('')">
+                   oninput="this.setCustomValidity('')">
 
             <div class="input-group-prepend">
                 <span class="input-group-text">@Html.DisplayNameFor(model => model.Task3_4)</span>
             </div>
             <input type="number" step="0.5" min="0" asp-for="Task3_4" class="form-control"
                    oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0')"
-                           oninput="this.setCustomValidity('')">
+                   oninput="this.setCustomValidity('')">
         </div>
         <br />
         <div class="form-group">
             <input type="submit" value="Išsaugoti" class="btn btn-primary" />
         </div>
     </form>
-    </div>
+</div>
 
 
 <div>

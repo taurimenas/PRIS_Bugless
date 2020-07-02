@@ -68,11 +68,13 @@ namespace PRIS.Web.Controllers
                 {
                     ExamId = ExamId,
                 };
+
                 result = await _resultRepository.InsertAsync(result);
                 result.Student = student;
                 student.Result = result;
                 student.ResultId = result.Id;
                 await _repository.InsertAsync(student);
+
                 return RedirectToAction("Index", "Students", new { id = ExamId });
             }
             return RedirectToAction("Index", "Students", new { id = ExamId });
@@ -182,9 +184,50 @@ namespace PRIS.Web.Controllers
 
             if (ModelState.IsValid)
             {
+               
+
                 try
                 {
+                    var studentRequest = _repository.Query<Student>().Include(x => x.Result).ThenInclude(y=>y.Exam).Where(x => x.Id > 0);
                     var result = await _resultRepository.FindByIdAsync(resultId);
+                    var student = await studentRequest.FirstOrDefaultAsync(x => x.Id == result.StudentForeignKey);
+
+                    //tasks in results table
+                    var resultTask1_1 = studentResultViewModel.Task1_1;
+                    var resultTask1_2 = studentResultViewModel.Task1_2;
+                    var resultTask1_3 = studentResultViewModel.Task1_3;
+                    var resultTask2_1 = studentResultViewModel.Task2_1;
+                    var resultTask2_2 = studentResultViewModel.Task2_2;
+                    var resultTask2_3 = studentResultViewModel.Task2_3;
+                    var resultTask3_1 = studentResultViewModel.Task3_1;
+                    var resultTask3_2 = studentResultViewModel.Task3_2;
+                    var resultTask3_3 = studentResultViewModel.Task3_3;
+                    var resultTask3_4 = studentResultViewModel.Task3_4;
+                    ////tasks in exams table
+                    var examTask1_1 = result.Exam.Task1_1;
+                    var examTask1_2 = result.Exam.Task1_2;
+                    var examTask1_3 = result.Exam.Task1_3;
+                    var examTask2_1 = result.Exam.Task2_1;
+                    var examTask2_2 = result.Exam.Task2_2;
+                    var examTask2_3 = result.Exam.Task2_3;
+                    var examTask3_1 = result.Exam.Task3_1;
+                    var examTask3_2 = result.Exam.Task3_2;
+                    var examTask3_3 = result.Exam.Task3_3;
+                    var examTask3_4 = result.Exam.Task3_4;
+
+                    if (examTask1_1 < resultTask1_1 || examTask1_2 < resultTask1_2 ||
+                        examTask1_3 < resultTask1_3 || examTask2_1 < resultTask2_1 ||
+                        examTask2_2 < resultTask2_2 || examTask2_3 < resultTask2_3 ||
+                        examTask3_1 < resultTask3_1 || examTask3_2 < resultTask3_2 ||
+                        examTask3_3 < resultTask3_3 || examTask3_4 < resultTask3_4
+                        )
+                    {
+                        ModelState.AddModelError("EditResult", "Užduoties balas negali būti didesnis nei testo šablono balas");
+                        TempData["ErrorMessage"] = "Užduoties balas negali būti didesnis nei testo šablono balas";
+                        TempData["ResultId"] = resultId;
+                        return RedirectToAction("EditResult", "Students", new { id = resultId });
+                    }
+
                     StudentsMappings.ToResultEntity(result, studentResultViewModel);
                     await _resultRepository.SaveAsync();
                 }
