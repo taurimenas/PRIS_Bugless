@@ -33,11 +33,11 @@
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
                 <div class="form-group text-center">
-                    <button type="submit" class="btn btn-primary">Prisijungti</button>
+                    <button type="submit" class="btn btn-secondary">Prisijungti</button>
                 </div>
                 <div class="form-group text-center">
                     <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Pamiršai slaptažodį?</a>
+                        <a class="text-secondary" id="forgot-password" asp-page="./ForgotPassword">Pamiršai slaptažodį?</a>
                     </p>
                 </div>
             </form>
@@ -47,7 +47,7 @@
 
 <footer class="border-top footer text-muted" style="position: absolute">
     <div class="container text-right text-white">
-        &copy; 2020 - Bugless, Inc. All rights reserved <a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
+        &copy; 2020 - Bugless. Visos teisės saugomos. <a asp-area="" asp-controller="Home" asp-action="Privacy"></a>
     </div>
 </footer>
 @section Scripts {

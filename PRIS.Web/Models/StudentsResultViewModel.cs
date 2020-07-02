@@ -11,7 +11,7 @@ namespace PRIS.Web.Models
     {
         public int ResultId { get; set; }
         [Display(Name = "1.1")]
-        [Required(ErrorMessage = "Įveskite {0} užduoties balą")]
+       [Required(ErrorMessage = "Įveskite {0} užduoties balą")]
         public double Task1_1 { get; set; }
         [Display(Name = "1.2")]
         [Required(ErrorMessage = "Įveskite {0} užduoties balą")]

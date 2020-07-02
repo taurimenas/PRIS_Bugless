@@ -4,15 +4,14 @@
     ViewData["Title"] = "Index";
 }
 
-<h3>Testai</h3>
-
-
-<h4>
-    <a asp-action="Create">Sukurti naują</a>
-</h4>
-
+    <h3>
+        Testai
+        @Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
+    </h3>
+<hr />
+<a asp-action="Create">Sukurti naują</a>
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
-<br/>
+
 <table class="table table-bordered">
     <thead>
         <tr>

@@ -43,8 +43,8 @@ namespace PRIS.Web.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage ="Įrašykite el. pašto adresą")]
+            [EmailAddress(ErrorMessage = "El. pašto adresas įvestas neteisingai")]
             [Display(Name = "New email")]
             public string NewEmail { get; set; }
         }

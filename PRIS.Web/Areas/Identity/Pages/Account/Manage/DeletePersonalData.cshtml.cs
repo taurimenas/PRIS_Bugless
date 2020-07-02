@@ -29,7 +29,7 @@ namespace PRIS.Web.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [Required]
+            [Required(ErrorMessage ="Įrašykite slaptažodį")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
         }

@@ -6,11 +6,11 @@
 @Html.ActionLink("Grįžti", "Index", "Exams", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
 <h3>Kandidatų sąrašas</h3>
 
-<h5>
+<hr/>
     <a asp-action="Create">Pridėti naują kandidatą</a>
-</h5>
+
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
-<br />
+
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -68,7 +68,7 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FinalPoints)
-                <span class="float-right">
+                <span class="float-right text-secondary">
                     @Html.ActionLink("", "EditResult", new { id = item.Id, resultId = item.ResultId }, new { @class = "fas fa-pen-square" })
                 </span>
             </td>

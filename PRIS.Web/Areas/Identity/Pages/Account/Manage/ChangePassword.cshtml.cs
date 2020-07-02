@@ -33,20 +33,20 @@ namespace PRIS.Web.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [Required]
+            [Required(ErrorMessage = "Įrašykite dabartinį slaptažodį")]
             [DataType(DataType.Password)]
-            [Display(Name = "Current password")]
+            [Display(Name = "Dabartinis slaptažodis")]
             public string OldPassword { get; set; }
 
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Įrašykite naują slaptažodį")]
+            [StringLength(100, ErrorMessage = " {0} turi būti nuo {2} iki {1} ilgio.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "New password")]
+            [Display(Name = "Naujas slaptažodis")]
             public string NewPassword { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm new password")]
-            [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+            [Display(Name = "Pakartoti naują slaptažodį")]
+            [Compare("NewPassword", ErrorMessage = "Naujas slaptažodis nesutampa su pakartotu.")]
             public string ConfirmPassword { get; set; }
         }
 

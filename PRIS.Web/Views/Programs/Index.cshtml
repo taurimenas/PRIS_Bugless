@@ -3,12 +3,12 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+@Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-4 text-center">
-            <h2>Programos</h2>
+            <h3>Programos</h3>
             <table class="table">
                 <tbody>
                     @foreach (var item in Model.ProgramNames)
@@ -24,12 +24,10 @@
                     }
                 </tbody>
             </table>
-            <p>
-                <a asp-action="Create">Sukurti naują programą</a>
-            </p>
+         
         </div>
         <div class="col-4 text-center">
-            <h2>Miestai</h2>
+            <h3>Miestai</h3>
             <table class="table">
                 <tbody>
                     @foreach (var item in Model.CityNames)
@@ -45,15 +43,11 @@
                     }
                 </tbody>
             </table>
-            <p>
-                <a asp-action="CreateNewCity">Sukurti naują miestą</a>
-            </p>
+         
         </div>
     </div>
 </div>
-<div>
-    <a asp-controller="Home" asp-action="Main">Grįžti</a>
-</div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -3,7 +3,7 @@
     ViewData["Title"] = "CreateNewCity";
 }
 
-<h1>Sukurti naują miestą</h1>
+<h3>Sukurti naują miestą</h3>
 
 <hr />
 <div class="row">
@@ -15,13 +15,13 @@
                 <span asp-validation-for="CityName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Sukurti" class="btn btn-primary" />
+                <input type="submit" value="Sukurti" class="btn btn-secondary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Grįžti</a>
+    <a class="text-secondary" asp-action="Index">Grįžti</a>
 </div>
 
