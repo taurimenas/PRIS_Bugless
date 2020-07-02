@@ -81,11 +81,11 @@
 
                 <!-- Sidebar - Brand -->
                 <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                    <div class="sidebar-brand-icon rotate-n-15">
+                    <div class="sidebar-brand-icon">
                         <img class="img" src="~/img/it_akademija logo.png" alt="logo" />
                     </div>
                     <div class="sidebar-brand-text mx-3">
-                        <div class="col-2 text-right"><img class="img" src="~/img/it_akademija.png" alt="akademija_it_logo" /></div>
+                        <div class="text-right"><img class="img" src="~/img/it_akademija.png" alt="akademija_it_logo" /></div>
                         <sup></sup>
                     </div>
                 </a>
@@ -275,20 +275,8 @@
                     <!-- End of Topbar -->
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
-
                         <!-- Page Heading -->
-                        @*<h1 class="h3 mb-4 text-gray-800">Blank Page</h1>*@
                         @RenderBody()
-
-
-                        <li class="nav-item">
-                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                <span type="submit" class="nav-link btn btn-link text-black-50">Atsijungti</span>
-                            </form>
-                        </li>
-                        <a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">atsijungim</a>
-
-                        <button class="btn-primary">8748</button>
                     </div>
                     <!-- /.container-fluid -->
 
@@ -315,7 +303,7 @@
         </a>
 
         <!-- Logout Modal-->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        @*<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -331,7 +319,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>*@
 
     }
     else
