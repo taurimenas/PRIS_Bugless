@@ -36,13 +36,9 @@ td div {
     border: 1px solid Transparent !important;
 }
 
-.header {
-    background-color: #502D54;
-}
-
 .navbar {
     height: 120px;
-    background-color: #502D54;
+    background-image: url(../img/duk.png) !important;
 }
 
 a.navbar-brand {
@@ -128,6 +124,6 @@ footer {
     width: 100%;
     white-space: nowrap;
     line-height: 60px;
-    background-color: #502D54;
+    background-image: url(../img/duk.png) !important;
 }
 
