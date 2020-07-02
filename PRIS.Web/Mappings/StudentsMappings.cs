@@ -24,6 +24,16 @@ namespace PRIS.Web.Mappings
             };
         }
 
+        public static void ToEntity(Student student, StudentViewModel model)
+        {
+            student.FirstName = model.FirstName;
+            student.LastName = model.LastName;
+            student.Email = model.Email;
+            student.PhoneNumber = model.PhoneNumber;
+            student.Gender = model.Gender;
+            student.Comment = model.Comment;
+        }
+
         public static Result ToResultEntity(StudentsResultViewModel model)
         {
             return new Result
@@ -38,6 +48,7 @@ namespace PRIS.Web.Mappings
                 Task3_2 = model.Task3_2,
                 Task3_3 = model.Task3_3,
                 Task3_4 = model.Task3_4,
+                ExamId = model.ExamId,
                 Comment = model.CommentResult,
                 StudentForeignKey = model.StudentForeignKey
             };
@@ -110,6 +121,7 @@ namespace PRIS.Web.Mappings
                 Task3_3 = resultEntity.Task3_3,
                 Task3_4 = resultEntity.Task3_4,
                 CommentResult = resultEntity.Comment,
+                ExamId = resultEntity.ExamId,
                 StudentForeignKey = resultEntity.StudentForeignKey
             };
         }
