@@ -48,7 +48,7 @@ namespace PRIS.Web.Controllers
                 foreach (var y in studentViewModels)
                 {
                     y.FinalPoints = y.Task1_1 + y.Task1_2 + y.Task1_3 + y.Task2_1 + y.Task2_2 + y.Task2_3 + y.Task3_1 + y.Task3_2 + y.Task3_3 + y.Task3_4;
-                   var examDraft = _examRepository.Query<Exam>().Where(e => e.Id == y.ExamId).FirstOrDefault();
+                    var examDraft = _examRepository.Query<Exam>().Where(e => e.Id == y.ExamId).FirstOrDefault();
                     double maxPoints = examDraft.Task1_1 + examDraft.Task1_2 + examDraft.Task1_3 + examDraft.Task2_1 + examDraft.Task2_2 + examDraft.Task2_3 + examDraft.Task3_1 + examDraft.Task3_2 + examDraft.Task3_3 + examDraft.Task3_4;
                     y.PercentageGrade = y.FinalPoints * 100 / maxPoints;
                 }
@@ -169,7 +169,7 @@ namespace PRIS.Web.Controllers
             }
             return View(student);
         }
-
+        //GET
         public async Task<IActionResult> EditResult(int? id, int? resultId)
         {
             TempData["ResultId"] = resultId;
@@ -181,7 +181,11 @@ namespace PRIS.Web.Controllers
             var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id == id);
             var studentEntity = await studentRequest.FirstOrDefaultAsync();
             var resultEntity = await _resultRepository.FindByIdAsync(studentEntity.Result.Id);
-
+            if (studentEntity.PassedExam)
+            {
+                TempData["ErrorMessage"] = "Studentas yra pakviestas į pokalbį, todėl jo duomenų negalima redaguoti.";
+                return RedirectToAction("Index", "Students", new { id = resultEntity.ExamId });
+            }
             if (studentEntity == null)
             {
                 return NotFound();
@@ -200,14 +204,12 @@ namespace PRIS.Web.Controllers
 
             if (ModelState.IsValid)
             {
-               
-
                 try
                 {
-                    var studentRequest = _repository.Query<Student>().Include(x => x.Result).ThenInclude(y=>y.Exam).Where(x => x.Id > 0);
+                    var studentRequest = _repository.Query<Student>().Include(x => x.Result).ThenInclude(y => y.Exam).Where(x => x.Id > 0);
                     var result = await _resultRepository.FindByIdAsync(resultId);
                     var student = await studentRequest.FirstOrDefaultAsync(x => x.Id == result.StudentForeignKey);
-
+                   
                     //tasks in results table
                     var resultTask1_1 = studentResultViewModel.Task1_1;
                     var resultTask1_2 = studentResultViewModel.Task1_2;
@@ -241,7 +243,7 @@ namespace PRIS.Web.Controllers
                         ModelState.AddModelError("EditResult", "Užduoties balas negali būti didesnis nei testo šablono balas");
                         TempData["ErrorMessage"] = "Užduoties balas negali būti didesnis nei testo šablono balas";
                         TempData["ResultId"] = resultId;
-                        return RedirectToAction("EditResult", "Students", new { id = resultId });
+                        return RedirectToAction("EditResult", "Students", new { resultId });
                     }
 
                     StudentsMappings.ToResultEntity(result, studentResultViewModel);
