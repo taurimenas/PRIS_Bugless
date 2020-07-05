@@ -215,7 +215,7 @@ namespace PRIS.Web.Controllers
                         ModelState.AddModelError("EditResult", "Užduoties balas negali būti didesnis nei testo šablono balas");
                         TempData["ErrorMessage"] = "Užduoties balas negali būti didesnis nei testo šablono balas";
                         TempData["ResultId"] = resultId;
-                        return RedirectToAction("EditResult", "Students", resultId);
+                        return RedirectToAction("EditResult", "Students", new { resultId });
                     }
 
                     StudentsMappings.ToResultEntity(result, studentResultViewModel);
