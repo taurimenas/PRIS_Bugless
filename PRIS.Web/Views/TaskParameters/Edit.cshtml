@@ -15,16 +15,6 @@
                     <span asp-validation-for="@task" class="text-danger"></span>
 
                 }
-                @*<span asp-validation-for="Task1_1" class="text-danger"></span>
-                    <span asp-validation-for="Task1_2" class="text-danger"></span>
-                    <span asp-validation-for="Task1_3" class="text-danger"></span>
-                    <span asp-validation-for="Task2_1" class="text-danger"></span>
-                    <span asp-validation-for="Task2_2" class="text-danger"></span>
-                    <span asp-validation-for="Task2_3" class="text-danger"></span>
-                    <span asp-validation-for="Task3_1" class="text-danger"></span>
-                    <span asp-validation-for="Task3_2" class="text-danger"></span>
-                    <span asp-validation-for="Task3_3" class="text-danger"></span>
-                    <span asp-validation-for="Task3_4" class="text-danger"></span>*@
                 <div class="input-group">
                     @foreach (var task in Model.Tasks)
                     {
@@ -35,70 +25,6 @@
                                oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
                                oninput="this.setCustomValidity('')">
                     }
-
-
-                    @*<div class="input-group-prepend">
-                            <span class="input-group-text">1.2</span>
-                        </div>
-                        <input type="number" step="0.5" min="0.5" asp-for="Task1_2" class="form-control" required
-                               oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
-                               oninput="this.setCustomValidity('')">
-
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">1.3</span>
-                        </div>
-                        <input type="number" step="0.5" min="0.5" asp-for="Task1_3" class="form-control" required
-                               oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
-                               oninput="this.setCustomValidity('')">
-
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">2.1</span>
-                        </div>
-                        <input type="number" step="0.5" min="0.5" asp-for="Task2_1" class="form-control" required
-                               oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
-                               oninput="this.setCustomValidity('')">
-
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">2.2</span>
-                        </div>
-                        <input type="number" step="0.5" min="0.5" asp-for="Task2_2" class="form-control" required
-                               oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
-                               oninput="this.setCustomValidity('')">
-
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">2.3</span>
-                        </div>
-                        <input type="number" step="0.5" min="0.5" asp-for="Task2_3" class="form-control" required
-                               oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
-                               oninput="this.setCustomValidity('')">
-
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">3.1</span>
-                        </div>
-                        <input type="number" step="0.5" min="0.5" asp-for="Task3_1" class="form-control" required
-                               oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
-                               oninput="this.setCustomValidity('')">
-
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">3.2</span>
-                        </div>
-                        <input type="number" step="0.5" min="0.5" asp-for="Task3_2" class="form-control" required
-                               oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
-                               oninput="this.setCustomValidity('')">
-
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">3.3</span>
-                        </div>
-                        <input type="number" step="0.5" min="0.5" asp-for="Task3_3" class="form-control" required
-                               oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
-                               oninput="this.setCustomValidity('')">
-
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">3.4</span>
-                        </div>
-                        <input type="number" step="0.5" min="0.5" asp-for="Task3_4" class="form-control" required
-                               oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
-                               oninput="this.setCustomValidity('')">*@
                 </div>
                 <br />
                 <div class="form-group">

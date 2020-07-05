@@ -7,6 +7,6 @@ namespace PRIS.Web.Models
 {
     public class TaskParameterListViewModel
     {
-        public List<Core.Library.Entities.Exam> Tasks { get; set; }
+        public List<TaskParameterModel> Tasks { get; set; }
     }
 }

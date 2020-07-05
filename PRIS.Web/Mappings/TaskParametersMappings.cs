@@ -34,6 +34,13 @@ namespace PRIS.Web.Mappings
                 Tasks = JsonSerializer.Deserialize<int[]>(examEntity.Tasks)
             };
         }
+        public static TaskParameterModel ToTaskViewModel(Exam examEntity)
+        {
+            return new TaskParameterModel
+            {
+                Tasks = JsonSerializer.Deserialize<int[]>(examEntity.Tasks)
+            };
+        }
         public static SetTaskParameterModel ToTaskParameterViewModel(int[] tasks)
         {
             return new SetTaskParameterModel

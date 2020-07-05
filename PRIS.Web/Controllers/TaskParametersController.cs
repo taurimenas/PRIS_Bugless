@@ -18,14 +18,7 @@ namespace PRIS.Web.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Index()
-        {
-            TaskParameterListViewModel taskParameterViewModel = new TaskParameterListViewModel();
-            var taskParameterResult = await _context.Exams.ToListAsync();
-            taskParameterViewModel.Tasks = taskParameterResult;
-            return View(taskParameterViewModel);
-        }
-        // GET: vvv/Edit/5
+
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -39,7 +32,7 @@ namespace PRIS.Web.Controllers
             }
             return View(TaskParametersMappings.ToTaskParameterViewModel(tasks));
         }
-        // POST: vvv/Edit/5
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, int[] tasks)

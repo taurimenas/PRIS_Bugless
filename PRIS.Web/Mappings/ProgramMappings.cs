@@ -34,7 +34,7 @@ namespace PRIS.Web.Mappings
         {
             return new ProgramViewModel
             {
-                CityNames = cityEntity,   
+                CityNames = cityEntity,
             };
         }
     }

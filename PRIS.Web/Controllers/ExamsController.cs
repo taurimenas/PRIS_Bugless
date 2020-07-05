@@ -24,7 +24,6 @@ namespace PRIS.Web.Controllers
             _context = context;
         }
 
-        // GET: Exams
         public async Task<IActionResult> Index()
         {
             var result = await _context.Exams.Include(exam => exam.City).ToListAsync();
@@ -34,7 +33,6 @@ namespace PRIS.Web.Controllers
             return View(examViewModels);
         }
 
-        // GET: Exams/Create
         public async Task<IActionResult> Create()
         {
             ExamViewModel examViewModel = new ExamViewModel();
@@ -50,9 +48,6 @@ namespace PRIS.Web.Controllers
             return View(examViewModel);
         }
 
-        // POST: Exams/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CityId,Date,Comment,Id,Created,SelectedCity")] ExamViewModel examViewModel)
@@ -67,16 +62,7 @@ namespace PRIS.Web.Controllers
                 exam.CityId = _context.Cities.FirstOrDefault(x => x.Name == examViewModel.SelectedCity).Id;
                 if (latestDate != null)
                 {
-                    //exam.Task1_1 = latestDate.Task1_1;
-                    //exam.Task1_2 = latestDate.Task1_2;
-                    //exam.Task1_3 = latestDate.Task1_3;
-                    //exam.Task2_1 = latestDate.Task2_1;
-                    //exam.Task2_2 = latestDate.Task2_2;
-                    //exam.Task2_3 = latestDate.Task2_3;
-                    //exam.Task3_1 = latestDate.Task3_1;
-                    //exam.Task3_2 = latestDate.Task3_2;
-                    //exam.Task3_3 = latestDate.Task3_3;
-                    //exam.Task3_4 = latestDate.Task3_4;
+                    exam.Tasks = latestDate.Tasks;
                     _context.Add(exam);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -88,7 +74,6 @@ namespace PRIS.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Exams/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

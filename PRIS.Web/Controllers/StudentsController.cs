@@ -191,7 +191,6 @@ namespace PRIS.Web.Controllers
             return View(StudentsMappings.ToViewModel(studentEntity, resultEntity));
         }
 
-        // POST: Exams/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditResult(int[] Tasks)

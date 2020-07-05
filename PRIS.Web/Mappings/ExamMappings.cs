@@ -1,6 +1,7 @@
 ﻿using PRIS.Core.Library.Entities;
 using PRIS.Web.Models;
 using System.Linq;
+using System.Text.Json;
 
 namespace PRIS.Web.Mappings
 {
@@ -13,7 +14,8 @@ namespace PRIS.Web.Mappings
                 Comment = model.Comment,
                 Date = model.Date,
                 Id = model.Id,
-                CityId = model.CityId
+                CityId = model.CityId,
+                Tasks = JsonSerializer.Serialize(model)
             };
         }
         public static ExamViewModel ToViewModel(Exam entity)
