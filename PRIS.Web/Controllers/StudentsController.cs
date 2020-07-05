@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,12 +46,12 @@ namespace PRIS.Web.Controllers
             students.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x, x.Result)));
             foreach (var item in students)
             {
-                foreach (var y in studentViewModels)
+                foreach (var student in studentViewModels)
                 {
-                    y.FinalPoints = y.Task1_1 + y.Task1_2 + y.Task1_3 + y.Task2_1 + y.Task2_2 + y.Task2_3 + y.Task3_1 + y.Task3_2 + y.Task3_3 + y.Task3_4;
-                   var examDraft = _examRepository.Query<Exam>().Where(e => e.Id == y.ExamId).FirstOrDefault();
-                    double maxPoints = examDraft.Task1_1 + examDraft.Task1_2 + examDraft.Task1_3 + examDraft.Task2_1 + examDraft.Task2_2 + examDraft.Task2_3 + examDraft.Task3_1 + examDraft.Task3_2 + examDraft.Task3_3 + examDraft.Task3_4;
-                    y.PercentageGrade = y.FinalPoints * 100 / maxPoints;
+                    student.FinalPoints = student.Tasks.Sum(x => x);
+                    var examDraft = _examRepository.Query<Exam>().Where(e => e.Id == student.ExamId).FirstOrDefault();
+                    double maxPoints = TaskParametersMappings.ToTaskParameterViewModel(examDraft).Tasks.Sum(x => x);
+                    student.PercentageGrade = student.FinalPoints * 100 / maxPoints;
                 }
             }
 
@@ -193,50 +194,25 @@ namespace PRIS.Web.Controllers
         // POST: Exams/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditResult([Bind("Task1_1,Task1_2,Task1_3,Task2_1,Task2_2,Task2_3,Task3_1,Task3_2,Task3_3,Task3_4, CommentResult, StudentForeignKey")] StudentsResultViewModel studentResultViewModel)
+        public async Task<IActionResult> EditResult(int[] Tasks)
         {
             int.TryParse(TempData["ResultId"].ToString(), out int resultId);
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
-
             if (ModelState.IsValid)
             {
-               
-
                 try
                 {
-                    var studentRequest = _repository.Query<Student>().Include(x => x.Result).ThenInclude(y=>y.Exam).Where(x => x.Id > 0);
+                    var studentRequest = _repository.Query<Student>().Include(x => x.Result).ThenInclude(y => y.Exam).Where(x => x.Id > 0);
                     var result = await _resultRepository.FindByIdAsync(resultId);
                     var student = await studentRequest.FirstOrDefaultAsync(x => x.Id == result.StudentForeignKey);
+                    var studentResultViewModel = StudentsMappings.ToStudentsResultViewModel(Tasks);
+                    var resultTasks = Tasks;
+                    var examTasks = StudentsMappings.ToStudentsResultViewModel(result).Tasks;
 
-                    //tasks in results table
-                    var resultTask1_1 = studentResultViewModel.Task1_1;
-                    var resultTask1_2 = studentResultViewModel.Task1_2;
-                    var resultTask1_3 = studentResultViewModel.Task1_3;
-                    var resultTask2_1 = studentResultViewModel.Task2_1;
-                    var resultTask2_2 = studentResultViewModel.Task2_2;
-                    var resultTask2_3 = studentResultViewModel.Task2_3;
-                    var resultTask3_1 = studentResultViewModel.Task3_1;
-                    var resultTask3_2 = studentResultViewModel.Task3_2;
-                    var resultTask3_3 = studentResultViewModel.Task3_3;
-                    var resultTask3_4 = studentResultViewModel.Task3_4;
-                    ////tasks in exams table
-                    var examTask1_1 = result.Exam.Task1_1;
-                    var examTask1_2 = result.Exam.Task1_2;
-                    var examTask1_3 = result.Exam.Task1_3;
-                    var examTask2_1 = result.Exam.Task2_1;
-                    var examTask2_2 = result.Exam.Task2_2;
-                    var examTask2_3 = result.Exam.Task2_3;
-                    var examTask3_1 = result.Exam.Task3_1;
-                    var examTask3_2 = result.Exam.Task3_2;
-                    var examTask3_3 = result.Exam.Task3_3;
-                    var examTask3_4 = result.Exam.Task3_4;
+                    var testToDelete = examTasks.Select((x, i) => x < resultTasks[i]);
 
-                    if (examTask1_1 < resultTask1_1 || examTask1_2 < resultTask1_2 ||
-                        examTask1_3 < resultTask1_3 || examTask2_1 < resultTask2_1 ||
-                        examTask2_2 < resultTask2_2 || examTask2_3 < resultTask2_3 ||
-                        examTask3_1 < resultTask3_1 || examTask3_2 < resultTask3_2 ||
-                        examTask3_3 < resultTask3_3 || examTask3_4 < resultTask3_4
-                        )
+                    var isInvalid = examTasks.Select((x, i) => x < resultTasks[i]).Any(x => x);
+                    if (isInvalid)
                     {
                         ModelState.AddModelError("EditResult", "Užduoties balas negali būti didesnis nei testo šablono balas");
                         TempData["ErrorMessage"] = "Užduoties balas negali būti didesnis nei testo šablono balas";

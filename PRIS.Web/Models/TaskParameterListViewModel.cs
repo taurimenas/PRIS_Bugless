@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace PRIS.Web.Models
 {
-    public class TaskParameterViewModel
+    public class TaskParameterListViewModel
     {
-        public List<PRIS.Core.Library.Entities.Exam> Tasks { get; set; }
+        public List<Core.Library.Entities.Exam> Tasks { get; set; }
     }
 }

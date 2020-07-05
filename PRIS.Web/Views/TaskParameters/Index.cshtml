@@ -1,71 +1,70 @@
-﻿@model PRIS.Web.Models.TaskParameterViewModel
+﻿@*@model PRIS.Web.Models.TaskParameterViewModel
 
-@{
-    ViewData["Title"] = "Index";
-}
+    @{
+        ViewData["Title"] = "Index";
+    }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Užduotys</th>
-            <th>1.1</th>
-            <th>1.2</th>
-            <th>1.3</th>
-            <th>2.1</th>
-            <th>2.2</th>
-            <th>2.3</th>
-            <th>3.1</th>
-            <th>3.2</th>
-            <th>3.3</th>
-            <th>3.4</th>
-            <th class="borderless-cell" width="50px"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Tasks)
-        {
-
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    Max balai
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Task1_1)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Task1_2)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Task1_3)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Task2_1)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Task2_2)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Task2_3)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Task3_1)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Task3_2)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Task3_3)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Task3_4)
-                </td>
-                <td>
-                    @Html.ActionLink("Redaguoti", "Edit", new { id = item.Id })
-                </td>
+                <th>Užduotys</th>
+                <th>1.1</th>
+                <th>1.2</th>
+                <th>1.3</th>
+                <th>2.1</th>
+                <th>2.2</th>
+                <th>2.3</th>
+                <th>3.1</th>
+                <th>3.2</th>
+                <th>3.3</th>
+                <th>3.4</th>
+                <th class="borderless-cell" width="50px"></th>
             </tr>
-        }
-    </tbody>
-</table>
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Tasks)
+            {
+                <tr>
+                    <td>
+                        Max balai
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Task1_1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Task1_2)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Task1_3)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Task2_1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Task2_2)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Task2_3)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Task3_1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Task3_2)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Task3_3)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Task3_4)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Redaguoti", "Edit", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }*@

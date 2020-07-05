@@ -7,6 +7,8 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20200628080536_ChamgedResultStudentRelashionshipToOneToOne.cs" />
     <Compile Remove="Data\Migrations\20200628080536_ChamgedResultStudentRelashionshipToOneToOne.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200704154109_AddedRequiredAtributesOnFreignKeys.cs" />
+    <Compile Remove="Data\Migrations\20200704154109_AddedRequiredAtributesOnFreignKeys.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,102 +1,102 @@
-﻿@model PRIS.Core.Library.Entities.Exam
+﻿@*@model PRIS.Core.Library.Entities.Exam
 
-@{
-    ViewData["Title"] = "Details";
-}
+    @{
+        ViewData["Title"] = "Details";
+    }
 
-<h1>Details</h1>
+    <h1>Details</h1>
 
-<div>
-    <h4>Exam</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CityId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CityId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task1_1)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task1_1)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task1_2)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task1_2)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task1_3)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task1_3)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task2_1)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task2_1)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task2_2)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task2_2)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task2_3)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task2_3)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task3_1)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task3_1)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task3_2)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task3_2)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task3_3)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task3_3)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Task3_4)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Task3_4)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Comment)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Comment)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Created)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Created)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div>
+        <h4>Exam</h4>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.CityId)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.CityId)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Date)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Date)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Task1_1)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Task1_1)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Task1_2)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Task1_2)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Task1_3)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Task1_3)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Task2_1)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Task2_1)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Task2_2)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Task2_2)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Task2_3)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Task2_3)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Task3_1)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Task3_1)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Task3_2)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Task3_2)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Task3_3)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Task3_3)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Task3_4)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Task3_4)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Comment)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Comment)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Created)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Created)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>*@

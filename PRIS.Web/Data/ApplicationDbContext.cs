@@ -54,9 +54,9 @@ namespace PRIS.Web.Data
                 .HasForeignKey(sc => sc.CourseId);
 
             modelBuilder.Entity<Student>()
-            .HasOne(s => s.Result)
-            .WithOne(r => r.Student)
-            .HasForeignKey<Result>(s => s.StudentForeignKey);
+                .HasOne(s => s.Result)
+                .WithOne(r => r.Student)
+                .HasForeignKey<Result>(s => s.StudentForeignKey);
         }
 
     }

@@ -1,4 +1,6 @@
-﻿using PRIS.Core.Library.Entities;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using PRIS.Core.Library.Entities;
 using PRIS.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -38,16 +40,17 @@ namespace PRIS.Web.Mappings
         {
             return new Result
             {
-                Task1_1 = model.Task1_1,
-                Task1_2 = model.Task1_2,
-                Task1_3 = model.Task1_3,
-                Task2_1 = model.Task2_1,
-                Task2_2 = model.Task2_2,
-                Task2_3 = model.Task2_3,
-                Task3_1 = model.Task3_1,
-                Task3_2 = model.Task3_2,
-                Task3_3 = model.Task3_3,
-                Task3_4 = model.Task3_4,
+                //Task1_1 = model.Task1_1,
+                //Task1_2 = model.Task1_2,
+                //Task1_3 = model.Task1_3,
+                //Task2_1 = model.Task2_1,
+                //Task2_2 = model.Task2_2,
+                //Task2_3 = model.Task2_3,
+                //Task3_1 = model.Task3_1,
+                //Task3_2 = model.Task3_2,
+                //Task3_3 = model.Task3_3,
+                //Task3_4 = model.Task3_4,
+                Tasks = JsonSerializer.Serialize(model.Tasks),
                 ExamId = model.ExamId,
                 Comment = model.CommentResult,
                 StudentForeignKey = model.StudentForeignKey
@@ -56,16 +59,17 @@ namespace PRIS.Web.Mappings
         }
         public static void ToResultEntity(Result result, StudentsResultViewModel model)
         {
-            result.Task1_1 = model.Task1_1;
-            result.Task1_2 = model.Task1_2;
-            result.Task1_3 = model.Task1_3;
-            result.Task2_1 = model.Task2_1;
-            result.Task2_2 = model.Task2_2;
-            result.Task2_3 = model.Task2_3;
-            result.Task3_1 = model.Task3_1;
-            result.Task3_2 = model.Task3_2;
-            result.Task3_3 = model.Task3_3;
-            result.Task3_4 = model.Task3_4;
+            //result.Task1_1 = model.Task1_1;
+            //result.Task1_2 = model.Task1_2;
+            //result.Task1_3 = model.Task1_3;
+            //result.Task2_1 = model.Task2_1;
+            //result.Task2_2 = model.Task2_2;
+            //result.Task2_3 = model.Task2_3;
+            //result.Task3_1 = model.Task3_1;
+            //result.Task3_2 = model.Task3_2;
+            //result.Task3_3 = model.Task3_3;
+            //result.Task3_4 = model.Task3_4;
+            result.Tasks = JsonSerializer.Serialize(model.Tasks);
             result.Comment = model.CommentResult;
         }
         public static StudentViewModel ToViewModel(Student entity)
@@ -96,6 +100,13 @@ namespace PRIS.Web.Mappings
                 PassedExam = entity.PassedExam
             };
         }
+        public static StudentsResultViewModel ToStudentsResultViewModel(Result entity)
+        {
+            return new StudentsResultViewModel
+            {
+                Tasks = JsonSerializer.Deserialize<int[]>(entity.Exam.Tasks)
+            };
+        }
 
         public static StudentsResultViewModel ToViewModel(Student studentEntity, Result resultEntity)
         {
@@ -110,19 +121,27 @@ namespace PRIS.Web.Mappings
                 Comment = studentEntity.Comment,
                 PassedExam = studentEntity.PassedExam,
                 ResultId = resultEntity.Id,
-                Task1_1 = resultEntity.Task1_1,
-                Task1_2 = resultEntity.Task1_2,
-                Task1_3 = resultEntity.Task1_3,
-                Task2_1 = resultEntity.Task2_1,
-                Task2_2 = resultEntity.Task2_2,
-                Task2_3 = resultEntity.Task2_3,
-                Task3_1 = resultEntity.Task3_1,
-                Task3_2 = resultEntity.Task3_2,
-                Task3_3 = resultEntity.Task3_3,
-                Task3_4 = resultEntity.Task3_4,
+                //Task1_1 = resultEntity.Task1_1,
+                //Task1_2 = resultEntity.Task1_2,
+                //Task1_3 = resultEntity.Task1_3,
+                //Task2_1 = resultEntity.Task2_1,
+                //Task2_2 = resultEntity.Task2_2,
+                //Task2_3 = resultEntity.Task2_3,
+                //Task3_1 = resultEntity.Task3_1,
+                //Task3_2 = resultEntity.Task3_2,
+                //Task3_3 = resultEntity.Task3_3,
+                //Task3_4 = resultEntity.Task3_4,
+                Tasks = JsonSerializer.Deserialize<int[]>(resultEntity.Tasks),
                 CommentResult = resultEntity.Comment,
                 ExamId = resultEntity.ExamId,
                 StudentForeignKey = resultEntity.StudentForeignKey
+            };
+        }
+        public static StudentsResultViewModel ToStudentsResultViewModel(int[] tasks)
+        {
+            return new StudentsResultViewModel
+            {
+                Tasks = tasks
             };
         }
     }
