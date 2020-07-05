@@ -48,7 +48,7 @@ namespace PRIS.Web.Controllers
             {
                 foreach (var student in studentViewModels)
                 {
-                    student.FinalPoints = student.Tasks.Sum(x => x);
+                    student.FinalPoints = student.Tasks?.Sum(x => x) ?? 0;
                     var examDraft = _examRepository.Query<Exam>().Where(e => e.Id == student.ExamId).FirstOrDefault();
                     double maxPoints = TaskParametersMappings.ToTaskParameterViewModel(examDraft).Tasks.Sum(x => x);
                     student.PercentageGrade = student.FinalPoints * 100 / maxPoints;
@@ -77,7 +77,6 @@ namespace PRIS.Web.Controllers
                 {
                     ExamId = ExamId,
                 };
-
                 result = await _resultRepository.InsertAsync(result);
                 result.Student = student;
                 student.Result = result;
@@ -174,6 +173,7 @@ namespace PRIS.Web.Controllers
         public async Task<IActionResult> EditResult(int? id, int? resultId)
         {
             TempData["ResultId"] = resultId;
+            int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
 
             if (id == null)
             {
@@ -182,18 +182,21 @@ namespace PRIS.Web.Controllers
             var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id == id);
             var studentEntity = await studentRequest.FirstOrDefaultAsync();
             var resultEntity = await _resultRepository.FindByIdAsync(studentEntity.Result.Id);
-
             if (studentEntity == null)
             {
                 return NotFound();
             }
-
-            return View(StudentsMappings.ToViewModel(studentEntity, resultEntity));
+            var exam = await _examRepository.FindByIdAsync(ExamId);
+            var studentViewModel = StudentsMappings.ToViewModel(studentEntity, resultEntity);
+            if (resultEntity.Tasks == null)
+                studentViewModel.Tasks = new double[JsonSerializer.Deserialize<double[]>(exam.Tasks).Length];
+            TempData["ExamId"] = ExamId;
+            return View(studentViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditResult(int[] Tasks)
+        public async Task<IActionResult> EditResult(double[] Tasks)
         {
             int.TryParse(TempData["ResultId"].ToString(), out int resultId);
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);

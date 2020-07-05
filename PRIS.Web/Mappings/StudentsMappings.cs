@@ -60,7 +60,7 @@ namespace PRIS.Web.Mappings
         {
             return new StudentsResultViewModel
             {
-                Tasks = JsonSerializer.Deserialize<int[]>(entity.Exam.Tasks)
+                Tasks = JsonSerializer.Deserialize<double[]>(entity.Exam.Tasks)
             };
         }
 
@@ -77,13 +77,13 @@ namespace PRIS.Web.Mappings
                 Comment = studentEntity.Comment,
                 PassedExam = studentEntity.PassedExam,
                 ResultId = resultEntity.Id,
-                Tasks = JsonSerializer.Deserialize<int[]>(resultEntity.Tasks),
+                Tasks = resultEntity.Tasks == null ? new double[] { 0 } : JsonSerializer.Deserialize<double[]>(resultEntity.Tasks),
                 CommentResult = resultEntity.Comment,
                 ExamId = resultEntity.ExamId,
                 StudentForeignKey = resultEntity.StudentForeignKey
             };
         }
-        public static StudentsResultViewModel ToStudentsResultViewModel(int[] tasks)
+        public static StudentsResultViewModel ToStudentsResultViewModel(double[] tasks)
         {
             return new StudentsResultViewModel
             {

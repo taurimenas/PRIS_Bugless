@@ -15,17 +15,20 @@
                     <span asp-validation-for="@task" class="text-danger"></span>
 
                 }
-                <div class="input-group">
-                    @foreach (var task in Model.Tasks)
-                    {
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">1.1</span>
-                        </div>
-                        <input name="tasks" type="number" step="0.5" min="0.5" asp-for="@task" class="form-control" required
-                               oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
-                               oninput="this.setCustomValidity('')">
-                    }
-                </div>
+            <div class="input-group">
+                @{
+                    var taskNames = new string[] { "1.1", "1.2", "1.3", "2.1", "2.2", "2.3", "3.1", "3.2", "3.3", "3.4" };
+                }
+                @for (int i = 0; i < Model.Tasks.Length; i++)
+                {
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">@taskNames[i]</span>
+                    </div>
+                    <input name="tasks" type="number" step="0.5" min="0.5" asp-for="@Model.Tasks[i]" class="form-control" required
+                           oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0.5')"
+                           oninput="this.setCustomValidity('')">
+                } 
+            </div>
                 <br />
                 <div class="form-group">
                     <input type="submit" value="Atnaujinti" class="btn btn-primary" />
