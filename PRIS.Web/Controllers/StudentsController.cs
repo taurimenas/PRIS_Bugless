@@ -206,18 +206,17 @@ namespace PRIS.Web.Controllers
                     var result = await _resultRepository.FindByIdAsync(resultId);
                     var student = await studentRequest.FirstOrDefaultAsync(x => x.Id == result.StudentForeignKey);
                     var studentResultViewModel = StudentsMappings.ToStudentsResultViewModel(Tasks);
-                    var resultTasks = Tasks;
                     var examTasks = StudentsMappings.ToStudentsResultViewModel(result).Tasks;
 
-                    var testToDelete = examTasks.Select((x, i) => x < resultTasks[i]);
+                    var testToDelete = examTasks.Select((x, i) => x < Tasks[i]);
 
-                    var isInvalid = examTasks.Select((x, i) => x < resultTasks[i]).Any(x => x);
+                    var isInvalid = examTasks.Select((x, i) => x < Tasks[i]).Any(x => x);
                     if (isInvalid)
                     {
                         ModelState.AddModelError("EditResult", "Užduoties balas negali būti didesnis nei testo šablono balas");
                         TempData["ErrorMessage"] = "Užduoties balas negali būti didesnis nei testo šablono balas";
                         TempData["ResultId"] = resultId;
-                        return RedirectToAction("EditResult", "Students", new { id = resultId });
+                        return RedirectToAction("EditResult", "Students", resultId);
                     }
 
                     StudentsMappings.ToResultEntity(result, studentResultViewModel);
