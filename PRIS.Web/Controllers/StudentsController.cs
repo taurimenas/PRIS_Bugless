@@ -169,7 +169,7 @@ namespace PRIS.Web.Controllers
             }
             return View(student);
         }
-
+        //GET
         public async Task<IActionResult> EditResult(int? id, int? resultId)
         {
             TempData["ResultId"] = resultId;
@@ -182,6 +182,11 @@ namespace PRIS.Web.Controllers
             var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id == id);
             var studentEntity = await studentRequest.FirstOrDefaultAsync();
             var resultEntity = await _resultRepository.FindByIdAsync(studentEntity.Result.Id);
+            if (studentEntity.PassedExam)
+            {
+                TempData["ErrorMessage"] = "Studentas yra pakviestas į pokalbį, todėl jo duomenų negalima redaguoti.";
+                return RedirectToAction("Index", "Students", new { id = resultEntity.ExamId });
+            }
             if (studentEntity == null)
             {
                 return NotFound();
