@@ -11,6 +11,7 @@ namespace PRIS.Web.Models
     public class ExamViewModel
     {
         public IEnumerable<SelectListItem> Cities { get; set; }
+        public IEnumerable<SelectListItem> AcceptancePeriod { get; set; }
         public int Id { get; set; }
         public int CityId { get; set; }
         [Display(Name = "Data")]
@@ -22,5 +23,8 @@ namespace PRIS.Web.Models
         [Required(ErrorMessage = "Būtinai turite pasirinkti miestą")]
         [Display(Name = "Miestas")]
         public string SelectedCity { get; set; }
+        public string SetAcceptancePeriod { get; set; }
+        public string SelectedAcceptancePeriod { get; set; }
+
     }
 }

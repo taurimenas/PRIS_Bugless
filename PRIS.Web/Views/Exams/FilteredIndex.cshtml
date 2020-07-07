@@ -1,7 +1,7 @@
 ﻿@model PRIS.Web.Models.ExamsViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "FilteredIndex";
 }
 
 <h3>
@@ -52,7 +52,7 @@
 
 <script>
     function callChangefunc(value) {
-        window.location.href = "/Exams/Index?value=" + value;
+        window.location.href = "/Exams/FilteredIndex?value=" + value;
     }
 </script>
 

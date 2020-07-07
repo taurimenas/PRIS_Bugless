@@ -24,13 +24,43 @@ namespace PRIS.Web.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int value, [Bind("SelectedCity")] ExamsViewModel viewModel)
         {
             var result = await _context.Exams.Include(exam => exam.City).ToListAsync();
             List<ExamViewModel> examViewModels = new List<ExamViewModel>();
             result.ForEach(x => examViewModels.Add(ExamMappings.ToViewModel(x)));
             examViewModels.ForEach(x => x.SelectedCity = result.FirstOrDefault(y => y.Id == x.Id).City.Name);
-            return View(examViewModels);
+
+            DateTime firstExamStart = new DateTime(2020, 03, 1);
+            DateTime firstExamEnd = new DateTime(2020, 09, 1);
+            List<string> AcceptancePeriod = new List<string>();
+            foreach (var examViewModel in examViewModels)
+            {
+                firstExamStart.AddYears(examViewModel.Date.Year - firstExamStart.Year);
+                firstExamEnd.AddYears(examViewModel.Date.Year - firstExamEnd.Year);
+                if (examViewModel.Date > firstExamStart && examViewModel.Date < firstExamEnd)
+                {
+                    if (!AcceptancePeriod.Any(x => x == $"{examViewModel.Date.Year} II pusmetis"))
+                        AcceptancePeriod.Add($"{examViewModel.Date.Year} II pusmetis");
+                    examViewModel.SetAcceptancePeriod = $"{examViewModel.Date.Year} II pusmetis";
+                }
+                else
+                {
+                    if (!AcceptancePeriod.Any(x => x == $"{examViewModel.Date.Year} I pusmetis"))
+                        AcceptancePeriod.Add($"{examViewModel.Date.Year} I pusmetis");
+                    examViewModel.SetAcceptancePeriod = $"{examViewModel.Date.Year} I pusmetis";
+                }
+            }
+
+            var stringAcceptancePeriod = new List<SelectListItem>();
+            foreach (var ap in AcceptancePeriod)
+            {
+                stringAcceptancePeriod.Add(new SelectListItem { Value = AcceptancePeriod.FindIndex(a => a == ap).ToString(), Text = ap });
+            }
+            viewModel.AcceptancePeriod = stringAcceptancePeriod;
+            viewModel.ExamViewModels = examViewModels;
+            viewModel.ExamViewModels = examViewModels.Where(x => x.SetAcceptancePeriod == stringAcceptancePeriod.ElementAt(value).Text).ToList();
+            return View(viewModel);
         }
 
         public async Task<IActionResult> Create()
