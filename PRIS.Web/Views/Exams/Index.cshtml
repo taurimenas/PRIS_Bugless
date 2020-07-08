@@ -4,12 +4,18 @@
     ViewData["Title"] = "Index";
 }
 
-<h3>
-    Testai
-    @Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
+    <h3>
+        Testai
+        @Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
 
-    @Html.DropDownListFor(x => Model.AcceptancePeriod, new SelectList(Model.AcceptancePeriod, "Value", "Text"), $"{Model.SelectedAcceptancePeriod}", htmlAttributes: new { @onchange = "callChangefunc(this.value)", @class = "form-control country-select-field", id = "test" })
-</h3>
+        <select class="btn btn-outline-secondary float-right mr-3" onchange="callChangefunc(this.value)">
+            <option style="display:none">@Model.SelectedAcceptancePeriod</option>
+            @foreach (var ap in Model.AcceptancePeriod)
+            {
+                <option value="@ap.Value">@ap.Text</option>
+            }
+        </select>
+    </h3>
 
 <hr />
 <a asp-action="Create">Sukurti naują</a>

@@ -29,6 +29,7 @@ namespace PRIS.Web.Controllers
             var result = await _context.Exams.Include(exam => exam.City).ToListAsync();
             List<ExamViewModel> examViewModels = new List<ExamViewModel>();
             result.ForEach(x => examViewModels.Add(ExamMappings.ToViewModel(x)));
+            examViewModels = examViewModels.OrderByDescending(x => x.Date).ToList();
             examViewModels.ForEach(x => x.SelectedCity = result.FirstOrDefault(y => y.Id == x.Id).City.Name);
 
             DateTime firstExamStart = new DateTime(2020, 03, 1);
