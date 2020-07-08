@@ -8,7 +8,7 @@
     Testai
     @Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
 
-    @Html.DropDownListFor(x => Model.AcceptancePeriod, new SelectList(Model.AcceptancePeriod, "Value", "Text"), htmlAttributes: new { @onchange = "callChangefunc(this.value)", @class = "form-control", id = "City" })
+    @Html.DropDownListFor(x => Model.AcceptancePeriod, new SelectList(Model.AcceptancePeriod, "Value", "Text"), $"{Model.SelectedAcceptancePeriod}", htmlAttributes: new { @onchange = "callChangefunc(this.value)", @class = "form-control country-select-field", id = "test" })
 </h3>
 
 <hr />
@@ -55,4 +55,5 @@
         window.location.href = "/Exams/Index?value=" + value;
     }
 </script>
+
 

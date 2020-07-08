@@ -60,6 +60,7 @@ namespace PRIS.Web.Controllers
             viewModel.AcceptancePeriod = stringAcceptancePeriod;
             viewModel.ExamViewModels = examViewModels;
             viewModel.ExamViewModels = examViewModels.Where(x => x.SetAcceptancePeriod == stringAcceptancePeriod.ElementAt(value).Text).ToList();
+            viewModel.SelectedAcceptancePeriod = stringAcceptancePeriod.ElementAt(value).Text;
             return View(viewModel);
         }
 
