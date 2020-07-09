@@ -144,13 +144,15 @@ namespace PRIS.Web.Controllers
                 {
                     await RemoveFromExams(examById);
                     return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");
-
                 }
                 return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");
             }
             else
             {
+                var oldestExam = await _examRepository.Query<Exam>().OrderBy(m => m.Date).FirstOrDefaultAsync();
                 await RemoveFromExams(examById);
+                if (examById.Date == oldestExam.Date)
+                    return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod - 1}");
                 return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");
             }
         }
