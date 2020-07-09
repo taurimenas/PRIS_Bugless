@@ -37,18 +37,30 @@ namespace PRIS.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, int[] tasks)
         {
-            var exam = await _context.Exams.FindAsync(id);
-            if (id != exam.Id)
+            int.TryParse(TempData["Count"].ToString(), out int studentsCountInAcceptancePeriod);
+            TempData["ExamId"] = id;
+
+            if (studentsCountInAcceptancePeriod > 0)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Šablono keisti negalima, nes prie jo jau yra priskirta kandidatų.";
+                ModelState.AddModelError("ExamsError", "Šablono keisti negalima, nes prie jo jau yra priskirta kandidatų.");
+                return RedirectToAction("Edit", "TaskParameters", new { id });
             }
-            if (ModelState.IsValid)
+            else
             {
-                TaskParametersMappings.EditTaskParametersEntity(exam, tasks);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Exams");
+                var exam = await _context.Exams.FindAsync(id);
+                if (id != exam.Id)
+                {
+                    return NotFound();
+                }
+                if (ModelState.IsValid)
+                {
+                    TaskParametersMappings.EditTaskParametersEntity(exam, tasks);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index", "Exams");
+                }
+                return View(TaskParametersMappings.ToTaskParameterViewModel(tasks));
             }
-            return View(TaskParametersMappings.ToTaskParameterViewModel(tasks));
         }
     }
 }

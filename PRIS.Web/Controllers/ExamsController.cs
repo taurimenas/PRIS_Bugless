@@ -35,13 +35,14 @@ namespace PRIS.Web.Controllers
 
         public async Task<IActionResult> Index(int value, [Bind("SelectedCity")] ExamsViewModel viewModel)
         {
-            var result = await _examRepository.Query<Exam>().Include(exam => exam.City).ToListAsync();
+            var exams = await _examRepository.Query<Exam>().Include(exam => exam.City).ToListAsync();
             List<ExamViewModel> examViewModels = new List<ExamViewModel>();
-            result.ForEach(x => examViewModels.Add(ExamMappings.ToViewModel(x)));
+            exams.ForEach(x => examViewModels.Add(ExamMappings.ToViewModel(x)));
             examViewModels = examViewModels.OrderByDescending(x => x.Date).ToList();
-            examViewModels.ForEach(x => x.SelectedCity = result.FirstOrDefault(y => y.Id == x.Id).City.Name);
+            examViewModels.ForEach(x => x.SelectedCity = exams.FirstOrDefault(y => y.Id == x.Id).City.Name);
 
             List<string> AcceptancePeriod = CalculateAcceptancePeriods(examViewModels);
+
 
             var stringAcceptancePeriod = new List<SelectListItem>();
             foreach (var ap in AcceptancePeriod)
@@ -53,6 +54,18 @@ namespace PRIS.Web.Controllers
             viewModel.ExamViewModels = examViewModels.Where(x => x.SetAcceptancePeriod == stringAcceptancePeriod.ElementAt(value).Text).ToList();
             viewModel.SelectedAcceptancePeriod = stringAcceptancePeriod.ElementAt(value).Text;
             TempData["SelectedAcceptancePeriod"] = stringAcceptancePeriod.ElementAt(value).Value;
+
+            var selectedExams = examViewModels.Where(x => x.SetAcceptancePeriod == stringAcceptancePeriod.ElementAt(value).Text).ToList();
+
+            var results = await _resultRepository.Query<Result>().ToListAsync();
+            //var examHasStudents = result.Any(x => selectedExams.ForEach(y => y.Date == x.Date));
+            int studentsCountInAcceptancePeriod = 0;
+            foreach (var selectedExam in selectedExams)
+            {
+                int examId = exams.FirstOrDefault(x => x.Date == selectedExam.Date).Id;
+                studentsCountInAcceptancePeriod += results.Count(x => x.ExamId == examId);
+            }
+            TempData["Count"] = studentsCountInAcceptancePeriod;
             return View(viewModel);
         }
 
