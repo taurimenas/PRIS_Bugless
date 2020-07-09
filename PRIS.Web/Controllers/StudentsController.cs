@@ -62,20 +62,21 @@ namespace PRIS.Web.Controllers
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(bool passedExam)
+        public async Task<IActionResult> Index(int[] passedExam)
         {
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
             if (ModelState.IsValid)
             {
                 var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id > 0);
                 var students = await studentRequest.Where(x => x.Result.Exam.Id == ExamId).ToListAsync();
-                foreach (var item in students)
+                students.ForEach(x => x.PassedExam = false);
+               
+                for (int i = 0; i < passedExam.Length; i++)
                 {
-                    if (passedExam == true)
-                    {
-                        item.PassedExam = true;
-                    }
+                    var findStudents = students.FirstOrDefault(x => x.Id == passedExam[i]);
+                    findStudents.PassedExam = true;
                 }
+                
                 await _repository.SaveAsync();
                 return RedirectToAction("Index", "Students", new { id = ExamId });
             }
