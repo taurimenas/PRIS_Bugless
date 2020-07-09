@@ -71,6 +71,7 @@ namespace PRIS.Web.Controllers
             viewModel.ExamViewModels = examViewModels;
             viewModel.ExamViewModels = examViewModels.Where(x => x.SetAcceptancePeriod == stringAcceptancePeriod.ElementAt(value).Text).ToList();
             viewModel.SelectedAcceptancePeriod = stringAcceptancePeriod.ElementAt(value).Text;
+            TempData["SelectedAcceptancePeriod"] = stringAcceptancePeriod.ElementAt(value).Value;
             return View(viewModel);
         }
 
@@ -129,6 +130,7 @@ namespace PRIS.Web.Controllers
             }
             var examById = await _examRepository.FindByIdAsync(id);
             var result = await _resultRepository.Query<Result>().FirstOrDefaultAsync(x => x.ExamId == examById.Id);
+            int.TryParse(TempData["SelectedAcceptancePeriod"].ToString(), out int SelectedAcceptancePeriod);
 
             if (result != null)
             {
@@ -140,13 +142,16 @@ namespace PRIS.Web.Controllers
                 }
                 else
                 {
-                    return await RemoveFromExams(examById);
+                    await RemoveFromExams(examById);
+                    return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");
+
                 }
-                return RedirectToAction(nameof(Index));
+                return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");
             }
             else
             {
-                return await RemoveFromExams(examById);
+                await RemoveFromExams(examById);
+                return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");
             }
         }
 
