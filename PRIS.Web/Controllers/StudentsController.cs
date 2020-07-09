@@ -60,26 +60,28 @@ namespace PRIS.Web.Controllers
             return View(studentViewModels);
         }
         //POST
-        //[HttpPost]
-        //public async Task<IActionResult> Index(bool passedExam)
-        //{
-        //    int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
-        //    if (ModelState.IsValid)
-        //    {
-        //        var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id > 0);
-        //        var students = await studentRequest.Where(x => x.Result.Exam.Id == ExamId).ToListAsync();
-        //        foreach (var item in students)
-        //        {
-        //            if (passedExam == true)
-        //            {
-        //                item.PassedExam = true;
-        //            }
-        //        }
-        //        await _repository.SaveAsync();
-        //        return RedirectToAction("Index", "Students", new { id = ExamId });
-        //    }
-        //    return RedirectToAction("Index", "Students", new { id = ExamId });
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(int[] passedExam)
+        {
+            int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
+            if (ModelState.IsValid)
+            {
+                var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id > 0);
+                var students = await studentRequest.Where(x => x.Result.Exam.Id == ExamId).ToListAsync();
+                students.ForEach(x => x.PassedExam = false);
+               
+                for (int i = 0; i < passedExam.Length; i++)
+                {
+                    var findStudents = students.FirstOrDefault(x => x.Id == passedExam[i]);
+                    findStudents.PassedExam = true;
+                }
+                
+                await _repository.SaveAsync();
+                return RedirectToAction("Index", "Students", new { id = ExamId });
+            }
+            return RedirectToAction("Index", "Students", new { id = ExamId });
+        }
         //GET
         public IActionResult Create()
         {

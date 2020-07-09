@@ -4,13 +4,14 @@
     ViewData["Title"] = "Index";
 }
 @Html.ActionLink("Grįžti", "Index", "Exams", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
+<form asp-action="Index">
 <h3>Kandidatų sąrašas</h3>
 
 <hr />
 <a asp-action="Create">Pridėti naują kandidatą</a>
 
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
-@Html.BeginForm("Index", "Students", FormMethod.Post){
+
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -76,7 +77,7 @@
                     </span>
                 </td>
                 <td>
-                    <input type="checkbox" name="passedExam" asp-for="@item.PassedExam">
+                    <input type="checkbox" name="PassedExam" asp-for="@item.PassedExam" value="@item.Id" class="custom-checkbox">
                 </td>
                 <td class="borderless-cell">
                     @Html.ActionLink("", "Edit", new { id = item.Id }, new { @class = "fa fa-pencil-square-o" })
@@ -88,8 +89,8 @@
 </table>
 
 <input type="submit" value="Išsaugoti" class="btn btn-primary" />
-}
 
+</form>
 
 
 
