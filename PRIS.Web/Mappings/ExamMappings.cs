@@ -13,8 +13,6 @@ namespace PRIS.Web.Mappings
             {
                 Comment = model.Comment,
                 Date = model.Date,
-                //Id = model.Id,
-                //CityId = model.CityId,
                 Tasks = JsonSerializer.Serialize(model)
             };
         }
