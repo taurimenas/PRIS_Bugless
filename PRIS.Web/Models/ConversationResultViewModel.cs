@@ -19,6 +19,6 @@ namespace PRIS.Web.Models
         public int ConversationResultId { get; set; }
         [Display(Name = "Pokalbio įvertinimas", Prompt = "Pokalbio įvertinimas")]
         [Range(0, 10)]
-        public int? Grade { get; set; }
+        public double? Grade { get; set; }
     }
 }
