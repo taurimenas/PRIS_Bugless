@@ -17,7 +17,7 @@ namespace PRIS.Web.Mappings
                 FirstName = studentEntity.FirstName,
                 LastName = studentEntity.LastName,
                 ConversationResultComment = conversationResultEntity.Comment,
-                ConversationResultId = conversationResultEntity.Id,
+                ConversationResultId = (int)studentEntity.ConversationResultId,
                 Grade = conversationResultEntity.Grade
             };
         }

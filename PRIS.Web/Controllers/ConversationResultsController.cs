@@ -10,6 +10,7 @@ using PRIS.Web.Controllers;
 using System.Security.Cryptography.X509Certificates;
 using PRIS.Web.Mappings;
 using PRIS.Web.Models;
+using MvcContrib.Filters;
 
 namespace PRIS.Web.Controllers
 {
@@ -30,44 +31,58 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-            
             var student = await _studentRepository.FindByIdAsync(id);
-            ConversationResult conversationResult = new ConversationResult
+            TempData["ConversationResultId"] = student.ConversationResultId;
+            TempData["StudentId"] = student.Id;
+            if (student.ConversationResultId == null)
             {
-            };
-            ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel();
-            student.ConversationResult = conversationResult;
-            conversationResult = await _conversationResult.InsertAsync(conversationResult);
-            conversationResultViewModel.ConversationResultId = conversationResult.Id;
 
-            return View(ConversationResultMappings.ToViewModel(student, conversationResult));
+                ConversationResult conversationResult = new ConversationResult();
+                conversationResult = await _conversationResult.InsertAsync(conversationResult);
+                ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel();
+                conversationResultViewModel.ConversationResultId = conversationResult.Id;
+                return View(ConversationResultMappings.ToViewModel(student, conversationResult));
+            }
+            else
+            {
+                var conversationResult = await _conversationResult.FindByIdAsync(student.ConversationResultId);
+                ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel();
+                conversationResultViewModel.ConversationResultId = conversationResult.Id;
+                return View(ConversationResultMappings.ToViewModel(student, conversationResult));
+            }
         }
         //POST
+        [System.Web.Mvc.ChildActionOnly]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditConversationResult(int? id, [Bind("Grade", "ConversationResultComment")] ConversationResultViewModel model)
+        public async Task<IActionResult> EditConversationResult([Bind("Grade", "ConversationResultComment")] ConversationResultViewModel model)
         {
-            ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel();
-
-            var student = await _studentRepository.FindByIdAsync(model.StudentId);
-
-
-            var conversation = await _conversationResult.FindByIdAsync(student.ConversationResult.Id);
+            int.TryParse(TempData["ConversationResultId"].ToString(), out int conversationResultId);
+            int.TryParse(TempData["StudentId"].ToString(), out int studentId);
             if (ModelState.IsValid)
             {
-                ConversationResultMappings.EditEntity(conversation, model);
-                await _conversationResult.SaveAsync();
+                try
+                {
+                    var studentRequest = _studentRepository.Query<Student>().Include(x => x.ConversationResult).Where(x => x.Id > 0);
+                    var conversationResult = await _conversationResult.FindByIdAsync(conversationResultId);
+                    var student = await studentRequest.FirstOrDefaultAsync(x => x.ConversationResultId == conversationResult.Id);
+                    var conversationResultViewModel = ConversationResultMappings.ToViewModel(student, conversationResult);
+                    ConversationResultMappings.EditEntity(conversationResult, model);
+                    await _conversationResult.UpdateAsync(conversationResult);
 
-                return RedirectToAction("EditConversationResult", "ConversationResult");
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    throw;
+                }
+                // TODO: turi redirectinti i sarasa studentu kurie pakviesti pokalbiui
+                return RedirectToAction("Index", "Exams");
             }
-            return View();
+            //TODO: turi redirectinti i ta pati studenta --------- DONE
+            TempData["ErrorMessage"] = "Pokalbio įvertinimas turi būti nuo 0 iki 10";
+            ModelState.AddModelError("ConversationResultRange", "Pokalbio įvertinimas turi būti nuo 0 iki 10");
+            return RedirectToAction("EditConversationResult", "ConversationResults", new { id = studentId });
         }
 
     }
 }
-
-//post
-    //, [Bind("Grade", "ConversationResultComment")] ConversationResultViewModel model
-    //var conversationResultEntity = await _conversationResult.FindByIdAsync(student.ConversationResult.Id);
-
-    //ConversationResultMappings.EditEntity(conversationResultEntity, model);
