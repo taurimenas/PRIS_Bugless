@@ -41,26 +41,7 @@ namespace PRIS.Web.Controllers
             examViewModels = examViewModels.OrderByDescending(x => x.Date).ToList();
             examViewModels.ForEach(x => x.SelectedCity = result.FirstOrDefault(y => y.Id == x.Id).City.Name);
 
-            DateTime firstExamStart = new DateTime(2020, 03, 1);
-            DateTime firstExamEnd = new DateTime(2020, 09, 1);
-            List<string> AcceptancePeriod = new List<string>();
-            foreach (var examViewModel in examViewModels)
-            {
-                firstExamStart.AddYears(examViewModel.Date.Year - firstExamStart.Year);
-                firstExamEnd.AddYears(examViewModel.Date.Year - firstExamEnd.Year);
-                if (examViewModel.Date > firstExamStart && examViewModel.Date < firstExamEnd)
-                {
-                    if (!AcceptancePeriod.Any(x => x == $"{examViewModel.Date.Year} II pusmetis"))
-                        AcceptancePeriod.Add($"{examViewModel.Date.Year} II pusmetis");
-                    examViewModel.SetAcceptancePeriod = $"{examViewModel.Date.Year} II pusmetis";
-                }
-                else
-                {
-                    if (!AcceptancePeriod.Any(x => x == $"{examViewModel.Date.Year} I pusmetis"))
-                        AcceptancePeriod.Add($"{examViewModel.Date.Year} I pusmetis");
-                    examViewModel.SetAcceptancePeriod = $"{examViewModel.Date.Year} I pusmetis";
-                }
-            }
+            List<string> AcceptancePeriod = CalculateAcceptancePeriods(examViewModels);
 
             var stringAcceptancePeriod = new List<SelectListItem>();
             foreach (var ap in AcceptancePeriod)
@@ -161,6 +142,30 @@ namespace PRIS.Web.Controllers
         {
             await _examRepository.DeleteAsync(examById.Id);
             return RedirectToAction(nameof(Index));
+        }
+        private static List<string> CalculateAcceptancePeriods(List<ExamViewModel> examViewModels)
+        {
+            DateTime firstExamStart = new DateTime(2020, 03, 1);
+            DateTime firstExamEnd = new DateTime(2020, 09, 1);
+            List<string> AcceptancePeriod = new List<string>();
+            foreach (var examViewModel in examViewModels)
+            {
+                firstExamStart.AddYears(examViewModel.Date.Year - firstExamStart.Year);
+                firstExamEnd.AddYears(examViewModel.Date.Year - firstExamEnd.Year);
+                if (examViewModel.Date > firstExamStart && examViewModel.Date < firstExamEnd)
+                {
+                    if (!AcceptancePeriod.Any(x => x == $"{examViewModel.Date.Year} II pusmetis"))
+                        AcceptancePeriod.Add($"{examViewModel.Date.Year} II pusmetis");
+                    examViewModel.SetAcceptancePeriod = $"{examViewModel.Date.Year} II pusmetis";
+                }
+                else
+                {
+                    if (!AcceptancePeriod.Any(x => x == $"{examViewModel.Date.Year} I pusmetis"))
+                        AcceptancePeriod.Add($"{examViewModel.Date.Year} I pusmetis");
+                    examViewModel.SetAcceptancePeriod = $"{examViewModel.Date.Year} I pusmetis";
+                }
+            }
+            return AcceptancePeriod;
         }
     }
 }
