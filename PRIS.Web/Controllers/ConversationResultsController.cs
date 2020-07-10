@@ -79,7 +79,7 @@ namespace PRIS.Web.Controllers
             }
         }
         //POST
-        [System.Web.Mvc.ChildActionOnly]
+        //[System.Web.Mvc.ChildActionOnly]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditConversationResult([Bind("Grade", "ConversationResultComment")] ConversationResultViewModel model)
