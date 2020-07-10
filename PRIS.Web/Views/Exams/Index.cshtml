@@ -48,13 +48,29 @@
                             @Html.ActionLink("Kandidatai", "Index", "Students", new { id = item.Id }, new { @class = "dropdown-item" })
                             @Html.ActionLink("Balų šablonas", "Edit", "TaskParameters", new { id = item.Id }, new { @class = "dropdown-item" })
                         </span>
+                        @Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" })
                     </span>
-                    @Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" })
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<div class="list-group container">
+    <div class="row">
+        <div class="list-group-item col-11">Miestas | Data </div>
+
+        @foreach (var item in Model.ExamViewModels)
+        {
+            <a asp-action="Index" asp-controller="Students" asp-route-id="@item.Id" class="list-group-item col-11 list-group-item-action list-group-item-light">
+
+                @Html.DisplayFor(modelItem => item.SelectedCity) | @Html.DisplayFor(modelItem => item.Date)
+            </a>
+            <div class="col-1 pt-2">
+                @Html.ActionLink("", "Edit", "TaskParameters", new { id = item.Id }, new { @class = "fa fa-cog text-secondary" }) @Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" })
+            </div>
+        }
+    </div>
+</div>
 
 <script>
     function callChangefunc(value) {
