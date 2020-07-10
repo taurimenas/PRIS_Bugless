@@ -58,7 +58,6 @@ namespace PRIS.Web.Controllers
             var selectedExams = examViewModels.Where(x => x.SetAcceptancePeriod == stringAcceptancePeriod.ElementAt(value).Text).ToList();
 
             var results = await _resultRepository.Query<Result>().ToListAsync();
-            //var examHasStudents = result.Any(x => selectedExams.ForEach(y => y.Date == x.Date));
             int studentsCountInAcceptancePeriod = 0;
             foreach (var selectedExam in selectedExams)
             {

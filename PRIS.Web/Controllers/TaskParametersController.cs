@@ -38,6 +38,7 @@ namespace PRIS.Web.Controllers
         public async Task<ActionResult> Edit(int id, int[] tasks)
         {
             int.TryParse(TempData["Count"].ToString(), out int studentsCountInAcceptancePeriod);
+            int.TryParse(TempData["SelectedAcceptancePeriod"].ToString(), out int SelectedAcceptancePeriod);
             TempData["ExamId"] = id;
 
             if (studentsCountInAcceptancePeriod > 0)
@@ -57,7 +58,7 @@ namespace PRIS.Web.Controllers
                 {
                     TaskParametersMappings.EditTaskParametersEntity(exam, tasks);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Index", "Exams");
+                    return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");
                 }
                 return View(TaskParametersMappings.ToTaskParameterViewModel(tasks));
             }
