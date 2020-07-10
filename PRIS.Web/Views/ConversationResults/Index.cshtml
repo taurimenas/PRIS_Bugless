@@ -1,0 +1,45 @@
+﻿@model PRIS.Web.Models.ConversationAndStudentViewModel
+ @{
+  ViewData["Title"]="Index" ;
+ }
+<h3>Kandidatai atrinkti į pokalbį</h3>
+<div class="col-12 border p-3">
+    <table class="table table-striped table-bordered " style="width:100%">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Students.FirstOrDefault().FirstName)</th>
+                <th>@Html.DisplayNameFor(model=> model.Students.FirstOrDefault().LastName)</th>
+                <th>@Html.DisplayNameFor(model => model.Students.FirstOrDefault().Email))</th>
+                <th>@Html.DisplayNameFor(model => model.Students.FirstOrDefault().PhoneNumber)</th>
+                <th>@Html.DisplayNameFor(model => model.ConvResults.FirstOrDefault().Grade)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Students.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.Students.ElementAtOrDefault(i).FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.Students.ElementAtOrDefault(i).LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.Students.ElementAtOrDefault(i).Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.Students.ElementAtOrDefault(i).PhoneNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.ConvResults.ElementAtOrDefault(i).Grade)
+                        <span class="float-right text-secondary fas fa-pen-square">
+                            @Html.ActionLink("Redaguoti", "EditConversationResult", "ConversationResults", new { Id = Model.Students.ElementAtOrDefault(i).Id }, null)
+                            
+                            @*@Html.ActionLink("", "EditResult", new { id = item.Id, resultId = item.ResultId }, new { @class = "fas fa-pen-square" })*@
+                        </span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

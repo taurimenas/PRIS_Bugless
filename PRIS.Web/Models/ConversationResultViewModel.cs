@@ -15,6 +15,10 @@ namespace PRIS.Web.Models
         [Display(Name = "Pavardė", Prompt = "Pavardė")]
         public string LastName { get; set; }
         [Display(Name = "Pokalbio komentaras", Prompt = "Pokalbio komentaras")]
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public double? FinalPoints { get; set; }
+        public double? PercentageGrade { get; set; }
         public string ConversationResultComment { get; set; }
         public int ConversationResultId { get; set; }
         [Display(Name = "Pokalbio įvertinimas", Prompt = "Pokalbio įvertinimas")]

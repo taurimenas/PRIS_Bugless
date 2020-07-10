@@ -11,6 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using PRIS.Web.Mappings;
 using PRIS.Web.Models;
 using MvcContrib.Filters;
+using System.Runtime.CompilerServices;
 
 namespace PRIS.Web.Controllers
 {
@@ -23,6 +24,31 @@ namespace PRIS.Web.Controllers
         {
             _studentRepository = studentRepository;
             _conversationResult = conversationResult;
+        }
+        public async Task<IActionResult> Index(int? id)
+        {
+            
+            var passedStudents = await _studentRepository.Query<Student>()
+                .Include(i =>i.Result)
+                .ThenInclude(u=>u.Exam)
+                .Where(x => x.PassedExam == true)
+                .Where(y=>y.Result.Exam.Id == id)
+                .ToListAsync();
+
+            var conversationResult = new List<ConversationResult>();
+            foreach (var student in passedStudents)
+            {
+                var p = await _conversationResult.FindByIdAsync(student.ConversationResultId);
+                conversationResult.Add(p);
+            }
+            List<ConversationResultViewModel> conversationResultViewModel = new List<ConversationResultViewModel>();
+            List<StudentViewModel> studentViewModels = new List<StudentViewModel>();
+            passedStudents.ForEach(x => studentViewModels.Add(ConversationResultMappings.ToStudentViewModel(x)));
+            conversationResult.ForEach(x => conversationResultViewModel.Add(ConversationResultMappings.ToConversationResultViewModel(x)));
+
+            ConversationResultMappings.ToStudentAndConversationResultViewModel(studentViewModels, conversationResultViewModel);
+
+            return View(ConversationResultMappings.ToStudentAndConversationResultViewModel(studentViewModels, conversationResultViewModel));
         }
         //GET
         public async Task<IActionResult> EditConversationResult(int? id)
