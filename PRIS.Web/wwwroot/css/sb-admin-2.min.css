@@ -5199,20 +5199,23 @@ a.badge-dark.focus, a.badge-dark:focus {
     flex-direction: column;
     padding-left: 0;
     margin-bottom: 0;
-    border-radius: .35rem
+    border-radius: .35rem; 
+    background-color: #f8f9fc;
 }
 
 .list-group-item-action {
     width: 100%;
     color: #6e707e;
-    text-align: inherit
+    text-align: inherit;
+    background-color: #f8f9fc;
 }
 
     .list-group-item-action:focus, .list-group-item-action:hover {
         z-index: 1;
         color: #6e707e;
         text-decoration: none;
-        background-color: #f8f9fc
+        background-color: #f8f9fc;
+        
     }
 
     .list-group-item-action:active {
@@ -5224,7 +5227,7 @@ a.badge-dark.focus, a.badge-dark:focus {
     position: relative;
     display: block;
     padding: .75rem 1.25rem;
-    background-color: #fff;
+    background-color: #f8f9fc;
     border: 1px solid rgba(0,0,0,.125)
 }
 
@@ -5518,12 +5521,12 @@ a.badge-dark.focus, a.badge-dark:focus {
 
 .list-group-item-light {
     color: #818183;
-    background-color: #fdfdfe
+    background-color: #f8f9fc;
 }
 
     .list-group-item-light.list-group-item-action:focus, .list-group-item-light.list-group-item-action:hover {
         color: #818183;
-        background-color: #ececf6
+        background-color: #ececf6;
     }
 
     .list-group-item-light.list-group-item-action.active {
@@ -11476,3 +11479,4 @@ footer.sticky-footer {
 body.sidebar-toggled footer.sticky-footer {
     width: 100%
 }
+

@@ -21,51 +21,17 @@
 <a asp-action="Create">Sukurti naują</a>
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Miestas</th>
-            <th>Data</th>
-
-            <th class="borderless-cell" width="100px"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.ExamViewModels)
-        {
-            <tr>
-                <td>
-                    <div class="mask flex-center" data-toggle="collapse" data-target="#demo">@Html.DisplayFor(modelItem => item.SelectedCity)</div>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Date)
-                </td>
-
-                <td class="borderless-cell">
-                    <span class="dropdown">
-                        <a data-toggle="dropdown"><i class="fa fa-cog" style="color: slategray"></i></a>
-                        <span class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @Html.ActionLink("Kandidatai", "Index", "Students", new { id = item.Id }, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Balų šablonas", "Edit", "TaskParameters", new { id = item.Id }, new { @class = "dropdown-item" })
-                        </span>
-                        @Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" })
-                    </span>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
 <div class="list-group container">
     <div class="row">
-        <div class="list-group-item col-11">Miestas | Data </div>
+        <div class="list-group-item col-11 font-weight-bold">Miestas | Data </div>
 
         @foreach (var item in Model.ExamViewModels)
         {
-            <a asp-action="Index" asp-controller="Students" asp-route-id="@item.Id" class="list-group-item col-11 list-group-item-action list-group-item-light">
-
+            <a asp-action="Index" asp-controller="Students" asp-route-id="@item.Id" class="col-11 list-group-item list-group-item-action list-group-item-light">
                 @Html.DisplayFor(modelItem => item.SelectedCity) | @Html.DisplayFor(modelItem => item.Date)
             </a>
-            <div class="col-1 pt-2">
+
+            <div class="col-1 pt-3">
                 @Html.ActionLink("", "Edit", "TaskParameters", new { id = item.Id }, new { @class = "fa fa-cog text-secondary" }) @Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" })
             </div>
         }
