@@ -1,4 +1,5 @@
 ﻿using PRIS.Core.Library.Entities;
+using PRIS.Web.Data.Migrations;
 using PRIS.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -56,12 +57,21 @@ namespace PRIS.Web.Mappings
                 PhoneNumber = studentEntity.PhoneNumber
             };
         }
-        public static ConversationResultViewModel ToConversationResultViewModel(ConversationResult conversationResultEnity)
-        {
+        public static ConversationResultViewModel ToConversationResultViewModel(ConversationResult conversationResultEntity)
+        {   
+            if(conversationResultEntity == null)
+            {
+                return new ConversationResultViewModel
+                {
+                    Grade = null,
+                    ConversationResultComment = null
+                };   
+            }
             return new ConversationResultViewModel
             {
-                ConversationResultId = conversationResultEnity.Id,
-                Grade = conversationResultEnity?.Grade,
+
+                ConversationResultId = conversationResultEntity.Id,
+                Grade = conversationResultEntity?.Grade,
             };
         }
     }

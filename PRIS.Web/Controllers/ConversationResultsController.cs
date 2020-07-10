@@ -1,17 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PRIS.Core.Library.Entities;
+using PRIS.Web.Mappings;
+using PRIS.Web.Models;
+using PRIS.Web.Storage;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PRIS.Core.Library.Entities;
-using PRIS.Web.Storage;
-using PRIS.Web.Controllers;
-using System.Security.Cryptography.X509Certificates;
-using PRIS.Web.Mappings;
-using PRIS.Web.Models;
-using MvcContrib.Filters;
-using System.Runtime.CompilerServices;
 
 namespace PRIS.Web.Controllers
 {
@@ -27,15 +22,21 @@ namespace PRIS.Web.Controllers
         }
         public async Task<IActionResult> Index(int? id)
         {
-            
             var passedStudents = await _studentRepository.Query<Student>()
-                .Include(i =>i.Result)
-                .ThenInclude(u=>u.Exam)
+                .Include(i => i.Result)
+                .ThenInclude(u => u.Exam)
                 .Where(x => x.PassedExam == true)
-                .Where(y=>y.Result.Exam.Id == id)
+                .Where(y => y.Result.Exam.Id == id)
                 .ToListAsync();
 
+
             var conversationResult = new List<ConversationResult>();
+            var getGradeNull = passedStudents.Where(x => x.ConversationResult.Grade == null);
+            if (getGradeNull == null)
+            {
+                return View();
+            }
+
             foreach (var student in passedStudents)
             {
                 var p = await _conversationResult.FindByIdAsync(student.ConversationResultId);
@@ -49,11 +50,12 @@ namespace PRIS.Web.Controllers
             ConversationResultMappings.ToStudentAndConversationResultViewModel(studentViewModels, conversationResultViewModel);
 
             return View(ConversationResultMappings.ToStudentAndConversationResultViewModel(studentViewModels, conversationResultViewModel));
+
         }
         //GET
         public async Task<IActionResult> EditConversationResult(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -62,7 +64,6 @@ namespace PRIS.Web.Controllers
             TempData["StudentId"] = student.Id;
             if (student.ConversationResultId == null)
             {
-
                 ConversationResult conversationResult = new ConversationResult();
                 conversationResult = await _conversationResult.InsertAsync(conversationResult);
                 ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel();
@@ -85,10 +86,12 @@ namespace PRIS.Web.Controllers
         {
             int.TryParse(TempData["ConversationResultId"].ToString(), out int conversationResultId);
             int.TryParse(TempData["StudentId"].ToString(), out int studentId);
+            int.TryParse(TempData["ExamId"].ToString(), out int examId);
             if (ModelState.IsValid)
             {
                 try
                 {
+
                     var studentRequest = _studentRepository.Query<Student>().Include(x => x.ConversationResult).Where(x => x.Id > 0);
                     var conversationResult = await _conversationResult.FindByIdAsync(conversationResultId);
                     var student = await studentRequest.FirstOrDefaultAsync(x => x.ConversationResultId == conversationResult.Id);
@@ -101,8 +104,8 @@ namespace PRIS.Web.Controllers
                 {
                     throw;
                 }
-                // TODO: turi redirectinti i sarasa studentu kurie pakviesti pokalbiui
-                return RedirectToAction("Index", "Exams");
+                // TODO: turi redirectinti i sarasa studentu kurie pakviesti pokalbiui ------------ DONE
+                return RedirectToAction("Index", "ConversationResults", new { id = examId });
             }
             //TODO: turi redirectinti i ta pati studenta --------- DONE
             TempData["ErrorMessage"] = "Pokalbio įvertinimas turi būti nuo 0 iki 10";
