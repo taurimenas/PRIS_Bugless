@@ -39,23 +39,22 @@ namespace PRIS.Web.Controllers
             List<ExamViewModel> examViewModels = new List<ExamViewModel>();
             exams.ForEach(x => examViewModels.Add(ExamMappings.ToViewModel(x)));
             examViewModels = examViewModels.OrderByDescending(x => x.Date).ToList();
-            examViewModels.ForEach(x => x.SelectedCity = exams.FirstOrDefault(y => y.Id == x.Id).City.Name);
 
             List<string> AcceptancePeriod = CalculateAcceptancePeriods(examViewModels);
 
 
-            var stringAcceptancePeriod = new List<SelectListItem>();
+            var AcceptancePeriods = new List<SelectListItem>();
             foreach (var ap in AcceptancePeriod)
             {
-                stringAcceptancePeriod.Add(new SelectListItem { Value = AcceptancePeriod.FindIndex(a => a == ap).ToString(), Text = ap });
+                AcceptancePeriods.Add(new SelectListItem { Value = AcceptancePeriod.FindIndex(a => a == ap).ToString(), Text = ap });
             }
-            viewModel.AcceptancePeriod = stringAcceptancePeriod;
-            viewModel.ExamViewModels = examViewModels;
-            viewModel.ExamViewModels = examViewModels.Where(x => x.SetAcceptancePeriod == stringAcceptancePeriod.ElementAt(value).Text).ToList();
-            viewModel.SelectedAcceptancePeriod = stringAcceptancePeriod.ElementAt(value).Text;
-            TempData["SelectedAcceptancePeriod"] = stringAcceptancePeriod.ElementAt(value).Value;
+            viewModel.AcceptancePeriod = AcceptancePeriods;
+            viewModel.ExamViewModels = examViewModels.Where(x => x.SetAcceptancePeriod == AcceptancePeriods.ElementAt(value).Text).ToList();
+            var SelectedAcceptancePeriod = AcceptancePeriods.ElementAt(value);
+            viewModel.SelectedAcceptancePeriod = SelectedAcceptancePeriod.Text;
+            TempData["SelectedAcceptancePeriod"] = SelectedAcceptancePeriod.Value;
 
-            var selectedExams = examViewModels.Where(x => x.SetAcceptancePeriod == stringAcceptancePeriod.ElementAt(value).Text).ToList();
+            var selectedExams = examViewModels.Where(x => x.SetAcceptancePeriod == SelectedAcceptancePeriod.Text).ToList();
 
             var results = await _resultRepository.Query<Result>().ToListAsync();
             int studentsCountInAcceptancePeriod = 0;
