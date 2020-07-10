@@ -13,6 +13,7 @@ namespace PRIS.Core.Library.Entities
         public bool PassedExam { get; set; }
         public int? StudentsCourseId { get; set; }
         public int? ResultId { get; set; }
+        public int? ConversationResultId { get; set; }
 
         public Result Result { get; set; }
         public ConversationResult ConversationResult { get; set; }

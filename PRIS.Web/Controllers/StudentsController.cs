@@ -78,7 +78,7 @@ namespace PRIS.Web.Controllers
                 }
                 
                 await _repository.SaveAsync();
-                return RedirectToAction("Index", "Students", new { id = ExamId });
+                return RedirectToAction("Index", "ConversationResults", new { id = ExamId });
             }
             return RedirectToAction("Index", "Students", new { id = ExamId });
         }
