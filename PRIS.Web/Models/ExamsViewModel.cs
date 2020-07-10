@@ -8,7 +8,7 @@ namespace PRIS.Web.Models
 {
     public class ExamsViewModel
     {
-        public List<ExamViewModel> ExamViewModels { get; set; }
+        public IEnumerable<ExamViewModel> ExamViewModels { get; set; }
         public string SelectedAcceptancePeriod { get; set; }
         public IEnumerable<SelectListItem> AcceptancePeriod { get; set; }
     }
