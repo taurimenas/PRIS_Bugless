@@ -18,16 +18,16 @@
 </h3>
 
 <hr />
-<a asp-action="Create">Sukurti naują</a>
+<a asp-action="Create" class="pl-3">Sukurti naują</a>
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 
 <div class="list-group container">
     <div class="row">
-        <div class="list-group-item col-11 font-weight-bold">Miestas | Data </div>
+        <div class="list-group-item col-11 font-weight-bold d-flex align-items-center">Miestas | Data </div>
 
         @foreach (var item in Model.ExamViewModels)
         {
-            <a asp-action="Index" asp-controller="Students" asp-route-id="@item.Id" class="col-11 list-group-item list-group-item-action list-group-item-light">
+            <a asp-action="Index" asp-controller="Students" asp-route-id="@item.Id" class="col-11 list-group-item list-group-item-action list-group-item-light d-flex align-items-center">
                 @Html.DisplayFor(modelItem => item.SelectedCity) | @Html.DisplayFor(modelItem => item.Date)
             </a>
 
