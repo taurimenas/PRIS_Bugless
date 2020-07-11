@@ -62,25 +62,26 @@ namespace PRIS.Web.Controllers
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(int[] passedExam)
+        public async Task<IActionResult> Index(int[] HasPassedExam)
         {
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
+            var backToExam = RedirectToAction("Index", "Students", new { id = ExamId });
             if (ModelState.IsValid)
             {
-                var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id > 0);
-                var students = await studentRequest.Where(x => x.Result.Exam.Id == ExamId).ToListAsync();
-                students.ForEach(x => x.PassedExam = false);
-               
-                for (int i = 0; i < passedExam.Length; i++)
+                var studentRequest = await _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id > 0).Where(x => x.Result.Exam.Id == ExamId).ToListAsync();
+
+                studentRequest.ForEach(x => x.PassedExam = false);
+
+                for (int i = 0; i < HasPassedExam.Length; i++)
                 {
-                    var findStudents = students.FirstOrDefault(x => x.Id == passedExam[i]);
+                    var findStudents = studentRequest.FirstOrDefault(x => x.Id == HasPassedExam[i]);
                     findStudents.PassedExam = true;
                 }
-                
+
                 await _repository.SaveAsync();
-                return RedirectToAction("Index", "Students", new { id = ExamId });
+                return backToExam;
             }
-            return RedirectToAction("Index", "Students", new { id = ExamId });
+            return backToExam;
         }
         //GET
         public IActionResult Create()
