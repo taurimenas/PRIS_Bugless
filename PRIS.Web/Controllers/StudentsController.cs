@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using PRIS.Core.Library.Entities;
@@ -21,12 +22,14 @@ namespace PRIS.Web.Controllers
         private readonly Repository<Student> _repository;
         private readonly Repository<Result> _resultRepository;
         private readonly Repository<Exam> _examRepository;
+        private readonly Repository<PRIS.Core.Library.Entities.Program> _programRepository;
 
-        public StudentsController(Repository<Student> repository, Repository<Result> resultRepository, Repository<Exam> examRepository)
+        public StudentsController(Repository<Student> repository, Repository<Result> resultRepository, Repository<Exam> examRepository, Repository<PRIS.Core.Library.Entities.Program> programRepository)
         {
             _repository = repository;
             _resultRepository = resultRepository;
             _examRepository = examRepository;
+            _programRepository = programRepository;
         }
 
         public async Task<IActionResult> Index(int? id)
@@ -59,9 +62,17 @@ namespace PRIS.Web.Controllers
 
             return View(studentViewModels);
         }
-
-        public IActionResult Create()
+        //GET
+        public async Task<IActionResult> Create()
         {
+
+            List<PRIS.Core.Library.Entities.Program> programs = await _examRepository.Query<PRIS.Core.Library.Entities.Program>().ToListAsync();
+            var stringPrograms = new List<SelectListItem>();
+            foreach (var program in programs)
+            {
+                stringPrograms.Add(new SelectListItem { Value = program.Name, Text = program.Name });
+            }
+
             return View();
         }
 
