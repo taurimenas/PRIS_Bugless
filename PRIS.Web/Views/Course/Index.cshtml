@@ -1,0 +1,79 @@
+﻿@model PRIS.Web.Models.CourseModels.StudentsInCourseViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>
+    Grupių formavimas
+    @Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
+
+    @*<select class="btn btn-outline-secondary float-right mr-3" onchange="callChangefunc(this.value)">*@
+    @*<option style="display:none">@Model</option>*@
+    @*@foreach (var exam in Model.ExamsViewModels)
+        {
+            <option value="@exam.SelectedAcceptancePeriod">@exam.SelectedAcceptancePeriod</option>
+        }*@
+    @*</select>*@
+</h3>
+
+<hr />
+@*<a asp-action="Create">Sukurti naują</a>*@
+<div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Students.FirstOrDefault().FirstName)</th>
+            <th>@Html.DisplayNameFor(model => model.Students.FirstOrDefault().LastName)</th>
+            <th>@Html.DisplayNameFor(model => model.Students.FirstOrDefault().Email)</th>
+            <th>@Html.DisplayNameFor(model => model.Students.FirstOrDefault().PhoneNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.Results.FirstOrDefault().PercentageGrade)</th>
+            <th>@Html.DisplayNameFor(model => model.ConversationResults.FirstOrDefault().Grade)</th>
+            <th>Galutinis balas</th>
+            <th>Prioritetas</th>
+            <th class="borderless-cell" width="100px"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Students.Count; i++)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.Students.ElementAtOrDefault(i).FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.Students.ElementAtOrDefault(i).LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.Students.ElementAtOrDefault(i).Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.Students.ElementAtOrDefault(i).PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.Results.ElementAtOrDefault(i).PercentageGrade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.ConversationResults.ElementAtOrDefault(i).Grade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.FinalAverageGrade.ElementAtOrDefault(i).Value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => modelItem.Courses.ElementAtOrDefault(i).Title)
+            </td>
+            <td class="borderless-cell">
+                <!--<span class="dropdown">
+                    <a data-toggle="dropdown"><i class="fa fa-cog" style="color: slategray"></i></a>
+                    <span class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
+                        @*@Html.ActionLink("Kandidatai", "Index", "Students", new { id = item.Id }, new { @class = "dropdown-item" })
+                    @Html.ActionLink("Balų šablonas", "Edit", "TaskParameters", new { id = item.Id }, new { @class = "dropdown-item" })*@
+                    <!--</span>
+                </span>-->
+                @*@Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" })*@
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

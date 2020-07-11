@@ -70,19 +70,19 @@ namespace PRIS.Web.Controllers
                 var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id > 0);
                 var students = await studentRequest.Where(x => x.Result.Exam.Id == ExamId).ToListAsync();
                 students.ForEach(x => x.PassedExam = false);
-               
+
                 for (int i = 0; i < passedExam.Length; i++)
                 {
                     var findStudents = students.FirstOrDefault(x => x.Id == passedExam[i]);
                     findStudents.PassedExam = true;
                 }
-                
+
                 await _repository.SaveAsync();
                 return RedirectToAction("Index", "ConversationResults", new { id = ExamId });
             }
             return RedirectToAction("Index", "Students", new { id = ExamId });
         }
-        //GET
+
         public IActionResult Create()
         {
             return View();
@@ -192,7 +192,7 @@ namespace PRIS.Web.Controllers
             }
             return View(student);
         }
-        //GET
+
         public async Task<IActionResult> EditResult(int? id, int? resultId)
         {
             TempData["ResultId"] = resultId;

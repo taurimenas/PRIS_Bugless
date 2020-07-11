@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PRIS.Core.Library;
 
 namespace PRIS.Web.Mappings
 {
@@ -15,14 +16,14 @@ namespace PRIS.Web.Mappings
         {
             return new Student
             {
-                Id = model.Id,
+                Id = (int)model.Id,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
-                Gender = model.Gender,
+                Gender = (Gender)model.Gender,
                 Comment = model.Comment,
-                PassedExam = model.PassedExam
+                PassedExam = (bool)model.PassedExam
             };
         }
 
@@ -32,7 +33,7 @@ namespace PRIS.Web.Mappings
             student.LastName = model.LastName;
             student.Email = model.Email;
             student.PhoneNumber = model.PhoneNumber;
-            student.Gender = model.Gender;
+            student.Gender = (Gender)model.Gender;
             student.Comment = model.Comment;
         }
 
