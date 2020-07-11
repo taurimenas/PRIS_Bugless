@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using PRIS.Core.Library.Entities;
+using PRIS.Web.Storage;
 
 namespace PRIS.Web
 {
@@ -43,14 +44,7 @@ namespace PRIS.Web
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
-            services.AddScoped<Storage.Repository<Student>>();
-            services.AddScoped<Storage.Repository<Result>>();
-            services.AddScoped<Storage.Repository<Exam>>();
-            services.AddScoped<Storage.Repository<City>>();
-            services.AddScoped<Storage.Repository<ConversationResult>>();
-            services.AddScoped<Storage.Repository<Course>>();
-            services.AddScoped<Storage.Repository<Core.Library.Entities.Program>>();
-            //services.AddScoped<Storage.Repository<StudentCourse>>();
+            services.AddScoped(typeof(IRepository), typeof(Repository));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

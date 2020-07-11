@@ -97,7 +97,7 @@ namespace PRIS.Web.Controllers
                 {
                     ExamId = ExamId,
                 };
-                result = await _resultRepository.InsertAsync(result);
+                result = await _repository.InsertAsync<Result>(result);
                 result.Student = student;
                 student.Result = result;
                 student.ResultId = result.Id;
@@ -117,21 +117,21 @@ namespace PRIS.Web.Controllers
             }
             if (!examPassed)
             {
-                if (_repository.Exists(id))
-                {
-                    var student = await _repository.Query<Student>()
-                                                     .Include(x => x.Result)
-                                                     .SingleOrDefaultAsync(x => x.Id == id);
-                    await _repository.DeleteAsync(id);
-                    if (student.ResultId != null)
-                        await _resultRepository.DeleteAsync(student.ResultId);
-                }
-                else
-                {
-                    ModelState.AddModelError("StudentDelete", "Toks studentas neegzistuoja.");
-                    TempData["ErrorMessage"] = "Toks studentas neegzistuoja.";
-                    return RedirectToAction("Index", "Students", new { id = ExamId });
-                }
+                //if (_repository.Exists(id))
+                //{
+                //    var student = await _repository.Query<Student>()
+                //                                     .Include(x => x.Result)
+                //                                     .SingleOrDefaultAsync(x => x.Id == id);
+                //    await _repository.DeleteAsync(id);
+                //    if (student.ResultId != null)
+                //        await _resultRepository.DeleteAsync(student.ResultId);
+                //}
+                //else
+                //{
+                //    ModelState.AddModelError("StudentDelete", "Toks studentas neegzistuoja.");
+                //    TempData["ErrorMessage"] = "Toks studentas neegzistuoja.";
+                //    return RedirectToAction("Index", "Students", new { id = ExamId });
+                //}
                 return RedirectToAction("Index", "Students", new { id = ExamId });
             }
             else
@@ -144,16 +144,16 @@ namespace PRIS.Web.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var student = await _repository.FindByIdAsync(id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-            return View(StudentsMappings.ToViewModel(student));
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
+            ////var student = await _repository.FindByIdAsync(id);
+            //if (student == null)
+            //{
+            //    return NotFound();
+            //}
+            //return View(StudentsMappings.ToViewModel(student));
         }
 
         [HttpPost]
@@ -161,7 +161,7 @@ namespace PRIS.Web.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
         {
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
-            var student = await _repository.FindByIdAsync(id);
+            //var student = await _repository.FindByIdAsync(id);
             StudentsMappings.ToEntity(student, studentViewModel);
 
             if (id != student.Id)
