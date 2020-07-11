@@ -13,7 +13,7 @@ namespace PRIS.Web.Controllers
     public class ConversationResultsController : Controller
     {
         private readonly IRepository _repository;
-        
+
         public ConversationResultsController(IRepository repository)
         {
             _repository = repository;
@@ -70,7 +70,7 @@ namespace PRIS.Web.Controllers
             }
             else
             {
-                var conversationResult = await _conversationResult.FindByIdAsync(student.ConversationResultId);
+                var conversationResult = await _repository.FindByIdAsync<ConversationResult>(student.ConversationResultId);
                 ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel();
                 conversationResultViewModel.ConversationResultId = conversationResult.Id;
                 return View(ConversationResultMappings.ToViewModel(student, conversationResult));
@@ -90,12 +90,12 @@ namespace PRIS.Web.Controllers
                 try
                 {
 
-                    var studentRequest = _studentRepository.Query<Student>().Include(x => x.ConversationResult).Where(x => x.Id > 0);
-                    var conversationResult = await _conversationResult.FindByIdAsync(conversationResultId);
+                    var studentRequest = _repository.Query<Student>().Include(x => x.ConversationResult).Where(x => x.Id > 0);
+                    var conversationResult = await _repository.FindByIdAsync<ConversationResult>(conversationResultId);
                     var student = await studentRequest.FirstOrDefaultAsync(x => x.ConversationResultId == conversationResult.Id);
                     var conversationResultViewModel = ConversationResultMappings.ToViewModel(student, conversationResult);
                     ConversationResultMappings.EditEntity(conversationResult, model);
-                    await _conversationResult.UpdateAsync(conversationResult);
+                    await _repository.UpdateAsync(conversationResult);
 
                 }
                 catch (DbUpdateConcurrencyException)

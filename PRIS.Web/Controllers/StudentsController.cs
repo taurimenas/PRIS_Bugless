@@ -25,7 +25,7 @@ namespace PRIS.Web.Controllers
         {
             _repository = repository;
         }
-        //GET
+
         public async Task<IActionResult> Index(int? id)
         {
             if (id == null)
@@ -56,7 +56,7 @@ namespace PRIS.Web.Controllers
 
             return View(studentViewModels);
         }
-        //POST
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(int[] passedExam)
@@ -101,7 +101,7 @@ namespace PRIS.Web.Controllers
                 result.Student = student;
                 student.Result = result;
                 student.ResultId = result.Id;
-                await _repository.InsertAsync(student);
+                await _repository.InsertAsync<Student>(student);
 
                 return RedirectToAction("Index", "Students", new { id = ExamId });
             }
@@ -117,21 +117,21 @@ namespace PRIS.Web.Controllers
             }
             if (!examPassed)
             {
-                //if (_repository.Exists(id))
-                //{
-                //    var student = await _repository.Query<Student>()
-                //                                     .Include(x => x.Result)
-                //                                     .SingleOrDefaultAsync(x => x.Id == id);
-                //    await _repository.DeleteAsync(id);
-                //    if (student.ResultId != null)
-                //        await _resultRepository.DeleteAsync(student.ResultId);
-                //}
-                //else
-                //{
-                //    ModelState.AddModelError("StudentDelete", "Toks studentas neegzistuoja.");
-                //    TempData["ErrorMessage"] = "Toks studentas neegzistuoja.";
-                //    return RedirectToAction("Index", "Students", new { id = ExamId });
-                //}
+                if (_repository.Exists<Student>(id))
+                {
+                    var student = await _repository.Query<Student>()
+                                                     .Include(x => x.Result)
+                                                     .SingleOrDefaultAsync(x => x.Id == id);
+                    await _repository.DeleteAsync<Student>(id);
+                    if (student.ResultId != null)
+                        await _repository.DeleteAsync<Result>(student.ResultId);
+                }
+                else
+                {
+                    ModelState.AddModelError("StudentDelete", "Toks studentas neegzistuoja.");
+                    TempData["ErrorMessage"] = "Toks studentas neegzistuoja.";
+                    return RedirectToAction("Index", "Students", new { id = ExamId });
+                }
                 return RedirectToAction("Index", "Students", new { id = ExamId });
             }
             else
@@ -144,16 +144,16 @@ namespace PRIS.Web.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-            ////var student = await _repository.FindByIdAsync(id);
-            //if (student == null)
-            //{
-            //    return NotFound();
-            //}
-            //return View(StudentsMappings.ToViewModel(student));
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var student = await _repository.FindByIdAsync<Student>(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
+            return View(StudentsMappings.ToViewModel(student));
         }
 
         [HttpPost]
@@ -161,7 +161,7 @@ namespace PRIS.Web.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
         {
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
-            //var student = await _repository.FindByIdAsync(id);
+            var student = await _repository.FindByIdAsync<Student>(id);
             StudentsMappings.ToEntity(student, studentViewModel);
 
             if (id != student.Id)
@@ -176,7 +176,7 @@ namespace PRIS.Web.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_repository.Exists(student.Id))
+                    if (!_repository.Exists<Student>(student.Id))
                     {
                         return NotFound();
                     }
@@ -201,7 +201,7 @@ namespace PRIS.Web.Controllers
             }
             var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id == id);
             var studentEntity = await studentRequest.FirstOrDefaultAsync();
-            var resultEntity = await _resultRepository.FindByIdAsync(studentEntity.Result.Id);
+            var resultEntity = await _repository.FindByIdAsync<Result>(studentEntity.Result.Id);
             if (studentEntity.PassedExam)
             {
                 TempData["ErrorMessage"] = "Studentas yra pakviestas į pokalbį, todėl jo duomenų negalima redaguoti.";
@@ -211,7 +211,7 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-            var exam = await _examRepository.FindByIdAsync(ExamId);
+            var exam = await _repository.FindByIdAsync<Exam>(ExamId);
             var studentViewModel = StudentsMappings.ToViewModel(studentEntity, resultEntity);
             if (resultEntity.Tasks == null)
                 studentViewModel.Tasks = new double[JsonSerializer.Deserialize<double[]>(exam.Tasks).Length];
@@ -230,7 +230,7 @@ namespace PRIS.Web.Controllers
                 try
                 {
                     var studentRequest = _repository.Query<Student>().Include(x => x.Result).ThenInclude(y => y.Exam).Where(x => x.Id > 0);
-                    var result = await _resultRepository.FindByIdAsync(resultId);
+                    var result = await _repository.FindByIdAsync<Result>(resultId);
                     var student = await studentRequest.FirstOrDefaultAsync(x => x.Id == result.StudentForeignKey);
                     var studentResultViewModel = StudentsMappings.ToStudentsResultViewModel(Tasks);
                     var examTasks = StudentsMappings.ToStudentsResultViewModel(result).Tasks;
@@ -246,7 +246,7 @@ namespace PRIS.Web.Controllers
                     }
 
                     StudentsMappings.ToResultEntity(result, studentResultViewModel);
-                    await _resultRepository.SaveAsync();
+                    await _repository.SaveAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -16,7 +16,6 @@ namespace PRIS.Web.Mappings
         {
             return new Student
             {
-                Id = (int)model.Id,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Email = model.Email,
