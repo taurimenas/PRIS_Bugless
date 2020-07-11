@@ -12,17 +12,15 @@ namespace PRIS.Web.Controllers
 {
     public class ConversationResultsController : Controller
     {
-        private readonly Repository<Student> _studentRepository;
-        private readonly Repository<ConversationResult> _conversationResult;
-
-        public ConversationResultsController(Repository<Student> studentRepository, Repository<ConversationResult> conversationResult)
+        private readonly IRepository _repository;
+        
+        public ConversationResultsController(IRepository repository)
         {
-            _studentRepository = studentRepository;
-            _conversationResult = conversationResult;
+            _repository = repository;
         }
         public async Task<IActionResult> Index(int? id)
         {
-            var passedStudents = await _studentRepository.Query<Student>()
+            var passedStudents = await _repository.Query<Student>()
                 .Include(i => i.Result)
                 .ThenInclude(u => u.Exam)
                 .Where(x => x.PassedExam == true)
@@ -39,7 +37,7 @@ namespace PRIS.Web.Controllers
 
             foreach (var student in passedStudents)
             {
-                var p = await _conversationResult.FindByIdAsync(student.ConversationResultId);
+                var p = await _repository.FindByIdAsync<ConversationResult>(student.ConversationResultId);
                 conversationResult.Add(p);
             }
             List<ConversationResultViewModel> conversationResultViewModel = new List<ConversationResultViewModel>();
@@ -59,13 +57,13 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-            var student = await _studentRepository.FindByIdAsync(id);
+            var student = await _repository.FindByIdAsync<Student>(id);
             TempData["ConversationResultId"] = student.ConversationResultId;
             TempData["StudentId"] = student.Id;
             if (student.ConversationResultId == null)
             {
                 ConversationResult conversationResult = new ConversationResult();
-                conversationResult = await _conversationResult.InsertAsync(conversationResult);
+                conversationResult = await _repository.InsertAsync(conversationResult);
                 ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel();
                 conversationResultViewModel.ConversationResultId = conversationResult.Id;
                 return View(ConversationResultMappings.ToViewModel(student, conversationResult));

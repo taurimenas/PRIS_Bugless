@@ -18,15 +18,12 @@ namespace PRIS.Web.Controllers
     [Authorize]
     public class StudentsController : Controller
     {
-        private readonly Repository<Student> _repository;
-        private readonly Repository<Result> _resultRepository;
-        private readonly Repository<Exam> _examRepository;
+        private readonly IRepository _repository;
 
-        public StudentsController(Repository<Student> repository, Repository<Result> resultRepository, Repository<Exam> examRepository)
+
+        public StudentsController(IRepository repository)
         {
             _repository = repository;
-            _resultRepository = resultRepository;
-            _examRepository = examRepository;
         }
         //GET
         public async Task<IActionResult> Index(int? id)
@@ -49,7 +46,7 @@ namespace PRIS.Web.Controllers
                 foreach (var student in studentViewModels)
                 {
                     student.FinalPoints = student.Tasks?.Sum(x => x) ?? 0;
-                    var examDraft = _examRepository.Query<Exam>().Where(e => e.Id == student.ExamId).FirstOrDefault();
+                    var examDraft = _repository.Query<Exam>().FirstOrDefault(e => e.Id == student.ExamId);
                     double maxPoints = TaskParametersMappings.ToTaskParameterViewModel(examDraft).Tasks.Sum(x => x);
                     student.PercentageGrade = student.FinalPoints * 100 / maxPoints;
                 }

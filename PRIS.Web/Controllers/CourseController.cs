@@ -19,10 +19,11 @@ namespace PRIS.Web.Controllers
         private readonly Repository<Student> _studentRepository;
         private readonly Repository<Result> _resultRepository;
         private readonly Repository<Course> _courseRepository;
+        private readonly Repository<StudentCourse> _studentCourseRepository;
         private readonly Repository<ConversationResult> _conversationResultRepository;
 
 
-        public CourseController(Repository<Exam> examRepository, Repository<City> cityRepository, Repository<Student> studentRepository, Repository<Result> resultRepository, Repository<Course> courseRepository, Repository<ConversationResult> conversationResultRepository)
+        public CourseController(Repository<Exam> examRepository, Repository<StudentCourse> studentCourseRepository, Repository<City> cityRepository, Repository<Student> studentRepository, Repository<Result> resultRepository, Repository<Course> courseRepository, Repository<ConversationResult> conversationResultRepository)
         {
             _examRepository = examRepository;
             _cityRepository = cityRepository;
@@ -30,36 +31,30 @@ namespace PRIS.Web.Controllers
             _resultRepository = resultRepository;
             _courseRepository = courseRepository;
             _conversationResultRepository = conversationResultRepository;
+            _studentCourseRepository = studentCourseRepository;
         }
         public async Task<IActionResult> Index()
         {
             var students = await _courseRepository.Query<Student>()
                 .Include(i => i.Result)
                 .ThenInclude(u => u.Exam)
+                .Include(x => x.ConversationResult)
                 .Where(x => x.PassedExam == true)
                 .ToListAsync();
 
             var conversationResults = new List<ConversationResult>();
+            var courses = new List<Course>();
+
             foreach (var student in students)
             {
                 var conversationResult = await _conversationResultRepository.FindByIdAsync(student.ConversationResultId);
                 conversationResults.Add(conversationResult);
-            }
 
-            var courses = new List<Course>();
-            foreach (var student in students)
-            {
                 var course = await _courseRepository.Query<Course>()
                     .FirstOrDefaultAsync(x => x.StudentsCourses.FirstOrDefault(y => y.StudentId == student.Id && y.Priority == 1).StudentId == student.Id);
                 courses.Add(course);
-            }
 
-            var results = new List<Result>();
-            foreach (var student in students)
-            {
-                var result = await _resultRepository.Query<Result>()
-                    .FirstOrDefaultAsync(x => x.StudentForeignKey == student.Id);
-                results.Add(result);
+                var course = await _courseRepository.Query<>()
             }
 
             var conversationResultViewModels = new List<ConversationResultViewModel>();
@@ -70,7 +65,7 @@ namespace PRIS.Web.Controllers
             students.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x)));
             conversationResults.ForEach(x => conversationResultViewModels.Add(ConversationResultMappings.ToConversationResultViewModel(x)));
             courses.ForEach(x => courseViewModels.Add(CourseMappings.ToViewModel(x)));
-            results.ForEach(x => resultViewModels.Add(ResultMappings.ToViewModel(x)));
+            students.ForEach(x => resultViewModels.Add(ResultMappings.ToViewModel(x.Result)));
 
             return View(CourseMappings.ToViewModel(studentViewModels, conversationResultViewModels, courseViewModels, resultViewModels));
         }

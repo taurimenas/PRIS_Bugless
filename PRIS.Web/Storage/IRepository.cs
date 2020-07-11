@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace PRIS.Web.Storage
 {
-    public interface IRepository<T>
+    public interface IRepository
     {
         Task SaveAsync();
         IQueryable<TEntity> Query<TEntity>() where TEntity : class, IEntity;
-        Task<T> FindByIdAsync(int? id);
-        Task<T> InsertAsync(T entity);
-        Task<T> UpdateAsync(T entity);
-        Task<T> DeleteAsync(int? id);
-        bool Exists(int? id);
+        Task<TEntity> FindByIdAsync<TEntity>(int? id) where TEntity : class, IEntity;
+        Task<TEntity> InsertAsync<TEntity>(TEntity entity) where TEntity : class, IEntity;
+        Task<TEntity> UpdateAsync<TEntity>(TEntity entity) where TEntity : class, IEntity;
+        Task<TEntity> DeleteAsync<TEntity>(int? id) where TEntity : class, IEntity;
+        bool Exists<TEntity>(int? id) where TEntity : class, IEntity;
     }
 }
