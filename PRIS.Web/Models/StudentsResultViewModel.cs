@@ -10,9 +10,8 @@ namespace PRIS.Web.Models
     public class StudentsResultViewModel
     {
         public int ResultId { get; set; }
-        //[Display(Name = "1.1")]
-        //[Required(ErrorMessage = "Įveskite {0} užduoties balą")]
         public double[] Tasks { get; set; }
+        [Display(Name = "Testo balai")]
         public double? FinalPoints { get; set; }
         [Display(Name = "Procentai")]
         [DisplayFormat(DataFormatString = "{0:F1}")]
@@ -34,6 +33,7 @@ namespace PRIS.Web.Models
         public Gender Gender { get; set; }
         [Display(Name = "Komentaras", Prompt = "Komentaras")]
         public string Comment { get; set; }
+        [Display(Name = "Kviečiamas")]
         public bool PassedExam { get; set; } = false;
         public string ErrorMessage { get; set; }
     }
