@@ -5,92 +5,115 @@
 }
 @Html.ActionLink("Grįžti", "Index", "Exams", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
 <form asp-action="Index">
-<h3>Kandidatų sąrašas</h3>
+    <h3>Kandidatų sąrašas</h3>
 
-<hr />
-<a asp-action="Create">Pridėti naują kandidatą</a>
+    <hr />
+    <a asp-action="Create">Pridėti naują kandidatą</a>
 
-<div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
+    <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Gender)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Comment)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PercentageGrade)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FinalPoints)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PassedExam)
-            </th>
-            <th class="borderless-cell" width="75px"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+    <table class="table table-bordered">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PhoneNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Gender)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Comment)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PercentageGrade)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FinalPoints)
-                    <span class="float-right text-secondary">
-                        @Html.ActionLink("", "EditResult", new { id = item.Id, resultId = item.ResultId }, new { @class = "fas fa-pen-square" })
-                    </span>
-                </td>
-                <td>
-                    <input type="checkbox" name="PassedExam" asp-for="@item.PassedExam" value="@item.Id" class="custom-checkbox">
-                </td>
-                <td class="borderless-cell">
-                    @Html.ActionLink("", "Edit", new { id = item.Id }, new { @class = "fa fa-pencil-square-o" })
-                    @Html.ActionLink("", "Delete", new { id = item.Id, examPassed = item.PassedExam }, new { @class = "fa fa-trash" })
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PhoneNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Gender)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Comment)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PercentageGrade)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FinalPoints)
+                </th>
+                <th class="text-center">
+                    @Html.DisplayNameFor(model => model.PassedExam)
+                </th>
+                <th class="borderless-cell" width="75px"></th>
             </tr>
-        }
-    </tbody>
-</table>
-
-<input type="submit" value="Išsaugoti" class="btn btn-primary" />
-
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Gender)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Comment)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PercentageGrade)
+                    </td>
+                    <td class="points" id="@item.Id">
+                        @Html.DisplayFor(modelItem => item.FinalPoints)
+                        <span class="float-right text-secondary">
+                            @Html.ActionLink("", "EditResult", new { id = item.Id, resultId = item.ResultId }, new { @class = "fas fa-pen-square" })
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" name="HasPassedExam" asp-for="@item.PassedExam" value="@item.Id" id="checkbox-@item.Id" onclick="clickThis(event, this.value)" class="checkbox-inline text-center">
+                    </td>
+                    <td class="borderless-cell">
+                        @Html.ActionLink("", "Edit", new { id = item.Id }, new { @class = "fa fa-pencil-square-o" })
+                        @Html.ActionLink("", "Delete", new { id = item.Id, examPassed = item.PassedExam }, new { @class = "fa fa-trash" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <input type="submit" value="Išsaugoti kviečiamus studentus" class="btn btn-secondary float-right mr-5" />
 </form>
+<script>
+    var points = document.getElementsByClassName("points");
+    var items = [];
+    for (var i = 0; i < points.length; i++) {
+        items.push({ points: parseInt(points[i].innerText), id: points[i].id });
+    }
+    function clickThis(e, id) {
+        var theOne = items.find(i => i.id === id).points
+        var theOneCheckBox = document.getElementById(`checkbox-${id}`);
+        if (theOneCheckBox.checked == false) {
+            items.forEach(x => {
+                var allCheckBoxes = document.getElementById(`checkbox-${x.id}`);
+                allCheckBoxes.checked = false;
+            }
+            )
+        } else {
+            items.forEach(x => {
+                if (x.points >= theOne) {
+                    var CheckBoxesMoreThanTheOne = document.getElementById(`checkbox-${x.id}`);
+                    CheckBoxesMoreThanTheOne.checked = true;
+                }
+            })
+        }
+    }
+</script>
 
 
 

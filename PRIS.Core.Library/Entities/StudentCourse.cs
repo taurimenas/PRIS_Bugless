@@ -1,6 +1,6 @@
 ﻿namespace PRIS.Core.Library.Entities
 {
-    public class StudentCourse
+    public class StudentCourse : EntityBase
     {
         public int StudentId { get; set; }
         public int CourseId { get; set; }

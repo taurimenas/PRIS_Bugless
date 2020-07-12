@@ -1,5 +1,6 @@
 ﻿using PRIS.Core.Library.Entities;
 using PRIS.Web.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 
@@ -13,8 +14,6 @@ namespace PRIS.Web.Mappings
             {
                 Comment = model.Comment,
                 Date = model.Date,
-                Id = model.Id,
-                CityId = model.CityId,
                 Tasks = JsonSerializer.Serialize(model)
             };
         }
@@ -25,7 +24,8 @@ namespace PRIS.Web.Mappings
                 Comment = entity.Comment,
                 Date = entity.Date,
                 Id = entity.Id,
-                CityId = entity.CityId
+                CityId = entity.CityId,
+                SelectedCity = entity.City.Name
             };
         }
     }
