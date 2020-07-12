@@ -22,7 +22,7 @@ namespace PRIS.Web.Models
         public string ConversationResultComment { get; set; }
         public int ConversationResultId { get; set; }
         [Display(Name = "Pokalbio įvertinimas", Prompt = "Pokalbio įvertinimas")]
-        [Range(0, 10)]
+        [Range(0.0, 10.0)]
         public double? Grade { get; set; }
     }
 }

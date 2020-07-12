@@ -19,7 +19,7 @@ namespace PRIS.Web.Mappings
                 Tasks = JsonSerializer.Serialize(model),
             };
         }
-        public static void EditTaskParametersEntity(Exam exam, int[] tasks)
+        public static void EditTaskParametersEntity(Exam exam, double[] tasks)
         {
             exam.Tasks = JsonSerializer.Serialize(tasks);
         }
@@ -31,17 +31,17 @@ namespace PRIS.Web.Mappings
                 Id = examEntity.Id,
                 CityId = examEntity.CityId,
                 Date = examEntity.Date,
-                Tasks = JsonSerializer.Deserialize<int[]>(examEntity.Tasks)
+                Tasks = JsonSerializer.Deserialize<double[]>(examEntity.Tasks)
             };
         }
         public static TaskParameterModel ToTaskViewModel(Exam examEntity)
         {
             return new TaskParameterModel
             {
-                Tasks = JsonSerializer.Deserialize<int[]>(examEntity.Tasks)
+                Tasks = JsonSerializer.Deserialize<double[]>(examEntity.Tasks)
             };
         }
-        public static SetTaskParameterModel ToTaskParameterViewModel(int[] tasks)
+        public static SetTaskParameterModel ToTaskParameterViewModel(double[] tasks)
         {
             return new SetTaskParameterModel
             {
