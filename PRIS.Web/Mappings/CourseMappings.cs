@@ -4,6 +4,7 @@ using PRIS.Web.Models.CourseModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PRIS.Web.Mappings
@@ -26,6 +27,29 @@ namespace PRIS.Web.Mappings
                 Courses = courses,
                 Results = results,
                 FinalAverageGrade = finalAverageGrades
+            };
+        }
+        public static StudentEvaluationViewModel ToViewModel(Student student, ConversationResult conversationResult, Course course, StudentCourse studentCourse, Result result)
+        {
+            double? finalAverageGrade = 0;
+            double? finalTestPoints = JsonSerializer.Deserialize<double[]>(result.Tasks).Sum(x => x);
+            double? maxPoints = JsonSerializer.Deserialize<double[]>(result.Exam.Tasks).Sum(x => x);
+            double? percentageGrade = finalTestPoints * 100 / maxPoints;
+            if (percentageGrade == null || conversationResult.Grade == null)
+                finalAverageGrade = 0;
+            else finalAverageGrade = (percentageGrade / 10 + conversationResult.Grade) / 2;
+
+            return new StudentEvaluationViewModel
+            {
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                Email = student.Email,
+                PhoneNumber = student.PhoneNumber,
+                FinalTestPoints = finalTestPoints,
+                PercentageGrade = percentageGrade,
+                ConversationGrade = conversationResult.Grade,
+                FinalAverageGrade = finalAverageGrade,
+                Priority = studentCourse.Priority
             };
         }
         public static CourseViewModel ToViewModel(Course entity)

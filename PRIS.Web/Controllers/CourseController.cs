@@ -48,6 +48,7 @@ namespace PRIS.Web.Controllers
             var studentViewModels = new List<StudentViewModel>();
             var courseViewModels = new List<CourseViewModel>();
             var resultViewModels = new List<ResultViewModel>();
+            var studentEvaluations = new List<StudentEvaluationViewModel>();
 
             students.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x)));
             conversationResults.ForEach(x => conversationResultViewModels.Add(ConversationResultMappings.ToConversationResultViewModel(x)));
