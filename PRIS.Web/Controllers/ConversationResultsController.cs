@@ -65,7 +65,13 @@ namespace PRIS.Web.Controllers
             if (student.ConversationResultId == null)
             {
                 ConversationResult conversationResult = new ConversationResult();
+                conversationResult.Student = student;
+                
+                student.ConversationResult = conversationResult;
                 conversationResult = await _conversationResult.InsertAsync(conversationResult);
+                student.ConversationResultId = conversationResult.Id;
+                TempData["ConversationResultId"] = student.ConversationResultId;
+                await _studentRepository.SaveAsync();
                 ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel();
                 conversationResultViewModel.ConversationResultId = conversationResult.Id;
                 return View(ConversationResultMappings.ToViewModel(student, conversationResult));
