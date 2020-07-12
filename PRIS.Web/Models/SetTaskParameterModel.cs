@@ -12,8 +12,7 @@ namespace PRIS.Web.Models
         public int Id { get; set; }
         public int CityId { get; set; }
         public DateTime Date { get; set; }
-        [Display(Name = "1.1")]
         [Required(ErrorMessage = "Įveskite {0} užduoties maksimalų balą")]
-        public int[] Tasks { get; set; }
+        public double[] Tasks { get; set; }
     }
 }
