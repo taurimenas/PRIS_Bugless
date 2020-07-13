@@ -86,7 +86,6 @@
                         {
                             <input type="checkbox" name="HasPassedExam" asp-for="@item.PassedExam" value="@item.Id" id="checkbox-@item.Id" onclick="clickThis(event, this.value)" class="checkbox-inline text-center">
                         }
-                        @*<input type="checkbox" name="HasPassedExam" asp-for="@item.PassedExam" value="@item.Id" id="checkbox-@item.Id" onclick="clickThis(event, this.value)" class="checkbox-inline text-center">*@
                     </td>
                     <td class="borderless-cell">
                         @Html.ActionLink("", "Edit", new { id = item.Id }, new { @class = "fa fa-pencil-square-o" })

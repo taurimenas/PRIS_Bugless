@@ -23,8 +23,6 @@ namespace PRIS.Web.Models
         public int ConversationResultId { get; set; }
         [Display(Name = "Pokalbio įvertinimas", Prompt = "Pokalbio įvertinimas")]
         [Range(0.0, 10.0)]
-        public double? Grade { get { return Grade; } set { Double.TryParse(value.ToString().Replace('.', ','),out double grade);
-                Grade = grade;
-            } }
+        public double? Grade { get; set; }
     }
 }
