@@ -36,7 +36,10 @@ namespace PRIS.Web.Controllers
                 return NotFound();
             }
             TempData["ExamId"] = id;
-            var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id > 0);
+            var studentRequest = _repository.Query<Student>()
+                .Include(x => x.Result)
+                .Include(x => x.ConversationResult)
+                .Where(x => x.Id > 0);
             var students = await studentRequest.Where(x => x.Result.Exam.Id == id).ToListAsync();
             if (students == null)
             {
@@ -68,13 +71,17 @@ namespace PRIS.Web.Controllers
             var backToExam = RedirectToAction("Index", "Students", new { id = ExamId });
             if (ModelState.IsValid)
             {
-                var studentRequest = await _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id > 0).Where(x => x.Result.Exam.Id == ExamId).ToListAsync();
-
-                studentRequest.ForEach(x => x.PassedExam = false);
+                var students = await _repository.Query<Student>()
+                    .Include(x => x.Result)
+                    .Include(x=>x.ConversationResult)
+                    .Where(x => x.Id > 0)
+                    .Where(x => x.Result.Exam.Id == ExamId)
+                    .ToListAsync();
+                students.ForEach(x => x.PassedExam = false);
 
                 for (int i = 0; i < HasPassedExam.Length; i++)
                 {
-                    var findStudents = studentRequest.FirstOrDefault(x => x.Id == HasPassedExam[i]);
+                    var findStudents = students.FirstOrDefault(x => x.Id == HasPassedExam[i]);
                     findStudents.PassedExam = true;
                 }
 
