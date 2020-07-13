@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Microsoft.Extensions.Caching.Memory;
 using PRIS.Core.Library.Entities;
 using PRIS.Web.Data;
 using PRIS.Web.Mappings;
@@ -23,13 +24,18 @@ namespace PRIS.Web.Controllers
         private readonly Repository<Result> _resultRepository;
         private readonly Repository<Exam> _examRepository;
         private readonly Repository<PRIS.Core.Library.Entities.Program> _programRepository;
+        private readonly Repository<Course> _courseRepository;
+        private readonly Repository<StudentCourse> _studentCourseRepository;
 
-        public StudentsController(Repository<Student> repository, Repository<Result> resultRepository, Repository<Exam> examRepository, Repository<PRIS.Core.Library.Entities.Program> programRepository)
+
+        public StudentsController(Repository<Student> repository, Repository<Result> resultRepository, Repository<Exam> examRepository, Repository<PRIS.Core.Library.Entities.Program> programRepository, Repository<Course> courseRepository, Repository<StudentCourse> studentCourseRepository)
         {
             _repository = repository;
             _resultRepository = resultRepository;
             _examRepository = examRepository;
             _programRepository = programRepository;
+            _courseRepository = courseRepository;
+            _studentCourseRepository = studentCourseRepository;
         }
 
         public async Task<IActionResult> Index(int? id)
@@ -65,38 +71,108 @@ namespace PRIS.Web.Controllers
         //GET
         public async Task<IActionResult> Create()
         {
-
-            List<PRIS.Core.Library.Entities.Program> programs = await _examRepository.Query<PRIS.Core.Library.Entities.Program>().ToListAsync();
+            StudentPrioritiesViewModel studentPrioritiesViewModel = new StudentPrioritiesViewModel();
+            List<PRIS.Core.Library.Entities.Program> programs = await _programRepository.Query<PRIS.Core.Library.Entities.Program>().ToListAsync();
             var stringPrograms = new List<SelectListItem>();
             foreach (var program in programs)
             {
                 stringPrograms.Add(new SelectListItem { Value = program.Name, Text = program.Name });
             }
-
-            return View();
+            studentPrioritiesViewModel.Programs = stringPrograms;
+            return View(studentPrioritiesViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
+        public async Task<IActionResult> Create(string[] SelectedPriority, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
         {
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
+            var backToExam = RedirectToAction("Index", "Students", new { id = ExamId });
             if (ModelState.IsValid)
             {
                 var student = StudentsMappings.ToEntity(studentViewModel);
+                //sukuriu studentui result
                 Result result = new Result
                 {
                     ExamId = ExamId,
                 };
+
                 result = await _resultRepository.InsertAsync(result);
                 result.Student = student;
                 student.Result = result;
                 student.ResultId = result.Id;
+                //isaugomas studentas
                 await _repository.InsertAsync(student);
+                //ieskom pirmos priority
+                var studentsExam = _examRepository.FindByIdAsync(ExamId).Result;
+                var firstPriorityProgram = _programRepository.Query<PRIS.Core.Library.Entities.Program>().Where(x => x.Name == SelectedPriority[0]).FirstOrDefault();
+                var firstPriorityCourse = _courseRepository.Query<Course>().Where(x => x.ProgramId == firstPriorityProgram.Id).Where(x => x.StartYear.Year == studentsExam.Date.Year).FirstOrDefault();
 
-                return RedirectToAction("Index", "Students", new { id = ExamId });
+                StudentCourse studentFirstCourse = new StudentCourse
+                {
+                    StudentId = student.Id,
+                    Student = student,
+                    Priority = 1
+                };
+
+                if (firstPriorityCourse != null)
+                {
+                    studentFirstCourse.Course = firstPriorityCourse;
+                    studentFirstCourse.CourseId = firstPriorityCourse.Id;
+                    student.StudentsCourseId = firstPriorityCourse.Id;
+                }
+                else
+                {
+                    Course course = new Course
+                    {
+                        StartYear = studentsExam.Date,
+                        EndYear = studentsExam.Date.AddYears(1),
+                        CityId = studentsExam.CityId,
+                        ProgramId = firstPriorityProgram.Id,
+                        Title = firstPriorityProgram.Name
+                    };
+                    course = await _courseRepository.InsertAsync(course);
+                    studentFirstCourse.Course = course;
+                    student.StudentsCourseId = course.Id;
+                    studentFirstCourse.CourseId = course.Id;
+
+                }
+                studentFirstCourse = await _studentCourseRepository.InsertAsync(studentFirstCourse);
+                await _repository.SaveAsync();
+                for (int i = 1; i < SelectedPriority.Length; i++)
+                {
+                    StudentCourse otherStudentCourses = new StudentCourse
+                    {
+                        StudentId = student.Id,
+                        Student = student,
+                        Priority = i + 1
+                    };
+                    var otherPriorityProgram = _programRepository.Query<PRIS.Core.Library.Entities.Program>().Where(x => x.Name == SelectedPriority[i]).FirstOrDefault();
+                    var otherPriorityCourse = _courseRepository.Query<Course>().Where(x => x.ProgramId == otherPriorityProgram.Id).Where(x => x.StartYear.Year == studentsExam.Date.Year).FirstOrDefault();
+                    if (otherPriorityCourse != null)
+                    {
+                        otherStudentCourses.CourseId = otherPriorityCourse.Id;
+                    }
+                    else
+                    {
+                        Course course = new Course
+                        {
+                            StartYear = studentsExam.Date,
+                            EndYear = studentsExam.Date.AddYears(1),
+                            CityId = studentsExam.CityId,
+                            ProgramId = otherPriorityProgram.Id,
+                            Title = otherPriorityProgram.Name
+                        };
+                        otherStudentCourses.CourseId = course.Id;
+                        otherStudentCourses.Course = course;
+                        course = await _courseRepository.InsertAsync(course);
+                    }
+                    otherStudentCourses = await _studentCourseRepository.InsertAsync(otherStudentCourses);
+                }
+
+                return backToExam;
             }
-            return RedirectToAction("Index", "Students", new { id = ExamId });
+            return backToExam;
         }
 
         public async Task<IActionResult> Delete(int? id, bool examPassed)

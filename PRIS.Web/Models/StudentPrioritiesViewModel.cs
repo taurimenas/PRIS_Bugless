@@ -1,4 +1,5 @@
-﻿using PRIS.Core.Library;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using PRIS.Core.Library;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,6 +33,7 @@ namespace PRIS.Web.Models
         public List<Program> Program { get; set; }
         public int Priority { get; set; }
         public int CourseId { get; set; }
-                
+        public IEnumerable<SelectListItem> Programs { get; set; }
+        public string[] SelectedPriority { get; set; }
     }
 }

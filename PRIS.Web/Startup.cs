@@ -48,6 +48,8 @@ namespace PRIS.Web
             services.AddScoped<Storage.Repository<Exam>>();
             services.AddScoped<Storage.Repository<City>>();
             services.AddScoped<Storage.Repository<PRIS.Core.Library.Entities.Program>>();
+            services.AddScoped<Storage.Repository<Course>>();
+            services.AddScoped<Storage.Repository<StudentCourse>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
