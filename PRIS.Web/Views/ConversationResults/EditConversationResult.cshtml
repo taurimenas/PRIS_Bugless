@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "EditConversationResult";
 }
+@Html.ActionLink("Grįžti", "Index", "ConversationResults", new { id = Model.ExamId }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
 <h4>Redaguoti pokalbio rezultatus</h4>
 <hr />
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
