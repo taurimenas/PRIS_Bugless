@@ -77,7 +77,15 @@
                         </span>
                     </td>
                     <td class="text-center">
-                        <input type="checkbox" name="HasPassedExam" asp-for="@item.PassedExam" value="@item.Id" id="checkbox-@item.Id" onclick="clickThis(event, this.value)" class="checkbox-inline text-center">
+                        @if (item.ConversationResult >= 0)
+                        {
+                            <input type="hidden" name="HasPassedExam" asp-for="@item.PassedExam" value="@item.Id" id="checkbox-@item.Id" onclick="clickThis(event, this.value)" class="checkbox-inline text-center" />
+                            <input type="checkbox" checked="checked" disabled="disabled" />
+                        }
+                        else
+                        {
+                            <input type="checkbox" name="HasPassedExam" asp-for="@item.PassedExam" value="@item.Id" id="checkbox-@item.Id" onclick="clickThis(event, this.value)" class="checkbox-inline text-center">
+                        }
                     </td>
                     <td class="borderless-cell">
                         @Html.ActionLink("", "Edit", new { id = item.Id }, new { @class = "fa fa-pencil-square-o" })

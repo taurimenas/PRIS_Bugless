@@ -7,6 +7,6 @@ namespace PRIS.Web.Models
 {
     public class TaskParameterModel
     {
-        public int[] Tasks { get; set; }
+        public double[] Tasks { get; set; }
     }
 }

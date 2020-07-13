@@ -35,7 +35,7 @@ namespace PRIS.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, int[] tasks)
+        public async Task<ActionResult> Edit(int id, double[] tasks)
         {
             int.TryParse(TempData["Count"].ToString(), out int studentsCountInAcceptancePeriod);
             int.TryParse(TempData["SelectedAcceptancePeriod"].ToString(), out int SelectedAcceptancePeriod);
