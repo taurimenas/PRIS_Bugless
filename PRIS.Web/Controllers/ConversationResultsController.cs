@@ -103,10 +103,8 @@ namespace PRIS.Web.Controllers
                 {
                     throw;
                 }
-                // TODO: turi redirectinti i sarasa studentu kurie pakviesti pokalbiui ------------ DONE
                 return RedirectToAction("Index", "ConversationResults", new { id = examId });
             }
-            //TODO: turi redirectinti i ta pati studenta --------- DONE
             TempData["ErrorMessage"] = "Pokalbio įvertinimas turi būti nuo 0 iki 10";
             ModelState.AddModelError("ConversationResultRange", "Pokalbio įvertinimas turi būti nuo 0 iki 10");
             return RedirectToAction("EditConversationResult", "ConversationResults", new { id = studentId });
