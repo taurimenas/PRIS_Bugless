@@ -33,8 +33,8 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => modelItem.ConvResults.ElementAtOrDefault(i).Grade)
-                        <span class="float-right text-secondary fas fa-pen-square">
-                            @Html.ActionLink("Redaguoti", "EditConversationResult", "ConversationResults", new { Id = Model.Students.ElementAtOrDefault(i).Id }, null)
+                        <span class="float-right">
+                            @Html.ActionLink("", "EditConversationResult", "ConversationResults", new { Id = Model.Students.ElementAtOrDefault(i).Id }, new { @class = "fas fa-pen-square" })
                         </span>
                     </td>
                 </tr>
