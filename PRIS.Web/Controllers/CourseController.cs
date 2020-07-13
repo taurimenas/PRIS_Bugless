@@ -23,39 +23,20 @@ namespace PRIS.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var students = await _repository.Query<Student>()
-                .Include(i => i.Result)
-                .ThenInclude(u => u.Exam)
                 .Include(x => x.ConversationResult)
+                .Include(x => x.Result)
+                .ThenInclude(x => x.Exam)
+                .Include(x => x.StudentCourses)
+                .ThenInclude(x => x.Course)
                 .Where(x => x.PassedExam == true)
                 .ToListAsync();
 
-            var conversationResults = new List<ConversationResult>();
-            var courses = new List<Course>();
-
-            foreach (var student in students)
-            {
-                var conversationResult = await _repository.FindByIdAsync<ConversationResult>(student.ConversationResultId);
-                conversationResults.Add(conversationResult);
-
-                var course = await _repository.Query<Course>()
-                    .FirstOrDefaultAsync(x => x.StudentsCourses.FirstOrDefault(y => y.StudentId == student.Id && y.Priority == 1).StudentId == student.Id);
-                courses.Add(course);
-
-                //var course = await _courseRepository.Query<>()
-            }
-
-            var conversationResultViewModels = new List<ConversationResultViewModel>();
-            var studentViewModels = new List<StudentViewModel>();
-            var courseViewModels = new List<CourseViewModel>();
-            var resultViewModels = new List<ResultViewModel>();
             var studentEvaluations = new List<StudentEvaluationViewModel>();
+            students.ForEach(x => studentEvaluations.Add(CourseMappings.ToViewModel(x, x.ConversationResult, x.StudentCourses.FirstOrDefault(y => y.Priority == 1), x.Result)));
 
-            students.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x)));
-            conversationResults.ForEach(x => conversationResultViewModels.Add(ConversationResultMappings.ToConversationResultViewModel(x)));
-            courses.ForEach(x => courseViewModels.Add(CourseMappings.ToViewModel(x)));
-            students.ForEach(x => resultViewModels.Add(ResultMappings.ToViewModel(x.Result)));
+            studentEvaluations = studentEvaluations.OrderByDescending(x => x.FinalAverageGrade).ToList();
 
-            return View(CourseMappings.ToViewModel(studentViewModels, conversationResultViewModels, courseViewModels, resultViewModels));
+            return View(CourseMappings.ToViewModel(studentEvaluations));
         }
     }
 }

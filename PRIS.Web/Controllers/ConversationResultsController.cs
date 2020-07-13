@@ -50,7 +50,7 @@ namespace PRIS.Web.Controllers
             return View(ConversationResultMappings.ToStudentAndConversationResultViewModel(studentViewModels, conversationResultViewModel));
 
         }
-        //GET
+
         public async Task<IActionResult> EditConversationResult(int? id)
         {
             if (id == null)
@@ -64,12 +64,12 @@ namespace PRIS.Web.Controllers
             {
                 ConversationResult conversationResult = new ConversationResult();
                 conversationResult.Student = student;
-                
+
                 student.ConversationResult = conversationResult;
-                conversationResult = await _conversationResult.InsertAsync(conversationResult);
+                conversationResult = await _repository.InsertAsync(conversationResult);
                 student.ConversationResultId = conversationResult.Id;
                 TempData["ConversationResultId"] = student.ConversationResultId;
-                await _studentRepository.SaveAsync();
+                await _repository.SaveAsync();
                 ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel();
                 conversationResultViewModel.ConversationResultId = conversationResult.Id;
                 return View(ConversationResultMappings.ToViewModel(student, conversationResult));
@@ -82,7 +82,7 @@ namespace PRIS.Web.Controllers
                 return View(ConversationResultMappings.ToViewModel(student, conversationResult));
             }
         }
-        //POST
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditConversationResult([Bind("Grade", "ConversationResultComment")] ConversationResultViewModel model)

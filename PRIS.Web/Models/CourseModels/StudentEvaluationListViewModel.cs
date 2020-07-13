@@ -7,6 +7,6 @@ namespace PRIS.Web.Models.CourseModels
 {
     public class StudentEvaluationListViewModel
     {
-        List<StudentEvaluationViewModel> StudentEvaluations { get; set; }
+        public List<StudentEvaluationViewModel> StudentEvaluations { get; set; }
     }
 }
