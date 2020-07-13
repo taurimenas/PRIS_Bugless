@@ -19,6 +19,7 @@ namespace PRIS.Web.Models
         public string PhoneNumber { get; set; }
         public double? FinalPoints { get; set; }
         public double? PercentageGrade { get; set; }
+        [Display(Name = "Pokalbio komentaras", Prompt = "Pokalbio komentaras")]
         public string ConversationResultComment { get; set; }
         public int ConversationResultId { get; set; }
         [Display(Name = "Pokalbio įvertinimas", Prompt = "Pokalbio įvertinimas")]
