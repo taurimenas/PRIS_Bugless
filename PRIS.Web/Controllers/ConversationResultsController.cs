@@ -29,13 +29,7 @@ namespace PRIS.Web.Controllers
                 .Where(y => y.Result.Exam.Id == id)
                 .ToListAsync();
 
-
             var conversationResult = new List<ConversationResult>();
-            var getGradeNull = passedStudents.Where(x => x.ConversationResult.Grade == null);
-            if (getGradeNull == null)
-            {
-                return View();
-            }
 
             foreach (var student in passedStudents)
             {
