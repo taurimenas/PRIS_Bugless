@@ -46,6 +46,7 @@ namespace PRIS.Web
             services.AddScoped<Storage.Repository<Student>>();
             services.AddScoped<Storage.Repository<Result>>();
             services.AddScoped<Storage.Repository<Exam>>();
+            services.AddScoped<Storage.Repository<ConversationResult>>();
             services.AddScoped<Storage.Repository<City>>();
             services.AddScoped<Storage.Repository<PRIS.Core.Library.Entities.Program>>();
             services.AddScoped<Storage.Repository<Course>>();

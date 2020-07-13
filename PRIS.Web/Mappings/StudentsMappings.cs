@@ -90,7 +90,8 @@ namespace PRIS.Web.Mappings
                 Tasks = resultEntity.Tasks == null ? new double[] { 0 } : JsonSerializer.Deserialize<double[]>(resultEntity.Tasks),
                 CommentResult = resultEntity.Comment,
                 ExamId = resultEntity.ExamId,
-                StudentForeignKey = resultEntity.StudentForeignKey
+                StudentForeignKey = resultEntity.StudentForeignKey,
+                ConversationResult = studentEntity.ConversationResult?.Grade
             };
         }
         public static StudentsResultViewModel ToStudentsResultViewModel(double[] tasks)
