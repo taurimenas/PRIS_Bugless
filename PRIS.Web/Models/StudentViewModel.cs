@@ -10,7 +10,7 @@ namespace PRIS.Web.Models
 {
     public class StudentViewModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         [Required(ErrorMessage = "Įveskite vardą")]
         [Display(Name = "Vardas", Prompt = "Vardas")]
         public string FirstName { get; set; }
@@ -25,10 +25,10 @@ namespace PRIS.Web.Models
         public string PhoneNumber { get; set; }
         [Required(ErrorMessage = "Būtina nurodyti lytį")]
         [Display(Name = "Lytis")]
-        public Gender Gender { get; set; }
+        public Gender? Gender { get; set; }
         [Display(Name = "Komentaras", Prompt = "Komentaras")]
         public string Comment { get; set; }
-        public bool PassedExam { get; set; } = false;
+        public bool? PassedExam { get; set; } = false;
         public string ErrorMessage { get; set; }
         public int ExamId { get; set; }
     } 

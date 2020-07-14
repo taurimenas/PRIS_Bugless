@@ -18,24 +18,16 @@ namespace PRIS.Web.Controllers
     [Authorize]
     public class ExamsController : Controller
     {
-        private readonly Repository<Exam> _examRepository;
-        private readonly Repository<City> _cityRepository;
-        private readonly Repository<Student> _studentRepository;
-        private readonly Repository<Result> _resultRepository;
+        private readonly IRepository _repository;
 
-
-        public ExamsController(Repository<Exam> examRepository, Repository<City> cityRepository, Repository<Student> studentRepository, Repository<Result> resultRepository)
+        public ExamsController(IRepository repository)
         {
-            _examRepository = examRepository;
-            _cityRepository = cityRepository;
-            _studentRepository = studentRepository;
-            _resultRepository = resultRepository;
-
+            _repository = repository;
         }
 
         public async Task<IActionResult> Index(int value, [Bind("SelectedCity")] ExamsViewModel viewModel)
         {
-            var exams = await _examRepository.Query<Exam>().Include(exam => exam.City).ToListAsync();
+            var exams = await _repository.Query<Exam>().Include(exam => exam.City).ToListAsync();
             List<ExamViewModel> examViewModels = new List<ExamViewModel>();
             exams.ForEach(x => examViewModels.Add(ExamMappings.ToViewModel(x)));
             examViewModels = examViewModels.OrderByDescending(x => x.Date).ToList();
@@ -56,7 +48,7 @@ namespace PRIS.Web.Controllers
 
             var selectedExams = examViewModels.Where(x => x.SetAcceptancePeriod == SelectedAcceptancePeriod.Text).ToList();
 
-            var results = await _resultRepository.Query<Result>().ToListAsync();
+            var results = await _repository.Query<Result>().ToListAsync();
             int studentsCountInAcceptancePeriod = 0;
             foreach (var selectedExam in selectedExams)
             {
@@ -70,7 +62,7 @@ namespace PRIS.Web.Controllers
         public async Task<IActionResult> Create()
         {
             ExamViewModel examViewModel = new ExamViewModel();
-            List<City> cities = await _examRepository.Query<City>().ToListAsync();
+            List<City> cities = await _repository.Query<City>().ToListAsync();
 
             var stringCities = new List<SelectListItem>();
             foreach (var city in cities)
@@ -88,20 +80,20 @@ namespace PRIS.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var latestDate = _examRepository.Query<Exam>()
+                var latestDate = _repository.Query<Exam>()
                                 .OrderBy(x => x.Created)
                                 .LastOrDefault();
 
                 var exam = ExamMappings.ToEntity(examViewModel);
-                var city = await _cityRepository.Query<City>().FirstOrDefaultAsync(x => x.Name == examViewModel.SelectedCity);
+                var city = await _repository.Query<City>().FirstOrDefaultAsync(x => x.Name == examViewModel.SelectedCity);
                 exam.CityId = city.Id;
                 if (latestDate != null)
                 {
                     exam.Tasks = latestDate.Tasks;
-                    await _examRepository.InsertAsync(exam);
+                    await _repository.InsertAsync(exam);
                     return RedirectToAction(nameof(Index));
                 }
-                await _examRepository.InsertAsync(exam);
+                await _repository.InsertAsync(exam);
                 return RedirectToAction(nameof(Index));
             }
             return RedirectToAction(nameof(Index));
@@ -114,19 +106,19 @@ namespace PRIS.Web.Controllers
                 return NotFound();
             }
 
-            var exam = await _examRepository.Query<Exam>()
+            var exam = await _repository.Query<Exam>()
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (exam == null)
             {
                 return NotFound();
             }
-            var examById = await _examRepository.FindByIdAsync(id);
-            var result = await _resultRepository.Query<Result>().FirstOrDefaultAsync(x => x.ExamId == examById.Id);
+            var examById = await _repository.FindByIdAsync<Exam>(id);
+            var result = await _repository.Query<Result>().FirstOrDefaultAsync(x => x.ExamId == examById.Id);
             int.TryParse(TempData["SelectedAcceptancePeriod"].ToString(), out int SelectedAcceptancePeriod);
 
             if (result != null)
             {
-                var studentById = await _studentRepository.FindByIdAsync(result.StudentForeignKey);
+                var studentById = await _repository.FindByIdAsync<Student>(result.StudentForeignKey);
                 if (studentById != null)
                 {
                     TempData["ErrorMessage"] = "Testo negalima ištrinti, nes prie jo jau yra priskirta testą išlaikiusių kandidatų.";
@@ -141,7 +133,7 @@ namespace PRIS.Web.Controllers
             }
             else
             {
-                var oldestExam = await _examRepository.Query<Exam>().OrderBy(m => m.Date).FirstOrDefaultAsync();
+                var oldestExam = await _repository.Query<Exam>().OrderBy(m => m.Date).FirstOrDefaultAsync();
                 await RemoveFromExams(examById);
                 if (examById.Date == oldestExam.Date)
                     return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod - 1}");
@@ -151,7 +143,7 @@ namespace PRIS.Web.Controllers
 
         private async Task<IActionResult> RemoveFromExams(Exam examById)
         {
-            await _examRepository.DeleteAsync(examById.Id);
+            await _repository.DeleteAsync<Exam>(examById.Id);
             return RedirectToAction(nameof(Index));
         }
         private static List<string> CalculateAcceptancePeriods(List<ExamViewModel> examViewModels)

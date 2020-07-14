@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace PRIS.Web.Storage
 {
-    public class Repository<T> : IRepository<T>, IDisposable
-        where T : class, IEntity
+    public class Repository : IRepository, IDisposable
     {
         private readonly ApplicationDbContext _context;
         public Repository(ApplicationDbContext context)
@@ -25,36 +24,36 @@ namespace PRIS.Web.Storage
             await _context.SaveChangesAsync();
         }
 
-        public async Task<T> InsertAsync(T entity)
+        public async Task<TEntity> InsertAsync<TEntity>(TEntity entity) where TEntity : class, IEntity
         {
-            await _context.Set<T>().AddAsync(entity);
+            await _context.Set<TEntity>().AddAsync(entity);
             await _context.SaveChangesAsync();
             return entity;
         }
-        public async Task<T> DeleteAsync(int? id)
+        public async Task<TEntity> DeleteAsync<TEntity>(int? id) where TEntity : class, IEntity
         {
-            var entity = await _context.Set<T>().FindAsync(id);
+            var entity = await _context.Set<TEntity>().FindAsync(id);
             if (entity == null)
             {
                 return entity;
             }
-            _context.Set<T>().Remove(entity);
+            _context.Set<TEntity>().Remove(entity);
             await _context.SaveChangesAsync();
             return entity;
         }
-        public async Task<T> UpdateAsync(T entity)
+        public async Task<TEntity> UpdateAsync<TEntity>(TEntity entity) where TEntity : class, IEntity
         {
             _context.Update(entity);
             await _context.SaveChangesAsync();
             return entity;
         }
-        public async Task<T> FindByIdAsync(int? id)
+        public async Task<TEntity> FindByIdAsync<TEntity>(int? id) where TEntity : class, IEntity
         {
-            return await _context.Set<T>().FirstOrDefaultAsync(m => m.Id == id);
+            return await _context.Set<TEntity>().FirstOrDefaultAsync(m => m.Id == id);
         }
-        public bool Exists(int? id)
+        public bool Exists<TEntity>(int? id) where TEntity : class, IEntity
         {
-            return _context.Set<T>().Any(e => e.Id == id);
+            return _context.Set<TEntity>().Any(e => e.Id == id);
         }
 
         public void Dispose()
