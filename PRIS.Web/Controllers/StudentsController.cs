@@ -70,7 +70,7 @@ namespace PRIS.Web.Controllers
             {
                 var students = await _repository.Query<Student>()
                     .Include(x => x.Result)
-                    .Include(x=>x.ConversationResult)
+                    .Include(x => x.ConversationResult)
                     .Where(x => x.Id > 0)
                     .Where(x => x.Result.Exam.Id == ExamId)
                     .ToListAsync();
@@ -209,17 +209,9 @@ namespace PRIS.Web.Controllers
             }
             var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id == id);
             var studentEntity = await studentRequest.FirstOrDefaultAsync();
-<<<<<<< HEAD
-            var resultEntity = await _resultRepository.FindByIdAsync(studentEntity.Result.Id);
 
-=======
             var resultEntity = await _repository.FindByIdAsync<Result>(studentEntity.Result.Id);
-            if (studentEntity.PassedExam)
-            {
-                TempData["ErrorMessage"] = "Studentas yra pakviestas į pokalbį, todėl jo duomenų negalima redaguoti.";
-                return RedirectToAction("Index", "Students", new { id = resultEntity.ExamId });
-            }
->>>>>>> RepositoryPatternImprovement
+
             if (studentEntity == null)
             {
                 return NotFound();

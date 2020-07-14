@@ -22,7 +22,7 @@ namespace PRIS.Web.Controllers
         {
             TempData["ExamId"] = id;
 
-            var passedStudents = await _studentRepository.Query<Student>()
+            var passedStudents = await _repository.Query<Student>()
                 .Include(i => i.Result)
                 .ThenInclude(u => u.Exam)
                 .Where(x => x.PassedExam == true)
@@ -49,7 +49,7 @@ namespace PRIS.Web.Controllers
         public async Task<IActionResult> EditConversationResult(int? id, int? examId)
         {
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
-            var passedStudents = await _studentRepository.Query<Student>()
+            var passedStudents = await _repository.Query<Student>()
                 .Include(i => i.Result)
                 .ThenInclude(u => u.Exam)
                 .Where(x => x.PassedExam == true)
@@ -63,7 +63,7 @@ namespace PRIS.Web.Controllers
             var student = await _repository.FindByIdAsync<Student>(id);
             TempData["ConversationResultId"] = student.ConversationResultId;
             TempData["StudentId"] = student.Id;
-            
+
             if (student.ConversationResultId == null)
             {
                 ConversationResult conversationResult = new ConversationResult();
