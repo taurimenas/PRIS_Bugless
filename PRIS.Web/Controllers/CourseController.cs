@@ -38,5 +38,49 @@ namespace PRIS.Web.Controllers
 
             return View(CourseMappings.ToViewModel(studentEvaluations));
         }
+
+        public async Task<IActionResult> LockingOfStudentData()
+        {
+            var students = await _repository.Query<Student>()
+                .Include(x => x.ConversationResult)
+                .Include(x => x.Result)
+                .ThenInclude(x => x.Exam)
+                .Include(x => x.StudentCourses)
+                .ThenInclude(x => x.Course)
+                .Where(x => x.PassedExam == true)
+                .ToListAsync();
+            var studentDataLocking = new List<StudentLockDataViewModel>();
+            students.ForEach(x => studentDataLocking.Add(CourseMappings.StudentLockDataToViewModel(x, x.ConversationResult, x.StudentCourses.FirstOrDefault(y => y.Priority == 1), x.Result)));
+
+            return View(studentDataLocking);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LockingOfStudentData(int[] HasSignedAContract)
+        {
+            //int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
+            //var backToExam = RedirectToAction("Index", "Students", new { id = ExamId });
+            if (ModelState.IsValid)
+            {
+                var students = await _repository.Query<Student>()
+                    .Include(x => x.Result)
+                    .Include(x => x.ConversationResult)
+                    .Where(x => x.Id > 0)
+                    .Where(x => x.Result.Exam.Id == 1)
+                    .ToListAsync();
+                students.ForEach(x => x.SignedAContract = false);
+
+                for (int i = 0; i < HasSignedAContract.Length; i++)
+                {
+                    var findStudents = students.FirstOrDefault(x => x.Id == HasSignedAContract[i]);
+                    findStudents.SignedAContract = true;
+                }
+
+                await _repository.SaveAsync();
+                return RedirectToAction("LockingOfStudentData", "Course");
+            }
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

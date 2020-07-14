@@ -42,5 +42,40 @@ namespace PRIS.Web.Mappings
             };
 
         }
+        public static StudentLockDataViewModel StudentLockDataToViewModel(Student student, ConversationResult conversationResult, StudentCourse studentCourse, Result result)
+        {
+            double? finalAverageGrade = 0;
+            double? finalTestPoints = JsonSerializer.Deserialize<double[]>(result.Tasks).Sum(x => x);
+            double? maxPoints = JsonSerializer.Deserialize<double[]>(result.Exam.Tasks).Sum(x => x);
+            double? percentageGrade = finalTestPoints * 100 / maxPoints;
+            if (percentageGrade == null || conversationResult == null)
+                finalAverageGrade = null;
+            else finalAverageGrade = (percentageGrade / 10 + conversationResult.Grade) / 2;
+
+            return new StudentLockDataViewModel
+            {
+                Id = student.Id,
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                Email = student.Email,
+                PhoneNumber = student.PhoneNumber,
+                FinalTestPoints = finalTestPoints,
+                PercentageGrade = percentageGrade,
+                ConversationGrade = conversationResult?.Grade,
+                FinalAverageGrade = finalAverageGrade,
+                Priority = studentCourse?.Course.Title,
+                SignedAContract = student.SignedAContract
+                //invited to study
+                // ar reikia? student data lock
+            };
+        }
+
+        public static StudentLockDataListViewModel StudentLockDataListToViewModel(List<StudentLockDataViewModel> studentLockDatas)
+        {
+            return new StudentLockDataListViewModel
+            {
+                StudentDataLocking = studentLockDatas
+            };
+        }
     }
 }
