@@ -136,12 +136,17 @@ namespace PRIS.Web.Controllers
                 var studentsExam = _examRepository.FindByIdAsync(ExamId).Result;
 
                 await _repository.SaveAsync();
-
+                studentViewModel = StudentsMappings.ToViewModel(student);
                 for (int i = 1; i < selectedPriority.Length + 1; i++)
                 {
                     if (selectedPriority[i - 1] == null)
                     {
-                        return backToExam;
+                        return RedirectToAction("Create", "Students"); ;
+                    }
+                    if (selectedPriority[i] == selectedPriority[i - 1] || selectedPriority[i] == selectedPriority[i + 1] || selectedPriority[i-1] == selectedPriority[i + 1])
+                    {
+                        TempData["ErrorMessage"] = "Studento prioritetai turi būti skirtingi";
+                        return RedirectToAction("Edit", "Students", new { id = student.Id });
                     }
                     StudentCourse studentCourse = new StudentCourse
                     {
@@ -156,6 +161,7 @@ namespace PRIS.Web.Controllers
                         .Where(x => x.ProgramId == priorityProgram.Id)
                         .Where(x => x.StartYear.Year == studentsExam.Date.Year)
                         .FirstOrDefault();
+
                     if (priorityCourse != null)
                     {
                         studentCourse.CourseId = priorityCourse.Id;
@@ -240,7 +246,8 @@ namespace PRIS.Web.Controllers
                     .FirstOrDefault();
                 if (studentPriority == null)
                 {
-                    stringPrograms.Add(new SelectListItem { Value = null, Text = " " });
+                    stringPrograms.Add(new SelectListItem { Value = programs[i - 1].Name, Text = programs[i - 1].Name });
+                    studentViewModel.SelectedPriority[i - 1] = programs[i - 1].Name;
                 }
                 else
                 {
@@ -263,47 +270,12 @@ namespace PRIS.Web.Controllers
         public async Task<IActionResult> Edit(int id, string[] selectedPriority, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
         {
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
-            //var student = await _repository.FindByIdAsync(id);
+
             var student = await _repository.Query<Student>()
                 .Include(x => x.StudentCourses)
                 .ThenInclude(x => x.Course)
                 .ThenInclude(x => x.Programs)
                 .FirstOrDefaultAsync(x => x.Id == id);
-            var course = await _courseRepository.Query<Course>().ToListAsync();
-            //var studentCourse = await _studentCourseRepository.Query<StudentCourse>().Where(x => x.StudentId == id).ToListAsync();
-            //foreach (var item in studentCourse)
-            //{
-            //    await _studentCourseRepository.DeleteAsync(item);
-            //}
-
-            StudentsMappings.ToEntity(student, studentViewModel);
-            var studentsExam = _examRepository.FindByIdAsync(ExamId).Result;
-
-
-            for (int i = 1; i < selectedPriority.Length + 1; i++)
-            {
-
-                student.StudentCourses.FirstOrDefault(x => x.Priority == i).Course = course.FirstOrDefault(x => x.Title == selectedPriority[i - 1]);
-
-                student.StudentCourses.FirstOrDefault(x => x.Priority == i).Course.Id = course.FirstOrDefault(x => x.Title == selectedPriority[i - 1]).Id;
-                //var priorityProgram = _programRepository.Query<PRIS.Core.Library.Entities.Program>()
-                //    .Where(x => x.Name == selectedPriority[i])
-                //    .FirstOrDefault();
-                //var priorityCourse = _courseRepository.Query<Course>()
-                //    .Where(x => x.ProgramId == priorityProgram.Id)
-                //    .Where(x => x.StartYear.Year == studentsExam.Date.Year)
-                //    .FirstOrDefault();
-                //var studentCoursePriority = _studentCourseRepository.Query<StudentCourse>()
-                //    .Where(x => x.CourseId == priorityCourse.Id)
-                //    .Where(x => x.StudentId == id)
-                //    .FirstOrDefault();
-
-                //studentCoursePriority.CourseId = priorityCourse.Id;
-                //studentCoursePriority.Course = priorityCourse;
-            }
-            await _studentCourseRepository.SaveAsync();
-
-
             if (id != student.Id)
             {
                 return NotFound();
@@ -312,6 +284,26 @@ namespace PRIS.Web.Controllers
             {
                 try
                 {
+                    var course = await _courseRepository.Query<Course>().ToListAsync();
+
+                    StudentsMappings.ToEntity(student, studentViewModel);
+                    var studentsExam = _examRepository.FindByIdAsync(ExamId).Result;
+
+                    for (int i = 1; i < selectedPriority.Length + 1; i++)
+                    {
+                        if (selectedPriority[i] == selectedPriority[i - 1] || selectedPriority[i] == selectedPriority[i + 1] || selectedPriority[i - 1] == selectedPriority[i + 1])
+                        {
+                            TempData["ErrorMessage"] = "Studento prioritetai turi būti skirtingi";
+                            return RedirectToAction("Edit", "Students", new { id = student.Id });
+                        }
+
+                        student.StudentCourses.FirstOrDefault(x => x.Priority == i).Course = course.FirstOrDefault(x => x.Title == selectedPriority[i - 1]);
+
+                        student.StudentCourses.FirstOrDefault(x => x.Priority == i).Course.Id = course.FirstOrDefault(x => x.Title == selectedPriority[i - 1]).Id;
+
+                    }
+                    await _studentCourseRepository.SaveAsync();
+
                     await _repository.SaveAsync();
                 }
                 catch (DbUpdateConcurrencyException)

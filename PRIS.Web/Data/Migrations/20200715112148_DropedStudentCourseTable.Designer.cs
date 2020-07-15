@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PRIS.Web.Data;
 
 namespace PRIS.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200715112148_DropedStudentCourseTable")]
+    partial class DropedStudentCourseTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -422,40 +424,9 @@ namespace PRIS.Web.Data.Migrations
                     b.Property<int?>("ResultId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StudentsCourseId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Student");
-                });
-
-            modelBuilder.Entity("PRIS.Core.Library.Entities.StudentCourse", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Priority")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("StudentsCourse");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -548,21 +519,6 @@ namespace PRIS.Web.Data.Migrations
                     b.HasOne("PRIS.Core.Library.Entities.Student", "Student")
                         .WithOne("Result")
                         .HasForeignKey("PRIS.Core.Library.Entities.Result", "StudentForeignKey");
-                });
-
-            modelBuilder.Entity("PRIS.Core.Library.Entities.StudentCourse", b =>
-                {
-                    b.HasOne("PRIS.Core.Library.Entities.Course", "Course")
-                        .WithMany("StudentsCourses")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PRIS.Core.Library.Entities.Student", "Student")
-                        .WithMany("StudentCourses")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

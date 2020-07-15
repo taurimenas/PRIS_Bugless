@@ -8,6 +8,7 @@
 <h3>Pridėti naują kandidatą</h3>
 
 <hr />
+<div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
@@ -40,16 +41,16 @@
 
             @for (int i = 1; i < Model.Programs.Count() + 1; i++)
             {
-                <div class="form-group">
-                    <div>
-                        @i
-                        @Html.DropDownListFor(x => Model.SelectedPriority, new SelectList(Model.Programs, "Value", "Text"), " ", htmlAttributes: new { @class = "form-control", id = "Program" })
-                        @Html.ValidationMessageFor(x => x.SelectedPriority, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-             }
+                @i
+                <select asp-for="@Model.SelectedPriority[i-1]" class="form-control">
+                    @foreach (var ap in Model.Programs)
+                    {
+                        <option value="@ap.Value">@ap.Text</option>
+                    }
+                </select>
+            }
             <div class="form-group">
-                <input type="submit" value="Sukurti" class="btn btn-secondary" />
+                <input type="submit" value="Sukurti" class="btn btn-secondary mt-2" />
             </div>
         </form>
     </div>

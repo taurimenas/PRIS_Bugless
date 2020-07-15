@@ -106,7 +106,7 @@
     function clickThis(e, id) {
         var theOne = items.find(i => i.id === id).points
         var theOneCheckBox = document.getElementById(`checkbox-${id}`);
-        if (theOneCheckBox.checked == false) {
+        if (!theOneCheckBox.checked) {
             items.forEach(x => {
                 var allCheckBoxes = document.getElementById(`checkbox-${x.id}`);
                 allCheckBoxes.checked = false;
