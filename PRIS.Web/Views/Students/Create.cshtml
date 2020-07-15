@@ -1,4 +1,4 @@
-﻿@model PRIS.Web.Models.StudentPrioritiesViewModel
+﻿@model PRIS.Web.Models.StudentViewModel
 @using PRIS.Core.Library
 
 @{
@@ -38,15 +38,16 @@
             </div>
             <div>Kandidato prioritetai</div>
 
-            @for (int i = 1; i < Model.Programs.Count()+1; i++)
-            {<div class="form-group">
+            @for (int i = 1; i < Model.Programs.Count() + 1; i++)
+            {
+                <div class="form-group">
                     <div>
                         @i
-                        @Html.DropDownListFor(x => Model.SelectedPriority, new SelectList(Model.Programs, "Value", "Text"), htmlAttributes: new { @class = "form-control", id = "Program" })
+                        @Html.DropDownListFor(x => Model.SelectedPriority, new SelectList(Model.Programs, "Value", "Text"), " ", htmlAttributes: new { @class = "form-control", id = "Program" })
                         @Html.ValidationMessageFor(x => x.SelectedPriority, "", new { @class = "text-danger" })
                     </div>
                 </div>
-            }
+             }
             <div class="form-group">
                 <input type="submit" value="Sukurti" class="btn btn-secondary" />
             </div>

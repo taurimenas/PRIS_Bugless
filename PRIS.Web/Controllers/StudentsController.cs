@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -45,7 +46,10 @@ namespace PRIS.Web.Controllers
                 return NotFound();
             }
             TempData["ExamId"] = id;
-            var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id > 0);
+            var studentRequest = _repository.Query<Student>()
+                .Include(x => x.Result)
+                .Include(x => x.ConversationResult)
+                .Where(x => x.Id > 0);
             var students = await studentRequest.Where(x => x.Result.Exam.Id == id).ToListAsync();
             if (students == null)
             {
@@ -68,30 +72,57 @@ namespace PRIS.Web.Controllers
 
             return View(studentViewModels);
         }
+        //POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(int[] HasPassedExam)
+        {
+            int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
+            var backToExam = RedirectToAction("Index", "Students", new { id = ExamId });
+            if (ModelState.IsValid)
+            {
+                var students = await _repository.Query<Student>()
+                    .Include(x => x.Result)
+                    .Include(x => x.ConversationResult)
+                    .Where(x => x.Id > 0)
+                    .Where(x => x.Result.Exam.Id == ExamId)
+                    .ToListAsync();
+                students.ForEach(x => x.PassedExam = false);
+
+                for (int i = 0; i < HasPassedExam.Length; i++)
+                {
+                    var findStudents = students.FirstOrDefault(x => x.Id == HasPassedExam[i]);
+                    findStudents.PassedExam = true;
+                }
+
+                await _repository.SaveAsync();
+                return RedirectToAction("Index", "ConversationResults", new { id = ExamId });
+            }
+            return backToExam;
+        }
         //GET
         public async Task<IActionResult> Create()
         {
-            StudentPrioritiesViewModel studentPrioritiesViewModel = new StudentPrioritiesViewModel();
+            StudentViewModel studentViewModel = new StudentViewModel();
             List<PRIS.Core.Library.Entities.Program> programs = await _programRepository.Query<PRIS.Core.Library.Entities.Program>().ToListAsync();
             var stringPrograms = new List<SelectListItem>();
             foreach (var program in programs)
             {
                 stringPrograms.Add(new SelectListItem { Value = program.Name, Text = program.Name });
             }
-            studentPrioritiesViewModel.Programs = stringPrograms;
-            return View(studentPrioritiesViewModel);
+            studentViewModel.Programs = stringPrograms;
+            return View(studentViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string[] SelectedPriority, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
+        public async Task<IActionResult> Create(string[] selectedPriority, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
         {
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
             var backToExam = RedirectToAction("Index", "Students", new { id = ExamId });
             if (ModelState.IsValid)
             {
                 var student = StudentsMappings.ToEntity(studentViewModel);
-                //sukuriu studentui result
                 Result result = new Result
                 {
                     ExamId = ExamId,
@@ -101,57 +132,33 @@ namespace PRIS.Web.Controllers
                 result.Student = student;
                 student.Result = result;
                 student.ResultId = result.Id;
-                //isaugomas studentas
                 await _repository.InsertAsync(student);
-                //ieskom pirmos priority
                 var studentsExam = _examRepository.FindByIdAsync(ExamId).Result;
-                var firstPriorityProgram = _programRepository.Query<PRIS.Core.Library.Entities.Program>().Where(x => x.Name == SelectedPriority[0]).FirstOrDefault();
-                var firstPriorityCourse = _courseRepository.Query<Course>().Where(x => x.ProgramId == firstPriorityProgram.Id).Where(x => x.StartYear.Year == studentsExam.Date.Year).FirstOrDefault();
 
-                StudentCourse studentFirstCourse = new StudentCourse
-                {
-                    StudentId = student.Id,
-                    Student = student,
-                    Priority = 1
-                };
-
-                if (firstPriorityCourse != null)
-                {
-                    studentFirstCourse.Course = firstPriorityCourse;
-                    studentFirstCourse.CourseId = firstPriorityCourse.Id;
-                    student.StudentsCourseId = firstPriorityCourse.Id;
-                }
-                else
-                {
-                    Course course = new Course
-                    {
-                        StartYear = studentsExam.Date,
-                        EndYear = studentsExam.Date.AddYears(1),
-                        CityId = studentsExam.CityId,
-                        ProgramId = firstPriorityProgram.Id,
-                        Title = firstPriorityProgram.Name
-                    };
-                    course = await _courseRepository.InsertAsync(course);
-                    studentFirstCourse.Course = course;
-                    student.StudentsCourseId = course.Id;
-                    studentFirstCourse.CourseId = course.Id;
-
-                }
-                studentFirstCourse = await _studentCourseRepository.InsertAsync(studentFirstCourse);
                 await _repository.SaveAsync();
-                for (int i = 1; i < SelectedPriority.Length; i++)
+
+                for (int i = 1; i < selectedPriority.Length + 1; i++)
                 {
-                    StudentCourse otherStudentCourses = new StudentCourse
+                    if (selectedPriority[i - 1] == null)
                     {
+                        return backToExam;
+                    }
+                    StudentCourse studentCourse = new StudentCourse
+                    {
+                        Priority = i,
                         StudentId = student.Id,
-                        Student = student,
-                        Priority = i + 1
+                        Student = student
                     };
-                    var otherPriorityProgram = _programRepository.Query<PRIS.Core.Library.Entities.Program>().Where(x => x.Name == SelectedPriority[i]).FirstOrDefault();
-                    var otherPriorityCourse = _courseRepository.Query<Course>().Where(x => x.ProgramId == otherPriorityProgram.Id).Where(x => x.StartYear.Year == studentsExam.Date.Year).FirstOrDefault();
-                    if (otherPriorityCourse != null)
+                    var priorityProgram = _programRepository.Query<PRIS.Core.Library.Entities.Program>()
+                        .Where(x => x.Name == selectedPriority[i - 1])
+                        .FirstOrDefault();
+                    var priorityCourse = _courseRepository.Query<Course>()
+                        .Where(x => x.ProgramId == priorityProgram.Id)
+                        .Where(x => x.StartYear.Year == studentsExam.Date.Year)
+                        .FirstOrDefault();
+                    if (priorityCourse != null)
                     {
-                        otherStudentCourses.CourseId = otherPriorityCourse.Id;
+                        studentCourse.CourseId = priorityCourse.Id;
                     }
                     else
                     {
@@ -160,14 +167,15 @@ namespace PRIS.Web.Controllers
                             StartYear = studentsExam.Date,
                             EndYear = studentsExam.Date.AddYears(1),
                             CityId = studentsExam.CityId,
-                            ProgramId = otherPriorityProgram.Id,
-                            Title = otherPriorityProgram.Name
+                            ProgramId = priorityProgram.Id,
+                            Title = priorityProgram.Name
                         };
-                        otherStudentCourses.CourseId = course.Id;
-                        otherStudentCourses.Course = course;
-                        course = await _courseRepository.InsertAsync(course);
+                        studentCourse.CourseId = course.Id;
+                        studentCourse.Course = course;
+                        await _courseRepository.InsertAsync(course);
                     }
-                    otherStudentCourses = await _studentCourseRepository.InsertAsync(otherStudentCourses);
+
+                    await _studentCourseRepository.InsertAsync(studentCourse);
                 }
 
                 return backToExam;
@@ -220,16 +228,81 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-            return View(StudentsMappings.ToViewModel(student));
+            var studentViewModel = StudentsMappings.ToViewModel(student);
+            var programs = await _programRepository.Query<PRIS.Core.Library.Entities.Program>().ToListAsync();
+            var stringPrograms = new List<SelectListItem>();
+            studentViewModel.SelectedPriority = new string[programs.Count()];
+            for (int i = 1; i < programs.Count() + 1; i++)
+            {
+                var studentPriority = _studentCourseRepository.Query<StudentCourse>()
+                    .Where(x => x.StudentId == student.Id)
+                    .Where(x => x.Priority == i)
+                    .FirstOrDefault();
+                if (studentPriority == null)
+                {
+                    stringPrograms.Add(new SelectListItem { Value = null, Text = " " });
+                }
+                else
+                {
+                    var priorityCourse = _courseRepository.Query<Course>()
+                   .Where(x => x.Id == studentPriority.CourseId)
+                   .FirstOrDefault();
+                    var priorityName = programs.Where(x => x.Id == priorityCourse.ProgramId).FirstOrDefault();
+                    studentViewModel.SelectedPriority[i - 1] = priorityName.Name;
+                    stringPrograms.Add(new SelectListItem { Value = priorityName.Name, Text = priorityName.Name });
+                }
+
+            }
+            studentViewModel.Programs = stringPrograms;
+
+            return View(studentViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
+        public async Task<IActionResult> Edit(int id, string[] selectedPriority, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
         {
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
-            var student = await _repository.FindByIdAsync(id);
+            //var student = await _repository.FindByIdAsync(id);
+            var student = await _repository.Query<Student>()
+                .Include(x => x.StudentCourses)
+                .ThenInclude(x => x.Course)
+                .ThenInclude(x => x.Programs)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            //var course = await _courseRepository.Query<Course>().ToListAsync();
+            //var studentCourse = await _studentCourseRepository.Query<StudentCourse>().Where(x => x.StudentId == id).ToListAsync();
+            //foreach (var item in studentCourse)
+            //{
+            //    await _studentCourseRepository.DeleteAsync(item);
+            //}
+
             StudentsMappings.ToEntity(student, studentViewModel);
+            var studentsExam = _examRepository.FindByIdAsync(ExamId).Result;
+
+
+            for (int i = 1; i < selectedPriority.Length + 1; i++)
+            {
+
+                student.StudentCourses.FirstOrDefault(x => x.Priority == i).Course = course.FirstOrDefault(x => x.Title == selectedPriority[i - 1]);
+
+                student.StudentCourses.FirstOrDefault(x => x.Priority == i).Course.Id = course.FirstOrDefault(x => x.Title == selectedPriority[i - 1]).Id;
+                //var priorityProgram = _programRepository.Query<PRIS.Core.Library.Entities.Program>()
+                //    .Where(x => x.Name == selectedPriority[i])
+                //    .FirstOrDefault();
+                //var priorityCourse = _courseRepository.Query<Course>()
+                //    .Where(x => x.ProgramId == priorityProgram.Id)
+                //    .Where(x => x.StartYear.Year == studentsExam.Date.Year)
+                //    .FirstOrDefault();
+                //var studentCoursePriority = _studentCourseRepository.Query<StudentCourse>()
+                //    .Where(x => x.CourseId == priorityCourse.Id)
+                //    .Where(x => x.StudentId == id)
+                //    .FirstOrDefault();
+
+                //studentCoursePriority.CourseId = priorityCourse.Id;
+                //studentCoursePriority.Course = priorityCourse;
+            }
+            await _studentCourseRepository.SaveAsync();
+
 
             if (id != student.Id)
             {
@@ -269,11 +342,7 @@ namespace PRIS.Web.Controllers
             var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id == id);
             var studentEntity = await studentRequest.FirstOrDefaultAsync();
             var resultEntity = await _resultRepository.FindByIdAsync(studentEntity.Result.Id);
-            if (studentEntity.PassedExam)
-            {
-                TempData["ErrorMessage"] = "Studentas yra pakviestas į pokalbį, todėl jo duomenų negalima redaguoti.";
-                return RedirectToAction("Index", "Students", new { id = resultEntity.ExamId });
-            }
+
             if (studentEntity == null)
             {
                 return NotFound();
@@ -301,6 +370,11 @@ namespace PRIS.Web.Controllers
                     var student = await studentRequest.FirstOrDefaultAsync(x => x.Id == result.StudentForeignKey);
                     var studentResultViewModel = StudentsMappings.ToStudentsResultViewModel(Tasks);
                     var examTasks = StudentsMappings.ToStudentsResultViewModel(result).Tasks;
+                    if (student.PassedExam)
+                    {
+                        TempData["ErrorMessage"] = "Studentas yra pakviestas į pokalbį, todėl jo duomenų negalima redaguoti.";
+                        return RedirectToAction("EditResult", "Students", new { resultId });
+                    }
 
                     var testToDelete = examTasks.Select((x, i) => x < Tasks[i]);
 

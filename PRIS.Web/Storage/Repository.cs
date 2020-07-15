@@ -42,6 +42,17 @@ namespace PRIS.Web.Storage
             await _context.SaveChangesAsync();
             return entity;
         }
+        public async Task<T> DeleteAsync(T entity)
+        {
+            var entit = await _context.Set<T>().FindAsync(entity);
+            if (entit == null)
+            {
+                return entit;
+            }
+            _context.Set<T>().Remove(entit);
+            await _context.SaveChangesAsync();
+            return entit;
+        }
         public async Task<T> UpdateAsync(T entity)
         {
             _context.Update(entity);
