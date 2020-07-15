@@ -64,9 +64,9 @@ namespace PRIS.Web.Mappings
                 ConversationGrade = conversationResult?.Grade,
                 FinalAverageGrade = finalAverageGrade,
                 Priority = studentCourse?.Course.Title,
-                SignedAContract = student.SignedAContract
-                //invited to study
-                // ar reikia? student data lock
+                SignedAContract = student.SignedAContract,
+                InvitedToStudy = student.InvitedToStudy,
+                StudentDataLocked = student.StudentDataLocked
             };
         }
 
