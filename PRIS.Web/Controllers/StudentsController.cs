@@ -269,7 +269,7 @@ namespace PRIS.Web.Controllers
                 .ThenInclude(x => x.Course)
                 .ThenInclude(x => x.Programs)
                 .FirstOrDefaultAsync(x => x.Id == id);
-            //var course = await _courseRepository.Query<Course>().ToListAsync();
+            var course = await _courseRepository.Query<Course>().ToListAsync();
             //var studentCourse = await _studentCourseRepository.Query<StudentCourse>().Where(x => x.StudentId == id).ToListAsync();
             //foreach (var item in studentCourse)
             //{
