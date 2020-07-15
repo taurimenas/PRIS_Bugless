@@ -29,36 +29,12 @@ namespace PRIS.Web.Controllers
         {
             var exams = await _repository.Query<Exam>()
                 .Include(exam => exam.City)
-                .Include(e => e.Results)
-                .ThenInclude(r => r.Student)
                 .ToListAsync();
             List<ExamViewModel> examViewModels = new List<ExamViewModel>();
             exams.ForEach(x => examViewModels.Add(ExamMappings.ToViewModel(x)));
             examViewModels = examViewModels.OrderByDescending(x => x.Date).ToList();
 
-            DateTime firstExamStart = new DateTime(2020, 03, 1);
-            DateTime firstExamEnd = new DateTime(2020, 09, 1);
-            List<string> AcceptancePeriod = new List<string>();
-            foreach (var examViewModel in examViewModels)
-            {
-                firstExamStart.AddYears(examViewModel.Date.Year - firstExamStart.Year);
-                firstExamEnd.AddYears(examViewModel.Date.Year - firstExamEnd.Year);
-                if (examViewModel.Date > firstExamStart && examViewModel.Date < firstExamEnd)
-                {
-                    if (!AcceptancePeriod.Any(x => x == $"{examViewModel.Date.Year} II pusmetis"))
-                        AcceptancePeriod.Add($"{examViewModel.Date.Year} II pusmetis");
-                    examViewModel.SetAcceptancePeriod = $"{examViewModel.Date.Year} II pusmetis";
-                    var examEntity = await _repository.FindByIdAsync<Exam>(examViewModel.Id);
-                    //examEntity.Results.FirstOrDefault(x => x.) = $"{examViewModel.Date.Year} II pusmetis";
-                    //TODO: išsaugoti į duombazę. Sukurti migraciją
-                }
-                else
-                {
-                    if (!AcceptancePeriod.Any(x => x == $"{examViewModel.Date.Year} I pusmetis"))
-                        AcceptancePeriod.Add($"{examViewModel.Date.Year} I pusmetis");
-                    examViewModel.SetAcceptancePeriod = $"{examViewModel.Date.Year} I pusmetis";
-                }
-            }
+            List<string> AcceptancePeriod = await CalculateAcceptancePeriods(examViewModels);
 
             var AcceptancePeriods = new List<SelectListItem>();
             foreach (var ap in AcceptancePeriod)
@@ -171,7 +147,8 @@ namespace PRIS.Web.Controllers
             await _repository.DeleteAsync<Exam>(examById.Id);
             return RedirectToAction(nameof(Index));
         }
-        private static async Task<List<string>> CalculateAcceptancePeriods(List<ExamViewModel> examViewModels)
+
+        private async Task<List<string>> CalculateAcceptancePeriods(List<ExamViewModel> examViewModels)
         {
             DateTime firstExamStart = new DateTime(2020, 03, 1);
             DateTime firstExamEnd = new DateTime(2020, 09, 1);
@@ -180,20 +157,24 @@ namespace PRIS.Web.Controllers
             {
                 firstExamStart.AddYears(examViewModel.Date.Year - firstExamStart.Year);
                 firstExamEnd.AddYears(examViewModel.Date.Year - firstExamEnd.Year);
+                var examEntity = await _repository.FindByIdAsync<Exam>(examViewModel.Id);
                 if (examViewModel.Date > firstExamStart && examViewModel.Date < firstExamEnd)
                 {
                     if (!AcceptancePeriod.Any(x => x == $"{examViewModel.Date.Year} II pusmetis"))
                         AcceptancePeriod.Add($"{examViewModel.Date.Year} II pusmetis");
                     examViewModel.SetAcceptancePeriod = $"{examViewModel.Date.Year} II pusmetis";
-                    //TODO: išsaugoti į duombazę. Sukurti migraciją
+                    examEntity.AcceptancePeriod = $"{examViewModel.Date.Year} II pusmetis";
                 }
                 else
                 {
                     if (!AcceptancePeriod.Any(x => x == $"{examViewModel.Date.Year} I pusmetis"))
                         AcceptancePeriod.Add($"{examViewModel.Date.Year} I pusmetis");
                     examViewModel.SetAcceptancePeriod = $"{examViewModel.Date.Year} I pusmetis";
+                    examEntity.AcceptancePeriod = $"{examViewModel.Date.Year} I pusmetis";
                 }
+                await _repository.SaveAsync();
             }
+
             return AcceptancePeriod;
         }
     }
