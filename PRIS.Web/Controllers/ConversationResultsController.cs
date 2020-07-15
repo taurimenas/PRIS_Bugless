@@ -98,11 +98,17 @@ namespace PRIS.Web.Controllers
             int.TryParse(TempData["ConversationResultId"].ToString(), out int conversationResultId);
             int.TryParse(TempData["StudentId"].ToString(), out int studentId);
             int.TryParse(TempData["ExamId"].ToString(), out int examId);
+            var studentFromDatabase = await _repository.FindByIdAsync<Student>(studentId);
+            if(studentFromDatabase.InvitedToStudy == true)
+            {
+                ModelState.AddModelError("ConversationResultEdit", "Studentas yra pakviestas į pokalbį, pokalbio įvertinimo redaguoti negalima");
+                TempData["ErrorMessage"] = "Studentas yra pakviestas į pokalbį, pokalbio įvertinimo redaguoti negalima";
+                return RedirectToAction("EditConversationResult", "ConversationResults", new { id = studentId});
+            }
             if (ModelState.IsValid)
             {
                 try
                 {
-
                     var studentRequest = _repository.Query<Student>().Include(x => x.ConversationResult).Where(x => x.Id > 0);
                     var conversationResult = await _repository.FindByIdAsync<ConversationResult>(conversationResultId);
                     var student = await studentRequest.FirstOrDefaultAsync(x => x.ConversationResultId == conversationResult.Id);
