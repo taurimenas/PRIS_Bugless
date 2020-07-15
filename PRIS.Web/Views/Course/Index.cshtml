@@ -8,6 +8,26 @@
     Grupių formavimas
     @Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
 
+    <form asp-action="Index" method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+        <div class="input-group">
+            <input type="text" name="searchString" value="" class="form-control bg-light border-1 rounded small" placeholder="Ieškoti..." aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-primary rounded-circle ml-1 mr-1" type="submit" value="Search">
+                    <i class="fas fa-search fa-sm"></i>
+                </button>
+                <a class="fa fa-times ml-1 mr-1 center" asp-action="Index" aria-hidden="true"></a>
+            </div>
+        </div>
+    </form>
+
+    <select class="btn btn-outline-secondary float-right mr-3" onchange="callChangefunc(this.value)">
+        @*<option style="display:none">@Model.SeletectedExam</option>*@
+        @foreach (var ap in Model.Exams)
+        {
+            <option value="@ap.Value">@ap.Text</option>
+        }
+    </select>
+
     @*<select class="btn btn-outline-secondary float-right mr-3" onchange="callChangefunc(this.value)">*@
     @*<option style="display:none">@Model</option>*@
     @*@foreach (var exam in Model.ExamsViewModels)
@@ -27,11 +47,21 @@
             <th>@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().FirstName)</th>
             <th>@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().LastName)</th>
             <th>@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().Email)</th>
-            <th>@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().PhoneNumber)</th>
-            <th>@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().PercentageGrade)</th>
-            <th>@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().ConversationGrade)</th>
-            <th>Galutinis balas</th>
-            <th>Prioritetas</th>
+            <th>
+                @Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().PhoneNumber)
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PercentageGradeSort">@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().PercentageGrade)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.ConversationGradeSort">@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().ConversationGrade)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.FinalAverageGradeSort">Galutinis balas</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PrioritySort">Prioritetas</a>
+            </th>
             <th class="borderless-cell" width="100px"></th>
         </tr>
     </thead>
@@ -77,3 +107,9 @@
         }
     </tbody>
 </table>
+
+<script>
+    function callChangefunc(value) {
+        window.location.href = "/Course/Index?exam=" + value;
+    }
+</script>

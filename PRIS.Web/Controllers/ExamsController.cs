@@ -34,7 +34,6 @@ namespace PRIS.Web.Controllers
 
             List<string> AcceptancePeriod = CalculateAcceptancePeriods(examViewModels);
 
-
             var AcceptancePeriods = new List<SelectListItem>();
             foreach (var ap in AcceptancePeriod)
             {
@@ -160,6 +159,7 @@ namespace PRIS.Web.Controllers
                     if (!AcceptancePeriod.Any(x => x == $"{examViewModel.Date.Year} II pusmetis"))
                         AcceptancePeriod.Add($"{examViewModel.Date.Year} II pusmetis");
                     examViewModel.SetAcceptancePeriod = $"{examViewModel.Date.Year} II pusmetis";
+                    //TODO: išsaugoti į duombazę. Sukurti migraciją
                 }
                 else
                 {

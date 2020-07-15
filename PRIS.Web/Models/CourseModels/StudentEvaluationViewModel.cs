@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PRIS.Web.Models.CourseModels
 {
@@ -17,7 +14,7 @@ namespace PRIS.Web.Models.CourseModels
         public double? PercentageGrade { get; set; }
         [Display(Name = "Pokalbio įvertinimas")]
         public double? ConversationGrade { get; set; }
-        [DisplayFormat(DataFormatString = "{0:F1}")]
+        [DisplayFormat(DataFormatString = "{0:F2}")]
         public double? FinalAverageGrade { get; set; }
         public string Priority { get; set; }
     }

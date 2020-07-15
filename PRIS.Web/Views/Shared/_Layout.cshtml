@@ -98,6 +98,25 @@
                         </div>
                     </div>
                 </li>
+                <hr class="sidebar-divider">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages2" aria-expanded="true" aria-controls="collapsePages">
+                        <i class="fas fa-fw fa-folder"></i>
+                        <span>Grupių formavimas</span>
+                    </a>
+                    <div id="collapsePages2" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Testų sąrašas:</h6>
+                            @{
+                                //TODO: Testu datu sarasas su foreach
+                            }
+                            <a class="collapse-item" asp-controller="Exams" asp-action="Index">Studentų sąrašas</a>
+                            <a class="collapse-item" asp-controller="Exams" asp-action="Create">Grupės formavimas</a>
+                            <a class="collapse-item" asp-controller="Exams" asp-action="Create">Grupės formavimas</a>
+                            <div class="collapse-divider"></div>
+                        </div>
+                    </div>
+                </li>
                 <!-- Divider -->
                 <hr class="sidebar-divider d-none d-md-block">
 
