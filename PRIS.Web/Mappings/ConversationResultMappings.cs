@@ -10,7 +10,7 @@ namespace PRIS.Web.Mappings
 {
     public class ConversationResultMappings
     {
-        public static ConversationResultViewModel ToViewModel(Student studentEntity, ConversationResult conversationResultEntity)
+        public static ConversationResultViewModel ToViewModel(Student studentEntity, ConversationResult conversationResultEntity, int? examId)
         {
             return new ConversationResultViewModel
             {
@@ -21,8 +21,8 @@ namespace PRIS.Web.Mappings
                 PhoneNumber = studentEntity.PhoneNumber,
                 ConversationResultComment = conversationResultEntity.Comment,
                 ConversationResultId = (int)studentEntity.ConversationResultId,
-                Grade = conversationResultEntity.Grade == null?0:conversationResultEntity.Grade
-
+                Grade = conversationResultEntity.Grade == null?0:conversationResultEntity.Grade,
+                ExamId = examId
             };
         }
         public static void EditEntity(ConversationResult conversationResult, ConversationResultViewModel model)
@@ -37,13 +37,14 @@ namespace PRIS.Web.Mappings
                 FirstName = model.FirstName,
             };
         }
-        public static ConversationAndStudentViewModel ToStudentAndConversationResultViewModel(List<StudentViewModel> studentViewModels, List<ConversationResultViewModel> conversationResultViewModels)
+        public static ConversationAndStudentViewModel ToStudentAndConversationResultViewModel(List<StudentViewModel> studentViewModels, List<ConversationResultViewModel> conversationResultViewModels, int? examId)
         {
             return new ConversationAndStudentViewModel
             {
-                
                 Students = studentViewModels,
-                ConvResults = conversationResultViewModels
+                ConvResults = conversationResultViewModels,
+                ExamId = examId
+
             };
         }
         public static StudentViewModel ToStudentViewModel(Student studentEntity)
@@ -64,12 +65,11 @@ namespace PRIS.Web.Mappings
                 return new ConversationResultViewModel
                 {
                     Grade = null,
-                    ConversationResultComment = null
+                    ConversationResultComment = null,
                 };   
             }
             return new ConversationResultViewModel
             {
-
                 ConversationResultId = conversationResultEntity.Id,
                 Grade = conversationResultEntity?.Grade,
             };

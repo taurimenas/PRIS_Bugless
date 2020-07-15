@@ -22,6 +22,8 @@ namespace PRIS.Web.Controllers
         }
         public async Task<IActionResult> Index(int? id)
         {
+            TempData["ExamId"] = id;
+
             var passedStudents = await _studentRepository.Query<Student>()
                 .Include(i => i.Result)
                 .ThenInclude(u => u.Exam)
@@ -40,15 +42,22 @@ namespace PRIS.Web.Controllers
             List<StudentViewModel> studentViewModels = new List<StudentViewModel>();
             passedStudents.ForEach(x => studentViewModels.Add(ConversationResultMappings.ToStudentViewModel(x)));
             conversationResult.ForEach(x => conversationResultViewModel.Add(ConversationResultMappings.ToConversationResultViewModel(x)));
+            ConversationResultMappings.ToStudentAndConversationResultViewModel(studentViewModels, conversationResultViewModel, id);
 
-            ConversationResultMappings.ToStudentAndConversationResultViewModel(studentViewModels, conversationResultViewModel);
-
-            return View(ConversationResultMappings.ToStudentAndConversationResultViewModel(studentViewModels, conversationResultViewModel));
+            return View(ConversationResultMappings.ToStudentAndConversationResultViewModel(studentViewModels, conversationResultViewModel, id));
 
         }
         //GET
-        public async Task<IActionResult> EditConversationResult(int? id)
+        public async Task<IActionResult> EditConversationResult(int? id, int? examId)
         {
+            int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
+            var passedStudents = await _studentRepository.Query<Student>()
+                .Include(i => i.Result)
+                .ThenInclude(u => u.Exam)
+                .Where(x => x.PassedExam == true)
+                .Where(y => y.Result.Exam.Id == examId)
+                .ToListAsync();
+
             if (id == null)
             {
                 return NotFound();
@@ -56,6 +65,7 @@ namespace PRIS.Web.Controllers
             var student = await _studentRepository.FindByIdAsync(id);
             TempData["ConversationResultId"] = student.ConversationResultId;
             TempData["StudentId"] = student.Id;
+            
             if (student.ConversationResultId == null)
             {
                 ConversationResult conversationResult = new ConversationResult();
@@ -68,14 +78,18 @@ namespace PRIS.Web.Controllers
                 await _studentRepository.SaveAsync();
                 ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel();
                 conversationResultViewModel.ConversationResultId = conversationResult.Id;
-                return View(ConversationResultMappings.ToViewModel(student, conversationResult));
+                TempData["ExamId"] = ExamId;
+                examId = ExamId;
+                return View(ConversationResultMappings.ToViewModel(student, conversationResult, examId));
             }
             else
             {
                 var conversationResult = await _conversationResult.FindByIdAsync(student.ConversationResultId);
                 ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel();
                 conversationResultViewModel.ConversationResultId = conversationResult.Id;
-                return View(ConversationResultMappings.ToViewModel(student, conversationResult));
+                TempData["ExamId"] = ExamId;
+                examId = ExamId;
+                return View(ConversationResultMappings.ToViewModel(student, conversationResult, examId));
             }
         }
         //POST
@@ -94,7 +108,7 @@ namespace PRIS.Web.Controllers
                     var studentRequest = _studentRepository.Query<Student>().Include(x => x.ConversationResult).Where(x => x.Id > 0);
                     var conversationResult = await _conversationResult.FindByIdAsync(conversationResultId);
                     var student = await studentRequest.FirstOrDefaultAsync(x => x.ConversationResultId == conversationResult.Id);
-                    var conversationResultViewModel = ConversationResultMappings.ToViewModel(student, conversationResult);
+                    var conversationResultViewModel = ConversationResultMappings.ToViewModel(student, conversationResult, examId);
                     ConversationResultMappings.EditEntity(conversationResult, model);
                     await _conversationResult.UpdateAsync(conversationResult);
 
