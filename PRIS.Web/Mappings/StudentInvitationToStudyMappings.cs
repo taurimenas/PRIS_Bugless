@@ -36,7 +36,7 @@ namespace PRIS.Web.Mappings
             };
         }
 
-        public static StudentInvitationToStudyListViewModel StudentInvitationToStudyListToViewModel(List<StudentInvitationToStudyViewModel> studentInvitationToStudy)
+        public static StudentInvitationToStudyListViewModel ToListViewModel(List<StudentInvitationToStudyViewModel> studentInvitationToStudy)
         {
             return new StudentInvitationToStudyListViewModel
             {

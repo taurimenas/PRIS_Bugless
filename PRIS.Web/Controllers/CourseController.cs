@@ -62,22 +62,7 @@ namespace PRIS.Web.Controllers
 
             //studentEvaluations = studentEvaluations.OrderByDescending(x => x.FinalAverageGrade).ToList();
 
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                if (studentEvaluations.Where(s => s.LastName.Contains(searchString)).Count() == 0)
-                    studentEvaluations = studentEvaluations.Where(s => s.FirstName.Contains(searchString)).ToList();
-                else studentEvaluations = studentEvaluations.Where(s => s.LastName.Contains(searchString)).ToList();
-            }
 
-
-            studentEvaluations = sortOrder switch
-            {
-                "PercentageGrade" => studentEvaluations.OrderByDescending(s => s.PercentageGrade).ToList(),
-                "ConversationGrade" => studentEvaluations.OrderByDescending(s => s.ConversationGrade).ToList(),
-                "FinalAverageGrade" => studentEvaluations.OrderBy(s => s.FinalAverageGrade).ToList(),
-                "Priority" => studentEvaluations.OrderByDescending(s => s.Priority).ToList(),
-                _ => studentEvaluations.OrderByDescending(s => s.FinalAverageGrade).ToList(),
-            };
             var model = CourseMappings.ToViewModel(studentEvaluations);
             model.Exams = stringExamDates;
 
@@ -97,7 +82,7 @@ namespace PRIS.Web.Controllers
                 .ToListAsync();
             var studentDataLocking = new List<StudentLockDataViewModel>();
 
-                students.ForEach(x => studentDataLocking.Add(CourseMappings.StudentLockDataToViewModel(x, x.ConversationResult, x.StudentCourses.FirstOrDefault(y => y.Priority == 1), x.Result)));
+            students.ForEach(x => studentDataLocking.Add(CourseMappings.StudentLockDataToViewModel(x, x.ConversationResult, x.StudentCourses.FirstOrDefault(y => y.Priority == 1), x.Result)));
 
             return View(studentDataLocking);
         }
@@ -141,7 +126,7 @@ namespace PRIS.Web.Controllers
                         if (student.SignedAContract == true)
                         {
                             var findStudents = studentsHasSignedAContract.FirstOrDefault(x => x.Id == HasStudentDataLocked[i]);
-                            if(findStudents.SignedAContract == true)
+                            if (findStudents.SignedAContract == true)
                             {
                                 findStudents.StudentDataLocked = true;
                             }

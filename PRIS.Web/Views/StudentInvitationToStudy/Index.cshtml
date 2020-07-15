@@ -1,62 +1,90 @@
-﻿@model IEnumerable<PRIS.Web.Models.InvitationToStudyModel.StudentInvitationToStudyViewModel>
+﻿@model PRIS.Web.Models.InvitationToStudyModel.StudentInvitationToStudyListViewModel
 
 @{
     ViewData["Title"] = "Index";
 }
-<h3>
-    Studentų kvietimas studijuoti
-    @*sutvarkyti grizti mygtuka*@
-    @Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
-</h3>
+    <h3>
+        Studentų kvietimas studijuoti
+        @*sutvarkyti grizti mygtuka*@
+        @Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
+        <form asp-action="Index" method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+                <input type="text" name="searchString" value="" class="form-control bg-light border-1 rounded small" placeholder="Ieškoti..." aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary rounded-circle ml-1 mr-1" type="submit" value="Search">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                    <a class="fa fa-times ml-1 mr-1 center" asp-action="Index" aria-hidden="true"></a>
+                </div>
+            </div>
+        </form>
+        <select class="btn btn-outline-secondary float-right mr-3" onchange="callChangefunc(this.value)">
+            @*<option style="display:none">@Model.SeletectedExam</option>*@
+            @foreach (var ap in Model.Exams)
+            {
+                <option value="@ap.Value">@ap.Text</option>
+            }
+        </select>
+    </h3>
 <hr />
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 <form asp-action="InvitationToStudy">
     <table class="table table-bordered">
         <thead>
             <tr class="text-center">
-                <th>@Html.DisplayNameFor(model => model.FirstName)</th>
-                <th>@Html.DisplayNameFor(model => model.LastName)</th>
-                <th>@Html.DisplayNameFor(model => model.Email)</th>
-                <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
-                <th>@Html.DisplayNameFor(model => model.PercentageGrade)</th>
-                <th>@Html.DisplayNameFor(model => model.ConversationGrade)</th>
-                <th>@Html.DisplayNameFor(model => model.FinalTestPoints)</th>
-                <th>@Html.DisplayNameFor(model => model.Priority)</th>
-                <th>@Html.DisplayNameFor(model => model.InvitedToStudy)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().FirstName)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().LastName)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().Email)</th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().PhoneNumber)
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.PercentageGradeSort">@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().PercentageGrade)</a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.ConversationGradeSort">@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().ConversationGrade)</a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.FinalAverageGradeSort">@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().FinalAverageGrade)</a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.PrioritySort">@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().Priority)</a>
+                </th>
+                <th>@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().InvitedToStudy)</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @for (int i = 0; i < Model.StudentInvitationToStudy.Count; i++)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FirstName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LastName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PhoneNumber)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PercentageGrade)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ConversationGrade)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FinalTestPoints)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Priority)
-                    </td>
-                    <td class="text-center">
-                        <input type="checkbox" name="HasInvitedToStudy" asp-for="@item.InvitedToStudy" value="@item.Id" id="checkbox-@item.Id" class="checkbox-inline text-center">
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).PhoneNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).PercentageGrade)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).ConversationGrade)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).FinalAverageGrade)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).Priority)
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" name="HasInvitedToStudy" asp-for="@Model.StudentInvitationToStudy.ElementAt(i).InvitedToStudy" value="@Model.StudentInvitationToStudy.ElementAt(i).Id" id="checkbox-@Model.StudentInvitationToStudy.ElementAt(i).Id" class="checkbox-inline text-center">
+                </td>
+            </tr>
             }
         </tbody>
     </table>
