@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PRIS.Web.Data;
 
 namespace PRIS.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200715060040_AddedToStudentEntityInvitedToStudyProperty")]
+    partial class AddedToStudentEntityInvitedToStudyProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -426,9 +428,6 @@ namespace PRIS.Web.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("SignedAContract")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("StudentDataLocked")
                         .HasColumnType("bit");
 
                     b.Property<int?>("StudentsCourseId")

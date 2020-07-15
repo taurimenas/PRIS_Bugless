@@ -9,5 +9,6 @@ namespace PRIS.Web.Models
     {
         public List<StudentViewModel> Students { get; set; }
         public List<ConversationResultViewModel> ConvResults { get; set; }
+        public int? ExamId { get; set; }
     }
 }

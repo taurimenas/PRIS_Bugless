@@ -2,8 +2,7 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-@*@Html.ActionLink("Grįžti", "Index", "Students", new {Id = Model.ConvResults.FirstOrDefault().ConversationResultId }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })*@
+@Html.ActionLink("Grįžti", "Index", "Students", new { id = Model.ExamId  }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
 <h3>Kandidatai atrinkti į pokalbį</h3>
 <div class="col-12 border p-3">
     <table class="table table-striped table-bordered " style="width:100%">
@@ -11,7 +10,7 @@
             <tr>
                 <th>@Html.DisplayNameFor(model => model.Students.FirstOrDefault().FirstName)</th>
                 <th>@Html.DisplayNameFor(model => model.Students.FirstOrDefault().LastName)</th>
-                <th>@Html.DisplayNameFor(model => model.Students.FirstOrDefault().Email))</th>
+                <th>@Html.DisplayNameFor(model => model.Students.FirstOrDefault().Email)</th>
                 <th>@Html.DisplayNameFor(model => model.Students.FirstOrDefault().PhoneNumber)</th>
                 <th>@Html.DisplayNameFor(model => model.ConvResults.FirstOrDefault().Grade)</th>
             </tr>
@@ -34,8 +33,8 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => modelItem.ConvResults.ElementAtOrDefault(i).Grade)
-                        <span class="float-right text-secondary fas fa-pen-square">
-                            @Html.ActionLink("Redaguoti", "EditConversationResult", "ConversationResults", new { Id = Model.Students.ElementAtOrDefault(i).Id }, null)
+                        <span class="float-right">
+                            @Html.ActionLink("", "EditConversationResult", "ConversationResults", new { Id = Model.Students.ElementAtOrDefault(i).Id }, new { @class = "fas fa-pen-square" })
                         </span>
                     </td>
                 </tr>

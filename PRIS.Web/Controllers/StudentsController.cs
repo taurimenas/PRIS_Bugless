@@ -33,7 +33,10 @@ namespace PRIS.Web.Controllers
                 return NotFound();
             }
             TempData["ExamId"] = id;
-            var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id > 0);
+            var studentRequest = _repository.Query<Student>()
+                .Include(x => x.Result)
+                .Include(x => x.ConversationResult)
+                .Where(x => x.Id > 0);
             var students = await studentRequest.Where(x => x.Result.Exam.Id == id).ToListAsync();
             if (students == null)
             {
@@ -65,13 +68,17 @@ namespace PRIS.Web.Controllers
             var backToExam = RedirectToAction("Index", "Students", new { id = ExamId });
             if (ModelState.IsValid)
             {
-                var studentRequest = await _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id > 0).Where(x => x.Result.Exam.Id == ExamId).ToListAsync();
-
-                studentRequest.ForEach(x => x.PassedExam = false);
+                var students = await _repository.Query<Student>()
+                    .Include(x => x.Result)
+                    .Include(x => x.ConversationResult)
+                    .Where(x => x.Id > 0)
+                    .Where(x => x.Result.Exam.Id == ExamId)
+                    .ToListAsync();
+                students.ForEach(x => x.PassedExam = false);
 
                 for (int i = 0; i < HasPassedExam.Length; i++)
                 {
-                    var findStudents = studentRequest.FirstOrDefault(x => x.Id == HasPassedExam[i]);
+                    var findStudents = students.FirstOrDefault(x => x.Id == HasPassedExam[i]);
                     findStudents.PassedExam = true;
                 }
 
@@ -169,6 +176,12 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
+            if(student.StudentDataLocked == true)
+            {
+                ModelState.AddModelError("StudentEdit", "Studento duomenys yra užrakinti, redaguoti studento negalima");
+                TempData["ErrorMessage"] = "Studento duomenys yra užrakinti, redaguoti studento negalima";
+                return RedirectToAction("Edit", "Students", new { id = student.Id });
+            }
             if (ModelState.IsValid)
             {
                 try
@@ -202,12 +215,9 @@ namespace PRIS.Web.Controllers
             }
             var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id == id);
             var studentEntity = await studentRequest.FirstOrDefaultAsync();
+
             var resultEntity = await _repository.FindByIdAsync<Result>(studentEntity.Result.Id);
-            if (studentEntity.PassedExam)
-            {
-                TempData["ErrorMessage"] = "Studentas yra pakviestas į pokalbį, todėl jo duomenų negalima redaguoti.";
-                return RedirectToAction("Index", "Students", new { id = resultEntity.ExamId });
-            }
+
             if (studentEntity == null)
             {
                 return NotFound();
@@ -235,7 +245,11 @@ namespace PRIS.Web.Controllers
                     var student = await studentRequest.FirstOrDefaultAsync(x => x.Id == result.StudentForeignKey);
                     var studentResultViewModel = StudentsMappings.ToStudentsResultViewModel(Tasks);
                     var examTasks = StudentsMappings.ToStudentsResultViewModel(result).Tasks;
-
+                    if (student.PassedExam)
+                    {
+                        TempData["ErrorMessage"] = "Studentas yra pakviestas į pokalbį, todėl jo duomenų negalima redaguoti.";
+                        return RedirectToAction("EditResult", "Students", new { resultId });
+                    }
                     var testToDelete = examTasks.Select((x, i) => x < Tasks[i]);
 
                     var isInvalid = examTasks.Select((x, i) => x < Tasks[i]).Any(x => x);

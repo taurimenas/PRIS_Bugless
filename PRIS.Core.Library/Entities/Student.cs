@@ -11,6 +11,9 @@ namespace PRIS.Core.Library.Entities
         public Gender Gender { get; set; }
         public string Comment { get; set; }
         public bool PassedExam { get; set; }
+        public bool SignedAContract { get; set; }
+        public bool InvitedToStudy { get; set; }
+        public bool StudentDataLocked { get; set; }
         public int? StudentsCourseId { get; set; }
         public int? ResultId { get; set; }
         public int? ConversationResultId { get; set; }

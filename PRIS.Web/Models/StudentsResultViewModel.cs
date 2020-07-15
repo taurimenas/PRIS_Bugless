@@ -36,5 +36,6 @@ namespace PRIS.Web.Models
         [Display(Name = "Kviečiamas")]
         public bool PassedExam { get; set; } = false;
         public string ErrorMessage { get; set; }
+        public double? ConversationResult { get; set; }
     }
 }
