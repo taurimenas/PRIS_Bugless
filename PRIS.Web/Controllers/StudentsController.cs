@@ -137,16 +137,16 @@ namespace PRIS.Web.Controllers
 
                 await _repository.SaveAsync();
                 studentViewModel = StudentsMappings.ToViewModel(student);
+                    if (selectedPriority.Length != selectedPriority.Distinct().Count())
+                    {
+                        TempData["ErrorMessage"] = "Studento prioritetai turi būti skirtingi";
+                        return RedirectToAction("Edit", "Students", new { id = student.Id });
+                    }
                 for (int i = 1; i < selectedPriority.Length + 1; i++)
                 {
                     if (selectedPriority[i - 1] == null)
                     {
                         return RedirectToAction("Create", "Students"); ;
-                    }
-                    if (selectedPriority[i] == selectedPriority[i - 1] || selectedPriority[i] == selectedPriority[i + 1] || selectedPriority[i-1] == selectedPriority[i + 1])
-                    {
-                        TempData["ErrorMessage"] = "Studento prioritetai turi būti skirtingi";
-                        return RedirectToAction("Edit", "Students", new { id = student.Id });
                     }
                     StudentCourse studentCourse = new StudentCourse
                     {
@@ -289,13 +289,13 @@ namespace PRIS.Web.Controllers
                     StudentsMappings.ToEntity(student, studentViewModel);
                     var studentsExam = _examRepository.FindByIdAsync(ExamId).Result;
 
-                    for (int i = 1; i < selectedPriority.Length + 1; i++)
-                    {
-                        if (selectedPriority[i] == selectedPriority[i - 1] || selectedPriority[i] == selectedPriority[i + 1] || selectedPriority[i - 1] == selectedPriority[i + 1])
+                        if (selectedPriority.Length != selectedPriority.Distinct().Count())
                         {
                             TempData["ErrorMessage"] = "Studento prioritetai turi būti skirtingi";
                             return RedirectToAction("Edit", "Students", new { id = student.Id });
                         }
+                    for (int i = 1; i < selectedPriority.Length + 1; i++)
+                    {
 
                         student.StudentCourses.FirstOrDefault(x => x.Priority == i).Course = course.FirstOrDefault(x => x.Title == selectedPriority[i - 1]);
 
