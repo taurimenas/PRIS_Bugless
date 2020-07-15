@@ -47,6 +47,7 @@ namespace PRIS.Web.Controllers
                 .ThenInclude(x => x.Exam)
                 .Include(x => x.StudentCourses)
                 .ThenInclude(x => x.Course)
+                //kuriuos imti studentus is kokio saraso?
                 .Where(x => x.InvitedToStudy == true)
                 .ToListAsync();
             var studentDataLocking = new List<StudentLockDataViewModel>();
