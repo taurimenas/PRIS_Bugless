@@ -176,6 +176,12 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
+            if(student.StudentDataLocked == true)
+            {
+                ModelState.AddModelError("StudentEdit", "Studento duomenys yra užrakinti, redaguoti studento negalima");
+                TempData["ErrorMessage"] = "Studento duomenys yra užrakinti, redaguoti studento negalima";
+                return RedirectToAction("Edit", "Students", new { id = student.Id });
+            }
             if (ModelState.IsValid)
             {
                 try
