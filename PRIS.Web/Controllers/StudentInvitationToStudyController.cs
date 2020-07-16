@@ -30,8 +30,6 @@ namespace PRIS.Web.Controllers
             ViewBag.FinalAverageGradeSort = string.IsNullOrEmpty(sortOrder) ? "FinalAverageGrade" : "";
             ViewBag.PrioritySort = string.IsNullOrEmpty(sortOrder) ? "Priority" : "";
 
-            var examDates = await _repository.Query<Exam>().ToListAsync();
-
             var exams = await _repository.Query<Exam>().ToListAsync();
             var stringAcceptancePeriods = new List<SelectListItem>();
             foreach (var ed in exams)
@@ -58,6 +56,7 @@ namespace PRIS.Web.Controllers
                 .Include(x => x.ConversationResult)
                 .Include(x => x.Result)
                 .ThenInclude(x => x.Exam)
+                .ThenInclude(x => x.City)
                 .Include(x => x.StudentCourses)
                 .ThenInclude(x => x.Course)
                 .Where(x => x.PassedExam == true)
@@ -66,7 +65,7 @@ namespace PRIS.Web.Controllers
             var invitationToStudy = new List<StudentInvitationToStudyViewModel>();
             students.ForEach(x => invitationToStudy
                 .Add(StudentInvitationToStudyMappings
-                .StudentInvitationToStudyToViewModel(x, x.ConversationResult, x.StudentCourses.FirstOrDefault(y => y.Priority == 1), x.Result)));
+                .StudentInvitationToStudyToViewModel(x, x.ConversationResult, x.StudentCourses, x.Result)));
 
             if (!string.IsNullOrEmpty(searchString))
             {
