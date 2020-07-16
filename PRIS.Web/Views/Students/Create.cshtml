@@ -43,6 +43,7 @@
             {
                 @i
                 <select asp-for="@Model.SelectedPriority[i-1]" class="form-control">
+                    <option style="display:none"></option>
                     @foreach (var ap in Model.Programs)
                     {
                         <option value="@ap.Value">@ap.Text</option>

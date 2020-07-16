@@ -39,14 +39,25 @@
             </div>
             <div>Kandidato prioritetai</div>
 
-            @for (int i = 1; i < Model.Programs.Count()+1; i++)
+            @for (int i = 1; i < Model.SelectedPriority.Length + 1; i++)
             {
                 @i
                 <select asp-for="@Model.SelectedPriority[i-1]" class="form-control">
-                    <option style="display:none">@Model.SelectedPriority[i - 1]</option>
-                    @foreach (var ap in Model.Programs)
+                    @if (Model.SelectedPriority[i - 1] == null)
                     {
-                        <option value="@ap.Value">@ap.Text</option>
+                        <option style="display:none"></option>
+                        @foreach (var ap in Model.Programs)
+                        {
+                            <option value="@ap.Value">@ap.Text</option>
+                        }
+                    }
+                    else
+                    {
+                        <option style="display:none">@Model.SelectedPriority[i - 1]</option>
+                        @foreach (var ap in Model.Programs)
+                        {
+                            <option value="@ap.Value">@ap.Text</option>
+                        }
                     }
                 </select>
             }
