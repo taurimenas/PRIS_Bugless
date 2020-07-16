@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PRIS.Web.Models.CourseModels.StudentLockDataViewModel>
+﻿@model PRIS.Web.Models.CourseModels.StudentLockDataListViewModel
 
 @{
     ViewData["Title"] = "LockingOfStudentData";
@@ -14,51 +14,52 @@
     <table class="table table-bordered">
         <thead>
             <tr class="text-center">
-                <th>@Html.DisplayNameFor(model => model.FirstName)</th>
-                <th>@Html.DisplayNameFor(model => model.LastName)</th>
-                <th>@Html.DisplayNameFor(model => model.Email)</th>
-                <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
-                <th>@Html.DisplayNameFor(model => model.PercentageGrade)</th>
-                <th>@Html.DisplayNameFor(model => model.ConversationGrade)</th>
-                <th>@Html.DisplayNameFor(model => model.FinalTestPoints)</th>
-                <th>@Html.DisplayNameFor(model => model.Priority)</th>
-                <th>@Html.DisplayNameFor(model => model.SignedAContract)</th>
-                <th>@Html.DisplayNameFor(model => model.StudentDataLocked)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FirstName)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().LastName)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Email)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().PhoneNumber)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().PercentageGrade)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().ConversationGrade)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalTestPoints)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Priority)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().SignedAContract)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().StudentDataLocked)</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @for (int i= 0; i < Model.StudentDataLocking.Count(); i ++)
             {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
+                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].FirstName)
+                    <input type="hidden" name="studentId" value="@Model.StudentDataLocking[i].Id" class="text" asp-for="@Model.StudentDataLocking[i].FirstName"/>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
+                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].LastName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Email)
+                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].Email)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].PhoneNumber)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PercentageGrade)
+                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].PercentageGrade)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ConversationGrade)
+                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].ConversationGrade)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FinalTestPoints)
+                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].FinalAverageGrade)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Priority)
+                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].Priority)
                 </td>
                 <td class="text-center">
-                    <input type="checkbox" name="HasSignedAContract" asp-for="@item.SignedAContract" value="@item.Id" id="checkbox-@item.Id" class="checkbox-inline text-center">
+                    <input type="checkbox" name="HasSignedAContract" asp-for="@Model.StudentDataLocking[i].SignedAContract" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">
                 </td>
                 <td class="text-center">
-                    <input type="checkbox" name="HasStudentDataLocked" asp-for="@item.StudentDataLocked" value="@item.Id" id="checkbox-@item.Id" class="checkbox-inline text-center">
+                    <input type="checkbox" name="HasStudentDataLocked" asp-for="@Model.StudentDataLocking[i].StudentDataLocked" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">
                 </td>
             </tr>
             }
