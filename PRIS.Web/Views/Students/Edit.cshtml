@@ -43,22 +43,22 @@
             {
                 @i
                 <select asp-for="@Model.SelectedPriority[i-1]" class="form-control">
-                    @if (Model.SelectedPriority[i - 1] == null)
+                    @*@if (Model.SelectedPriority[i - 1] == null)
                     {
-                        <option style="display:none"></option>
                         @foreach (var ap in Model.Programs)
                         {
                             <option value="@ap.Value">@ap.Text</option>
                         }
+                        <option style="display:none"></option>
                     }
                     else
-                    {
+                    {*@
                         <option style="display:none">@Model.SelectedPriority[i - 1]</option>
                         @foreach (var ap in Model.Programs)
                         {
                             <option value="@ap.Value">@ap.Text</option>
                         }
-                    }
+                    @*}*@
                 </select>
             }
 

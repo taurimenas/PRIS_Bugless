@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -138,17 +139,9 @@ namespace PRIS.Web.Controllers
 
                 await _repository.SaveAsync();
                 studentViewModel = StudentsMappings.ToViewModel(student);
-                if (selectedPriority[0] == null)
-                {
-                    TempData["ErrorMessage"] = "Studentas privalo turėti pirmą pasirinkimą";
-                    return RedirectToAction("Create", "Students");
-                }
-                var selectedPriorityWithoutNull = selectedPriority.Where(priority => !string.IsNullOrEmpty(priority)).ToArray();
-                if (selectedPriorityWithoutNull.Length != selectedPriorityWithoutNull.Distinct().Count())
-                {
-                    TempData["ErrorMessage"] = "Studento prioritetai turi būti skirtingi";
-                    return RedirectToAction("Edit", "Students", new { id = student.Id });
-                }
+              
+                var selectedPriorityWithoutNullAndDuplictates = selectedPriority.Where(priority => !string.IsNullOrEmpty(priority)).Distinct().ToArray();
+              
                 var programs = await _programRepository.Query<PRIS.Core.Library.Entities.Program>().ToListAsync();
                 foreach (var program in programs)
                 {
@@ -184,16 +177,12 @@ namespace PRIS.Web.Controllers
                         studentCourse.Course = course;
                         await _courseRepository.InsertAsync(course);
                     }
-                    var listOfSelectedPriority = selectedPriority.ToList();
+                    var listOfSelectedPriority = selectedPriorityWithoutNullAndDuplictates.ToList();
                     int? priority = listOfSelectedPriority.IndexOf(program.Name);
                     if (priority == -1)
-                    {
                         studentCourse.Priority = null;
-                    }
                     else
-                    {
                         studentCourse.Priority = priority + 1;
-                    }
 
                     await _studentCourseRepository.InsertAsync(studentCourse);
                 }
@@ -251,28 +240,33 @@ namespace PRIS.Web.Controllers
             }
             var studentViewModel = StudentsMappings.ToViewModel(student);
             var programs = await _programRepository.Query<PRIS.Core.Library.Entities.Program>().ToListAsync();
-            var studentCourses = await _studentCourseRepository.Query<StudentCourse>().Where(x => x.StudentId == id).OrderByDescending(x => x.Priority).ToListAsync();
+            var studentCourses = await _studentCourseRepository.Query<StudentCourse>()
+                .Where(x => x.StudentId == id)
+                .OrderByDescending(x => x.Priority.HasValue)
+                .ThenBy(x=>x.Priority)
+                .ToListAsync();
             var stringPrograms = new List<SelectListItem>();
             studentViewModel.SelectedPriority = new string[studentCourses.Count()];
             List<string> listOfSelectedPriority = new List<string>();
-
-            foreach (var studentCourse in studentCourses)
-            {
-                var priorityCourse = _courseRepository.Query<Course>()
-               .Where(x => x.Id == studentCourse.CourseId)
-               .FirstOrDefault();
-                var priorityName = programs.Where(x => x.Id == priorityCourse.ProgramId).FirstOrDefault();
-                stringPrograms.Add(new SelectListItem { Value = priorityName.Name, Text = priorityName.Name });
-
-                if (studentCourse.Priority == null)
+           
+                foreach (var studentCourse in studentCourses)
                 {
-                    listOfSelectedPriority.Add(null);
+                    var priorityCourse = _courseRepository.Query<Course>()
+                   .Where(x => x.Id == studentCourse.CourseId)
+                   .FirstOrDefault();
+                    var priorityName = programs.Where(x => x.Id == priorityCourse.ProgramId).FirstOrDefault();
+                    stringPrograms.Add(new SelectListItem { Value = priorityName.Name, Text = priorityName.Name });
+
+                    if (studentCourse.Priority == null)
+                    {
+                        listOfSelectedPriority.Add(null);
+                    }
+                    else
+                    {
+                        listOfSelectedPriority.Add(priorityName.Name);
+                    }
                 }
-                else
-                {
-                    listOfSelectedPriority.Add(priorityName.Name);
-                }
-            }
+            
             stringPrograms.Add(new SelectListItem { Value = "", Text = "" });
             studentViewModel.SelectedPriority = listOfSelectedPriority.ToArray();
 
@@ -300,20 +294,12 @@ namespace PRIS.Web.Controllers
             {
                 try
                 {
-                    if (selectedPriority[0] == null)
-                    {
-                        TempData["ErrorMessage"] = "Studentas privalo turėti pirmą pasirinkimą";
-                        return RedirectToAction("Edit", "Students", new { id = student.Id });
-                    }
-                    var selectedPriorityWithoutNull = selectedPriority.Where(priority => !string.IsNullOrEmpty(priority)).ToArray();
-                    if (selectedPriorityWithoutNull.Length != selectedPriorityWithoutNull.Distinct().Count())
-                    {
-                        TempData["ErrorMessage"] = "Studento prioritetai turi būti skirtingi";
-                        return RedirectToAction("Edit", "Students", new { id = student.Id });
-                    }
+
+                    var selectedPriorityWithoutNullAndDuplictates = selectedPriority.Where(priority => !string.IsNullOrEmpty(priority)).Distinct().ToArray();
+                  
                     StudentsMappings.ToEntity(student, studentViewModel);
                     var studentCourses = student.StudentCourses.ToList();
-                    var listOfSelectedPriority = selectedPriority.ToList();
+                    var listOfSelectedPriority = selectedPriorityWithoutNullAndDuplictates.ToList();
 
                     foreach (var studentCourse in studentCourses)
                     {
