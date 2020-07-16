@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MoreLinq;
 using PRIS.Core.Library.Entities;
 using PRIS.Web.Mappings;
 using PRIS.Web.Models;
@@ -30,9 +31,10 @@ namespace PRIS.Web.Controllers
 
             var exams = await _repository.Query<Exam>().ToListAsync();
             var stringAcceptancePeriods = new List<SelectListItem>();
+            var filteredExams = exams.DistinctBy(x => x.AcceptancePeriod).ToList();
             foreach (var ed in exams)
             {
-                stringAcceptancePeriods.Add(new SelectListItem { Value = exams.FindIndex(a => a == ed).ToString(), Text = ed.AcceptancePeriod });
+                stringAcceptancePeriods.Add(new SelectListItem { Value = filteredExams.FindIndex(a => a == ed).ToString(), Text = ed.AcceptancePeriod });
             }
 
 

@@ -22,7 +22,7 @@
         <option style="display:none">@Model.CurrentSelectedAcceptancePeriodId</option>
         @foreach (var ap in Model.AcceptancePeriods)
         {
-            <option value="@ap.Value">@ap.Text</option>
+            <option value="@ap.Text">@ap.Text</option>
         }
     </select>
     <select name="CityId" class="btn btn-outline-secondary float-right mr-3" onchange="callChangefunc(this.name, this.value)">

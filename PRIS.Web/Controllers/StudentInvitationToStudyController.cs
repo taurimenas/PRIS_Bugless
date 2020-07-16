@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using MoreLinq;
 using PRIS.Core.Library.Entities;
 using PRIS.Web.Mappings;
 using PRIS.Web.Models.InvitationToStudyModel;
@@ -23,18 +24,22 @@ namespace PRIS.Web.Controllers
         {
             _repository = repository;
         }
-        public async Task<IActionResult> Index(int? examId, int? courseId, int? cityId, string searchString, string sortOrder)
+        public async Task<IActionResult> Index(string examId, int? courseId, int? cityId, string searchString, string sortOrder)
         {
             ViewBag.PercentageGradeSort = string.IsNullOrEmpty(sortOrder) ? "PercentageGrade" : "";
             ViewBag.ConversationGradeSort = string.IsNullOrEmpty(sortOrder) ? "ConversationGrade" : "";
             ViewBag.FinalAverageGradeSort = string.IsNullOrEmpty(sortOrder) ? "FinalAverageGrade" : "";
             ViewBag.PrioritySort = string.IsNullOrEmpty(sortOrder) ? "Priority" : "";
 
-            var exams = await _repository.Query<Exam>().ToListAsync();
+            var exams = await _repository.Query<Exam>()
+                .Include(x => x.Results)
+                .ThenInclude(x => x.Student)
+                .ToListAsync();
             var stringAcceptancePeriods = new List<SelectListItem>();
-            foreach (var ed in exams)
+            var filteredExams = exams.DistinctBy(x => x.AcceptancePeriod).ToList();
+            foreach (var ed in filteredExams)
             {
-                stringAcceptancePeriods.Add(new SelectListItem { Value = exams.FindIndex(a => a == ed).ToString(), Text = ed.AcceptancePeriod });
+                stringAcceptancePeriods.Add(new SelectListItem { Value = filteredExams.FindIndex(a => a == ed).ToString(), Text = ed.AcceptancePeriod });
             }
 
 
@@ -62,6 +67,11 @@ namespace PRIS.Web.Controllers
                 .Where(x => x.PassedExam == true)
                 .ToListAsync();
 
+            if (examId != null)
+            {
+                students = students.Where(x => x.Result.Exam.AcceptancePeriod == examId).ToList();
+            }
+
             var invitationToStudy = new List<StudentInvitationToStudyViewModel>();
             students.ForEach(x => invitationToStudy
                 .Add(StudentInvitationToStudyMappings
@@ -73,14 +83,10 @@ namespace PRIS.Web.Controllers
                     invitationToStudy = invitationToStudy.Where(s => s.FirstName.Contains(searchString)).ToList();
                 else invitationToStudy = invitationToStudy.Where(s => s.LastName.Contains(searchString)).ToList();
             }
-            //todo: turi imti ne exam id, o pusmetis
-            if (examId != null)
-            {
-                invitationToStudy = invitationToStudy.Where(e => e.ExamId == exams.ElementAt((int)examId).Id).ToList();
-            }
             if (cityId != null)
             {
                 invitationToStudy = invitationToStudy.Where(e => e.CityId == cities.ElementAt((int)cityId).Id).ToList();
+
             }
             if (courseId != null)
             {
