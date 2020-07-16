@@ -9,6 +9,6 @@ namespace PRIS.Web.Models
     {
         public int StudentId { get; set; }
         public int CourseId { get; set; }
-        public int Priority { get; set; }
+        public int? Priority { get; set; }
     }
 }
