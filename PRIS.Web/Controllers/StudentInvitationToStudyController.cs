@@ -49,7 +49,7 @@ namespace PRIS.Web.Controllers
             var invitationToStudy = new List<StudentInvitationToStudyViewModel>();
             students.ForEach(x => invitationToStudy
                 .Add(StudentInvitationToStudyMappings
-                .StudentInvitationToStudyToViewModel(x, x.ConversationResult, x.StudentCourses.FirstOrDefault(y => y.Priority == 1), x.Result, searchString)));
+                .StudentInvitationToStudyToViewModel(x, x.ConversationResult, x.StudentCourses.FirstOrDefault(y => y.Priority == 1), x.Result)));
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -68,7 +68,7 @@ namespace PRIS.Web.Controllers
                 _ => invitationToStudy.OrderByDescending(s => s.FinalAverageGrade).ToList(),
             };
 
-            var model = StudentInvitationToStudyMappings.ToListViewModel(invitationToStudy, searchString);
+            var model = StudentInvitationToStudyMappings.ToListViewModel(invitationToStudy);
             model.Exams = stringExamDates;
             return View(model);
         }
