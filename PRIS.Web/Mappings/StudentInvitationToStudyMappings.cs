@@ -40,7 +40,7 @@ namespace PRIS.Web.Mappings
         {
             return new StudentInvitationToStudyListViewModel
             {
-                StudentInvitationToStudy = studentInvitationToStudy
+                StudentInvitationToStudy = studentInvitationToStudy,
             };
         }
     }
