@@ -29,5 +29,8 @@ namespace PRIS.Web.Models.InvitationToStudyModel
         public string Priority { get; set; }
         [Display(Name = "Pakviestas studijuoti")]
         public bool InvitedToStudy { get; set; }
+        public int? CityId { get; set; }
+        public int? ExamId { get; set; }
+        public int? CourseId { get; set; }
     }
 }

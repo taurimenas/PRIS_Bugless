@@ -19,7 +19,7 @@ namespace PRIS.Web.Controllers
         {
             _repository = repository;
         }
-        public async Task<IActionResult> Index(int exam, string searchString, string sortOrder)
+        public async Task<IActionResult> Index(int? examId, int? courseId, int? cityId, string searchString, string sortOrder)
         {
             ViewBag.PercentageGradeSort = string.IsNullOrEmpty(sortOrder) ? "PercentageGrade" : "";
             ViewBag.ConversationGradeSort = string.IsNullOrEmpty(sortOrder) ? "ConversationGrade" : "";
@@ -28,11 +28,28 @@ namespace PRIS.Web.Controllers
 
             var examDates = await _repository.Query<Exam>().ToListAsync();
 
-            var stringExamDates = new List<SelectListItem>();
-            foreach (var ed in examDates)
+            var exams = await _repository.Query<Exam>().ToListAsync();
+            var stringAcceptancePeriods = new List<SelectListItem>();
+            foreach (var ed in exams)
             {
-                stringExamDates.Add(new SelectListItem { Value = examDates.FindIndex(a => a == ed).ToString(), Text = ed.Date.ToString() });
+                stringAcceptancePeriods.Add(new SelectListItem { Value = exams.FindIndex(a => a == ed).ToString(), Text = ed.AcceptancePeriod });
             }
+
+
+            var cities = await _repository.Query<City>().ToListAsync();
+            var stringCities = new List<SelectListItem>();
+            foreach (var c in cities)
+            {
+                stringCities.Add(new SelectListItem { Value = cities.FindIndex(a => a == c).ToString(), Text = c.Name });
+            }
+
+            var courses = await _repository.Query<Course>().ToListAsync();
+            var stringCourses = new List<SelectListItem>();
+            foreach (var p in courses)
+            {
+                stringCourses.Add(new SelectListItem { Value = courses.FindIndex(a => a == p).ToString(), Text = p.Title });
+            }
+
             var students = await _repository.Query<Student>()
                 .Include(x => x.ConversationResult)
                 .Include(x => x.Result)
@@ -53,7 +70,18 @@ namespace PRIS.Web.Controllers
                     invitationToStudy = invitationToStudy.Where(s => s.FirstName.Contains(searchString)).ToList();
                 else invitationToStudy = invitationToStudy.Where(s => s.LastName.Contains(searchString)).ToList();
             }
-
+            if (examId != null)
+            {
+                invitationToStudy = invitationToStudy.Where(e => e.ExamId == exams.ElementAt((int)examId).Id).ToList();
+            }
+            if (cityId != null)
+            {
+                invitationToStudy = invitationToStudy.Where(e => e.CityId == cities.ElementAt((int)cityId).Id).ToList();
+            }
+            if (courseId != null)
+            {
+                invitationToStudy = invitationToStudy.Where(e => e.CourseId == courses.ElementAt((int)courseId).Id).ToList();
+            }
 
             invitationToStudy = sortOrder switch
             {
@@ -65,7 +93,9 @@ namespace PRIS.Web.Controllers
             };
 
             var model = StudentInvitationToStudyMappings.ToListViewModel(invitationToStudy);
-            model.Exams = stringExamDates;
+            model.AcceptancePeriods = stringAcceptancePeriods;
+            model.Cities = stringCities;
+            model.Courses = stringCourses;
 
             return View(model);
         }

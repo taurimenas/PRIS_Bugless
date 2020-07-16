@@ -50,7 +50,6 @@ namespace PRIS.Web.Controllers
                 stringCourses.Add(new SelectListItem { Value = courses.FindIndex(a => a == p).ToString(), Text = p.Title });
             }
 
-
             var students = await _repository.Query<Student>()
                 .Include(x => x.ConversationResult)
                 .Include(x => x.Result)
