@@ -20,9 +20,23 @@
         </div>
     </form>
 
-    <select class="btn btn-outline-secondary float-right mr-3" onchange="callChangefunc(this.value)">
-        @*<option style="display:none">@Model.SeletectedExam</option>*@
-        @foreach (var ap in Model.Exams)
+    <select name="ExamId" class="btn btn-outline-secondary float-right mr-3" onchange="callChangefunc(this.name, this.value)">
+        <option style="display:none">@Model.CurrentSelectedAcceptancePeriodId</option>
+        @foreach (var ap in Model.AcceptancePeriods)
+        {
+            <option value="@ap.Value">@ap.Text</option>
+        }
+    </select>
+    <select name="CityId" class="btn btn-outline-secondary float-right mr-3" onchange="callChangefunc(this.name, this.value)">
+        <option style="display:none">@Model.CurrentSelectedCityId</option>
+        @foreach (var ap in Model.Cities)
+        {
+            <option value="@ap.Value">@ap.Text</option>
+        }
+    </select>
+    <select name="CourseId" class="btn btn-outline-secondary float-right mr-3" onchange="callChangefunc(this.name, this.value)">
+        <option style="display:none">@Model.CurrentSelectedPriorityId</option>
+        @foreach (var ap in Model.Courses)
         {
             <option value="@ap.Value">@ap.Text</option>
         }
@@ -60,7 +74,13 @@
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.FinalAverageGradeSort">Galutinis balas</a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PrioritySort">Prioritetas</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PrioritySort">I Prioritetas</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PrioritySort">II Prioritetas</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PrioritySort">III Prioritetas</a>
             </th>
             <th class="borderless-cell" width="100px"></th>
         </tr>
@@ -93,10 +113,16 @@
                 <td>
                     @Html.DisplayFor(modelItem => modelItem.StudentEvaluations.ElementAtOrDefault(i).Priority)
                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentEvaluations.ElementAtOrDefault(i).Priority2)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentEvaluations.ElementAtOrDefault(i).Priority3)
+                </td>
                 <td class="borderless-cell">
                     <!--<span class="dropdown">
-                        <a data-toggle="dropdown"><i class="fa fa-cog" style="color: slategray"></i></a>
-                        <span class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
+                    <a data-toggle="dropdown"><i class="fa fa-cog" style="color: slategray"></i></a>
+                    <span class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
                     @*@Html.ActionLink("Kandidatai", "Index", "Students", new { id = item.Id }, new { @class = "dropdown-item" })
                         @Html.ActionLink("Balų šablonas", "Edit", "TaskParameters", new { id = item.Id }, new { @class = "dropdown-item" })*@
                     <!--</span>
@@ -109,7 +135,7 @@
 </table>
 
 <script>
-    function callChangefunc(value) {
-        window.location.href = "/Course/Index?exam=" + value;
+    function callChangefunc(name, value) {
+        window.location.href = `/Course/Index?${name}=${value}`;
     }
 </script>

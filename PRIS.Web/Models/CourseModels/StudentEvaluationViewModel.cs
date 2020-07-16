@@ -17,5 +17,10 @@ namespace PRIS.Web.Models.CourseModels
         [DisplayFormat(DataFormatString = "{0:F2}")]
         public double? FinalAverageGrade { get; set; }
         public string Priority { get; set; }
+        public string Priority2 { get; set; }
+        public string Priority3 { get; set; }
+        public int? CityId { get; set; }
+        public int? ExamId { get; set; }
+        public int? CourseId { get; set; }
     }
 }

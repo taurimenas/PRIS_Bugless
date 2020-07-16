@@ -11,7 +11,7 @@ namespace PRIS.Web.Mappings
 {
     public class CourseMappings
     {
-        public static StudentEvaluationViewModel ToViewModel(Student student, ConversationResult conversationResult, StudentCourse studentCourse, Result result)
+        public static StudentEvaluationViewModel ToViewModel(Student student, ConversationResult conversationResult, IEnumerable<StudentCourse> studentCourse, Result result)
         {
             double? finalAverageGrade = 0;
             double? finalTestPoints = JsonSerializer.Deserialize<double[]>(result.Tasks).Sum(x => x);
@@ -31,7 +31,12 @@ namespace PRIS.Web.Mappings
                 PercentageGrade = percentageGrade,
                 ConversationGrade = conversationResult?.Grade,
                 FinalAverageGrade = finalAverageGrade,
-                Priority = studentCourse?.Course.Title
+                Priority = studentCourse.Count() >= 1 ? studentCourse?.FirstOrDefault(x => x?.Priority == 1).Course?.Title : null,
+                Priority2 = studentCourse.Count() >= 2 ? studentCourse?.FirstOrDefault(x => x?.Priority == 2).Course?.Title : null,
+                Priority3 = studentCourse.Count() >= 3 ? studentCourse?.FirstOrDefault(x => x?.Priority == 3).Course?.Title : null,
+                CityId = result?.Exam.City.Id,
+                ExamId = result?.Exam.Id,
+                CourseId = studentCourse.Count() >= 1 ? studentCourse?.FirstOrDefault(x => x?.Priority == 1).Course?.Id : null,
             };
         }
         public static StudentEvaluationListViewModel ToViewModel(List<StudentEvaluationViewModel> studentEvaluations)
