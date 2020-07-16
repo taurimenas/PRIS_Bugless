@@ -126,28 +126,27 @@ namespace PRIS.Web.Controllers
                 .ToListAsync();
             var studentDataLocking = new List<StudentLockDataViewModel>();
 
-            students.ForEach(x => studentDataLocking.Add(CourseMappings.StudentLockDataToViewModel(x, x.ConversationResult, x.StudentCourses.FirstOrDefault(y => y.Priority == 1), x.Result)));
+            students.ForEach(x => studentDataLocking
+                .Add(CourseMappings
+                .StudentLockDataToViewModel(x, x.ConversationResult, x.StudentCourses.FirstOrDefault(y => y.Priority == 1), x.Result)));
 
-            return View(studentDataLocking);
+            var model = CourseMappings.StudentLockDataListToViewModel(studentDataLocking);
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LockingOfStudentData(int[] HasSignedAContract, int[] HasStudentDataLocked)
+        public async Task<IActionResult> LockingOfStudentData(int[] studentId, int[] HasSignedAContract, int[] HasStudentDataLocked)
         {
-            //int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
-            //var backToExam = RedirectToAction("Index", "Students", new { id = ExamId });
             if (ModelState.IsValid)
             {
-                var students = await _repository.Query<Student>()
-                    .Include(x => x.Result)
-                    .Include(x => x.ConversationResult)
-                    .Where(x => x.Id > 0)
-                    //pataisyti examid == ???
-                    .Where(x => x.Result.Exam.Id == 1)
-                    .ToListAsync();
-                students.ForEach(x => x.SignedAContract = false);
 
+                var students = new List<Student>();
+                for (int i = 0; i < studentId.Length; i++)
+                {
+                    students.Add(await _repository.FindByIdAsync<Student>(studentId[i]));
+                }
+                students.ForEach(x => x.SignedAContract = false);
                 for (int i = 0; i < HasSignedAContract.Length; i++)
                 {
                     var findStudents = students.FirstOrDefault(x => x.Id == HasSignedAContract[i]);
@@ -155,21 +154,19 @@ namespace PRIS.Web.Controllers
                 }
 
                 //studento uzrakinimas jei studentas pasirase sutarti
-                var studentsHasSignedAContract = await _repository.Query<Student>()
-                    .Include(x => x.Result)
-                    .Include(x => x.ConversationResult)
-                    .Where(x => x.Id > 0)
-                    //pataisyti examid == ???
-                    .Where(x => x.Result.Exam.Id == 1)
-                    .ToListAsync();
-                studentsHasSignedAContract.ForEach(x => x.StudentDataLocked = false);
+                var studentsForDataLock = new List<Student>();
+                for (int i = 0; i < studentId.Length; i++)
+                {
+                    studentsForDataLock.Add(await _repository.FindByIdAsync<Student>(studentId[i]));
+                }
+                studentsForDataLock.ForEach(x => x.StudentDataLocked = false);
                 for (int i = 0; i < HasStudentDataLocked.Length; i++)
                 {
-                    foreach (var student in studentsHasSignedAContract)
+                    foreach (var student in studentsForDataLock)
                     {
                         if (student.SignedAContract == true)
                         {
-                            var findStudents = studentsHasSignedAContract.FirstOrDefault(x => x.Id == HasStudentDataLocked[i]);
+                            var findStudents = studentsForDataLock.FirstOrDefault(x => x.Id == HasStudentDataLocked[i]);
                             if (findStudents.SignedAContract == true)
                             {
                                 findStudents.StudentDataLocked = true;
@@ -179,8 +176,8 @@ namespace PRIS.Web.Controllers
                                 ModelState.AddModelError("StudentDelete", "Studentas turi būti pasirašęs sutartį, kad būtų galima užrakinti studento duomenis");
                                 TempData["ErrorMessage"] = "Studentas turi būti pasirašęs sutartį, kad būtų galima užrakinti studento duomenis";
                             }
-                        }
                     }
+                }
                 }
                 await _repository.SaveAsync();
                 return RedirectToAction("LockingOfStudentData", "Course");
