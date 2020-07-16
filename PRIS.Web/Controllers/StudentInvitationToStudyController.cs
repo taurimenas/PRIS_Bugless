@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using PRIS.Core.Library.Entities;
 using PRIS.Web.Mappings;
 using PRIS.Web.Models.InvitationToStudyModel;
@@ -45,7 +49,7 @@ namespace PRIS.Web.Controllers
             var invitationToStudy = new List<StudentInvitationToStudyViewModel>();
             students.ForEach(x => invitationToStudy
                 .Add(StudentInvitationToStudyMappings
-                .StudentInvitationToStudyToViewModel(x, x.ConversationResult, x.StudentCourses.FirstOrDefault(y => y.Priority == 1), x.Result)));
+                .StudentInvitationToStudyToViewModel(x, x.ConversationResult, x.StudentCourses.FirstOrDefault(y => y.Priority == 1), x.Result, searchString)));
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -64,29 +68,25 @@ namespace PRIS.Web.Controllers
                 _ => invitationToStudy.OrderByDescending(s => s.FinalAverageGrade).ToList(),
             };
 
-            var model = StudentInvitationToStudyMappings.ToListViewModel(invitationToStudy);
+            var model = StudentInvitationToStudyMappings.ToListViewModel(invitationToStudy, searchString);
             model.Exams = stringExamDates;
-
             return View(model);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> InvitationToStudy(int[] HasInvitedToStudy)
+        public async Task<IActionResult> Index(int[] studentId, int[] HasInvitedToStudy)
         {
             if (ModelState.IsValid)
             {
-                var students = await _repository.Query<Student>()
-                    .Include(x => x.Result)
-                    .Include(x => x.ConversationResult)
-                    .Where(x => x.Id > 0)
-                    //pataisyti examid == ???
-                    //.Where(x => x.Result.Exam.Id > 1)
-                    .ToListAsync();
+                var students = new List<Student>();
+                for (int i = 0; i < studentId.Length; i++)
+                {
+                    students.Add(await _repository.FindByIdAsync<Student>(studentId[i]));
+                }
                 students.ForEach(x => x.InvitedToStudy = false);
                 for (int i = 0; i < HasInvitedToStudy.Length; i++)
                 {
                     var findStudents = students.FirstOrDefault(x => x.Id == HasInvitedToStudy[i]);
-                    //null exception
                     findStudents.InvitedToStudy = true;
                 }
                 await _repository.SaveAsync();

@@ -10,7 +10,7 @@ namespace PRIS.Web.Mappings
 {
     public class StudentInvitationToStudyMappings
     {
-        public static StudentInvitationToStudyViewModel StudentInvitationToStudyToViewModel(Student student, ConversationResult conversationResult, StudentCourse studentCourse, Result result)
+        public static StudentInvitationToStudyViewModel StudentInvitationToStudyToViewModel(Student student, ConversationResult conversationResult, StudentCourse studentCourse, Result result, string searchString)
         {
             double? finalAverageGrade = 0;
             double? finalTestPoints = JsonSerializer.Deserialize<double[]>(result.Tasks).Sum(x => x);
@@ -33,14 +33,16 @@ namespace PRIS.Web.Mappings
                 FinalAverageGrade = finalAverageGrade,
                 Priority = studentCourse?.Course.Title,
                 InvitedToStudy = student.InvitedToStudy,
+                SearchString = searchString
             };
         }
 
-        public static StudentInvitationToStudyListViewModel ToListViewModel(List<StudentInvitationToStudyViewModel> studentInvitationToStudy)
+        public static StudentInvitationToStudyListViewModel ToListViewModel(List<StudentInvitationToStudyViewModel> studentInvitationToStudy, string searchString)
         {
             return new StudentInvitationToStudyListViewModel
             {
-                StudentInvitationToStudy = studentInvitationToStudy
+                StudentInvitationToStudy = studentInvitationToStudy,
+                SearchString = searchString
             };
         }
     }
