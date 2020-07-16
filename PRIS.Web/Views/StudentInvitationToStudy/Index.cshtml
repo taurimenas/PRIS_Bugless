@@ -3,35 +3,35 @@
 @{
     ViewData["Title"] = "Index";
 }
-    <h3>
-        Studentų kvietimas studijuoti
-        @*sutvarkyti grizti mygtuka*@
-        @Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
-        <form asp-action="Index" method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-            <div class="input-group">
-                <input type="text" name="searchString" value="" class="form-control bg-light border-1 rounded small" placeholder="Ieškoti..." aria-label="Search" aria-describedby="basic-addon2">
-                <div class="input-group-append">
-                    <button class="btn btn-primary rounded-circle ml-1 mr-1" type="submit" value="Search">
-                        <i class="fas fa-search fa-sm"></i>
-                    </button>
-                    <a class="fa fa-times ml-1 mr-1 center" asp-action="Index" aria-hidden="true"></a>
-                </div>
-            </div>
-        </form>
-        <select class="btn btn-outline-secondary float-right mr-3" onchange="callChangefunc(this.value)">
-            @*<option style="display:none">@Model.SeletectedExam</option>*@
-            @foreach (var ap in Model.Exams)
-            {
-                <option value="@ap.Value">@ap.Text</option>
-            }
-        </select>
-    </h3>
+<h3>
+    Studentų kvietimas studijuoti
+</h3>
+@*sutvarkyti grizti mygtuka*@
+@Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
+<form asp-action="Index" method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+    <div class="input-group">
+        <input type="text" name="searchString" value="" class="form-control bg-light border-1 rounded small" placeholder="Ieškoti..." aria-label="Search" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+            <button class="btn btn-primary rounded-circle ml-1 mr-1" type="submit" value="Search">
+                <i class="fas fa-search fa-sm"></i>
+            </button>
+            <a class="fa fa-times ml-1 mr-1 center" asp-action="Index" aria-hidden="true"></a>
+        </div>
+    </div>
+</form>
+<select class="btn btn-outline-secondary float-right mr-3" onchange="callChangefunc(this.value)">
+    @*<option style="display:none">@Model.SeletectedExam</option>*@
+    @foreach (var ap in Model.Exams)
+    {
+        <option value="@ap.Value">@ap.Text</option>
+    }
+</select>
 <hr />
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 <form asp-action="InvitationToStudy">
     <table class="table table-bordered">
         <thead>
-            <tr class="text-center">
+            <tr class="text-centers">
                 <th>@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().FirstName)</th>
                 <th>@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().LastName)</th>
                 <th>@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().Email)</th>
@@ -50,43 +50,63 @@
                 <th>
                     <a asp-action="Index" asp-route-sortOrder="@ViewBag.PrioritySort">@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().Priority)</a>
                 </th>
-                <th>@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().InvitedToStudy)</th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().InvitedToStudy)
+                    
+                    <input type="checkbox" class="checkbox-inline text-center ml-2" id="selectAll" onclick="clickThis(event)">
+                                           
+                </th>
             </tr>
         </thead>
         <tbody>
             @for (int i = 0; i < Model.StudentInvitationToStudy.Count; i++)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).LastName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).PhoneNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).PercentageGrade)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).ConversationGrade)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).FinalAverageGrade)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).Priority)
-                </td>
-                <td class="text-center">
-                    <input type="checkbox" name="HasInvitedToStudy" asp-for="@Model.StudentInvitationToStudy.ElementAt(i).InvitedToStudy" value="@Model.StudentInvitationToStudy.ElementAt(i).Id" id="checkbox-@Model.StudentInvitationToStudy.ElementAt(i).Id" class="checkbox-inline text-center">
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).PhoneNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).PercentageGrade)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).ConversationGrade)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).FinalAverageGrade)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy.ElementAtOrDefault(i).Priority)
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" name="HasInvitedToStudy" asp-for="@Model.StudentInvitationToStudy.ElementAt(i).InvitedToStudy" value="@Model.StudentInvitationToStudy.ElementAt(i).Id" id="checkbox-@Model.StudentInvitationToStudy.ElementAt(i).Id" class="checkbox-inline text-center">
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
     <input type="submit" value="Išsaugoti" class="btn btn-secondary float-right mr-5" />
 </form>
+<script>
+    var allCheckBoxes = document.getElementsByName("HasInvitedToStudy");
+    var selectAllCheckBox = document.getElementById("selectAll");
+    console.log(allCheckBoxes)
+    function clickThis(e) {
+        console.log(selectAllCheckBox)
+        if (selectAllCheckBox.checked === true) {
+            allCheckBoxes.forEach(x =>
+                x.checked = true);
+        } else {
+            allCheckBoxes.forEach(x =>
+                x.checked = false);
+        }
+    }
+</script>
