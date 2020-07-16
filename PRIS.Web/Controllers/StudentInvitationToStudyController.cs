@@ -73,6 +73,7 @@ namespace PRIS.Web.Controllers
                     invitationToStudy = invitationToStudy.Where(s => s.FirstName.Contains(searchString)).ToList();
                 else invitationToStudy = invitationToStudy.Where(s => s.LastName.Contains(searchString)).ToList();
             }
+            //todo: turi imti ne exam id, o pusmetis
             if (examId != null)
             {
                 invitationToStudy = invitationToStudy.Where(e => e.ExamId == exams.ElementAt((int)examId).Id).ToList();
