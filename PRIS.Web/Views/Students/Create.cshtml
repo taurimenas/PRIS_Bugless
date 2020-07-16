@@ -8,6 +8,7 @@
 <h3>Pridėti naują kandidatą</h3>
 
 <hr />
+<div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
@@ -36,15 +37,28 @@
                 <input asp-for="Comment" class="form-control" />
                 <span asp-validation-for="Comment" class="text-danger"></span>
             </div>
+            <div>Kandidato prioritetai</div>
+
+            @for (int i = 1; i < Model.Programs.Count() + 1; i++)
+            {
+                @i
+                <select asp-for="@Model.SelectedPriority[i-1]" class="form-control">
+                    <option style="display:none"></option>
+                    @foreach (var ap in Model.Programs)
+                    {
+                        <option value="@ap.Value">@ap.Text</option>
+                    }
+                </select>
+            }
             <div class="form-group">
-                <input type="submit" value="Sukurti" class="btn btn-secondary" />
+                <input type="submit" value="Sukurti" class="btn btn-secondary mt-2" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-	<a class="text-secondary" href='javascript:history.go(-1)'>Grįžti</a>
+    <a class="text-secondary" href='javascript:history.go(-1)'>Grįžti</a>
 </div>
 
 

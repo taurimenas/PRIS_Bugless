@@ -41,6 +41,16 @@ namespace PRIS.Web.Mappings
             result.Tasks = JsonSerializer.Serialize(model.Tasks);
             result.Comment = model.CommentResult;
         }
+
+        public static StudentCourse ToStudentCourseEntity(StudentCourseViewModel model)
+        {
+            return new StudentCourse
+            {
+                StudentId = model.StudentId,
+                CourseId = model.CourseId,
+                Priority = model.Priority
+            };
+        }
         public static StudentViewModel ToViewModel(Student entity)
         {
             return new StudentViewModel

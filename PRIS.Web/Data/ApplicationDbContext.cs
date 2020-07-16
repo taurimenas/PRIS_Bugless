@@ -41,9 +41,6 @@ namespace PRIS.Web.Data
             modelBuilder.Entity<Exam>().ToTable("Exam");
 
             modelBuilder.Entity<StudentCourse>()
-            .HasKey(s => new { s.StudentId, s.CourseId });
-
-            modelBuilder.Entity<StudentCourse>()
                 .HasOne(sc => sc.Student)
                 .WithMany(s => s.StudentCourses)
                 .HasForeignKey(sc => sc.StudentId);

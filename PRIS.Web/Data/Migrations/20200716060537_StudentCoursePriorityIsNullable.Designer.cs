@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PRIS.Web.Data;
 
 namespace PRIS.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200716060537_StudentCoursePriorityIsNullable")]
+    partial class StudentCoursePriorityIsNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -307,9 +309,6 @@ namespace PRIS.Web.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AcceptancePeriod")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
@@ -413,9 +412,6 @@ namespace PRIS.Web.Data.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
-                    b.Property<bool>("InvitedToStudy")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -427,12 +423,6 @@ namespace PRIS.Web.Data.Migrations
 
                     b.Property<int?>("ResultId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("SignedAContract")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("StudentDataLocked")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("StudentsCourseId")
                         .HasColumnType("int");

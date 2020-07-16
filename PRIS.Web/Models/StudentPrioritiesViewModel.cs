@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace PRIS.Web.Models
 {
-    public class StudentViewModel
+    public class StudentPrioritiesViewModel
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         [Required(ErrorMessage = "Įveskite vardą")]
         [Display(Name = "Vardas", Prompt = "Vardas")]
         public string FirstName { get; set; }
@@ -25,13 +25,15 @@ namespace PRIS.Web.Models
         public string PhoneNumber { get; set; }
         [Required(ErrorMessage = "Būtina nurodyti lytį")]
         [Display(Name = "Lytis")]
-        public Gender? Gender { get; set; }
+        public Gender Gender { get; set; }
         [Display(Name = "Komentaras", Prompt = "Komentaras")]
         public string Comment { get; set; }
-        public bool? PassedExam { get; set; } = false;
+        public bool PassedExam { get; set; } = false;
         public string ErrorMessage { get; set; }
-        public int ExamId { get; set; }
-        public List<SelectListItem> Programs { get; set; }
+        public List<Program> Program { get; set; }
+        public int Priority { get; set; }
+        public int CourseId { get; set; }
+        public IEnumerable<SelectListItem> Programs { get; set; }
         public string[] SelectedPriority { get; set; }
-    } 
+    }
 }
