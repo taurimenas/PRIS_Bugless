@@ -5,12 +5,17 @@ namespace PRIS.Web.Models.CourseModels
 {
     public class StudentEvaluationViewModel
     {
+        [Display(Name = "Vardas")]
         public string FirstName { get; set; }
+        [Display(Name = "Pavardė")]
         public string LastName { get; set; }
+        [Display(Name = "El. paštas")]
         public string Email { get; set; }
+        [Display(Name = "Tel. numeris")]
         public string PhoneNumber { get; set; }
         public double? FinalTestPoints { get; set; }
         [DisplayFormat(DataFormatString = "{0:F1}")]
+        [Display(Name = "Procentai")]
         public double? PercentageGrade { get; set; }
         [Display(Name = "Pokalbio įvertinimas")]
         public double? ConversationGrade { get; set; }
