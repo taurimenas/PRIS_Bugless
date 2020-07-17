@@ -72,6 +72,8 @@
                 <th>
                     <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.PrioritySort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Priority)</a>
                 </th>
+                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().SignedAContract)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().StudentDataLocked)</th>
             </tr>
         </thead>
         <tbody>
