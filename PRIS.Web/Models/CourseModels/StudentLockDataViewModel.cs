@@ -32,5 +32,8 @@ namespace PRIS.Web.Models.CourseModels
         public bool SignedAContract { get; set; } = false;
         [Display(Name = "Studento duomenys užrakinti")]
         public bool StudentDataLocked { get; set; }
+        public int? CityId { get; set; }
+        public int? ExamId { get; set; }
+        public int? CourseId { get; set; }
     }
 }

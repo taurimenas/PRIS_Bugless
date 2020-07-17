@@ -7,8 +7,50 @@
     Studentų duomenų užrakinimas
     @*sutvarkyti grizti mygtuka*@
     @Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
+
+    <form asp-action="LockingOfStudentData" method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+        <div class="input-group">
+            <input type="text" name="searchString" value="" class="form-control bg-light border-1 rounded small" placeholder="Ieškoti..." aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-primary rounded-circle ml-1 mr-1" type="submit" value="Search">
+                    <i class="fas fa-search fa-sm"></i>
+                </button>
+                <a class="fa fa-times ml-1 mr-1 center" asp-action="LockingOfStudentData" aria-hidden="true"></a>
+            </div>
+        </div>
+    </form>
+
+    <form asp-action="LockingOfStudentData" method="get" class="float-right d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100">
+        <div class="input-group">
+            <select name="ExamId" class="btn btn-outline-secondary float-right mr-3">
+                <option style="display:none">@Model.CurrentSelectedAcceptancePeriodId</option>
+
+                @foreach (var ap in Model.AcceptancePeriods)
+                {
+                    <option value="@ap.Text">@ap.Text</option>
+                }
+            </select>
+            <select name="CityId" class="btn btn-outline-secondary float-right mr-3">
+                <option style="display:none">@Model.CurrentSelectedCityId</option>
+                @foreach (var ap in Model.Cities)
+                {
+                    <option value="@ap.Value">@ap.Text</option>
+                }
+            </select>
+            <select name="CourseId" class="btn btn-outline-secondary float-right mr-3">
+                <option style="display:none">@Model.CurrentSelectedPriorityId</option>
+                @foreach (var ap in Model.Courses)
+                {
+                    <option value="@ap.Value">@ap.Text</option>
+                }
+            </select>
+            <button class="btn btn-primary rounded-circle ml-1 mr-1" type="submit" value="Search">
+                <i class="fas fa-search fa-sm"></i>
+            </button>
+        </div>
+    </form>
 </h3>
-<hr/>
+<hr />
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 <form asp-action="LockingOfStudentData">
     <table class="table table-bordered">
@@ -18,52 +60,66 @@
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().LastName)</th>
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Email)</th>
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().PhoneNumber)</th>
-                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().PercentageGrade)</th>
-                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().ConversationGrade)</th>
-                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalTestPoints)</th>
-                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Priority)</th>
+                <th>
+                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.PercentageGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().PercentageGrade)</a>
+                </th>
+                <th>
+                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.ConversationGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().ConversationGrade)</a>
+                </th>
+                <th>
+                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.FinalAverageGradeSort">Galutinis balas</a>
+                </th>
+                <th>
+                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.PrioritySort">I Prioritetas</a>
+                </th>
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().SignedAContract)</th>
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().StudentDataLocked)</th>
             </tr>
         </thead>
         <tbody>
-            @for (int i= 0; i < Model.StudentDataLocking.Count(); i ++)
+            @for (int i = 0; i < Model.StudentDataLocking.Count(); i++)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].FirstName)
-                    <input type="hidden" name="studentId" value="@Model.StudentDataLocking[i].Id" class="text" asp-for="@Model.StudentDataLocking[i].FirstName"/>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].LastName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].PhoneNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].PercentageGrade)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].ConversationGrade)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].FinalAverageGrade)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].Priority)
-                </td>
-                <td class="text-center">
-                    <input type="checkbox" name="HasSignedAContract" asp-for="@Model.StudentDataLocking[i].SignedAContract" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">
-                </td>
-                <td class="text-center">
-                    <input type="checkbox" name="HasStudentDataLocked" asp-for="@Model.StudentDataLocking[i].StudentDataLocked" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].FirstName)
+                        <input type="hidden" name="studentId" value="@Model.StudentDataLocking[i].Id" class="text" asp-for="@Model.StudentDataLocking[i].FirstName" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].PhoneNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].PercentageGrade)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].ConversationGrade)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].FinalAverageGrade)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].Priority)
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" name="HasSignedAContract" asp-for="@Model.StudentDataLocking[i].SignedAContract" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" name="HasStudentDataLocked" asp-for="@Model.StudentDataLocking[i].StudentDataLocked" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
     <input type="submit" value="Išsaugoti" class="btn btn-secondary float-right mr-5" />
 </form>
+
+<script>
+    function callChangefunc(name, value) {
+        window.location.href = `/Course/Index?${name}=${value}`;
+    }
+</script>

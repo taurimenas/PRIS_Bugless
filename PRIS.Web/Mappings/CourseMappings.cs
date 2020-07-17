@@ -49,7 +49,7 @@ namespace PRIS.Web.Mappings
             };
 
         }
-        public static StudentLockDataViewModel StudentLockDataToViewModel(Student student, ConversationResult conversationResult, StudentCourse studentCourse, Result result)
+        public static StudentLockDataViewModel StudentLockDataToViewModel(Student student, ConversationResult conversationResult, IEnumerable<StudentCourse> studentCourse, Result result)
         {
             double? finalAverageGrade = 0;
             double? finalTestPoints = JsonSerializer.Deserialize<double[]>(result.Tasks).Sum(x => x);
@@ -70,10 +70,13 @@ namespace PRIS.Web.Mappings
                 PercentageGrade = percentageGrade,
                 ConversationGrade = conversationResult?.Grade,
                 FinalAverageGrade = finalAverageGrade,
-                Priority = studentCourse?.Course.Title,
+                Priority = studentCourse.Count() >= 1 ? studentCourse?.FirstOrDefault(x => x?.Priority == 1).Course?.Title : null,
                 SignedAContract = student.SignedAContract,
                 InvitedToStudy = student.InvitedToStudy,
-                StudentDataLocked = student.StudentDataLocked
+                StudentDataLocked = student.StudentDataLocked,
+                CityId = result?.Exam.City.Id,
+                ExamId = result?.Exam.Id,
+                CourseId = studentCourse.Count() >= 1 ? studentCourse?.FirstOrDefault(x => x?.Priority == 1).Course?.Id : null
             };
         }
 

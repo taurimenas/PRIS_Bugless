@@ -41,7 +41,6 @@ namespace PRIS.Web.Controllers
                 stringAcceptancePeriods.Add(new SelectListItem { Value = filteredExams.FindIndex(a => a == ed).ToString(), Text = ed.AcceptancePeriod });
             }
 
-
             var cities = await _repository.Query<City>().ToListAsync();
             var stringCities = new List<SelectListItem>();
             foreach (var c in cities)
