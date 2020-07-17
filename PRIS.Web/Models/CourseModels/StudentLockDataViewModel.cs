@@ -23,6 +23,7 @@ namespace PRIS.Web.Models.CourseModels
         public double? PercentageGrade { get; set; }
         [Display(Name = "Pokalbio įvertinimas")]
         public double? ConversationGrade { get; set; }
+        [Display(Name = "Bendras vidurkis")]
         [DisplayFormat(DataFormatString = "{0:F1}")]
         public double? FinalAverageGrade { get; set; }
         [Display(Name = "Prioritetas")]

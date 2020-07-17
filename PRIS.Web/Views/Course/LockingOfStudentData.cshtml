@@ -67,13 +67,11 @@
                     <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.ConversationGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().ConversationGrade)</a>
                 </th>
                 <th>
-                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.FinalAverageGradeSort">Galutinis balas</a>
+                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.FinalAverageGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalAverageGrade)</a>
                 </th>
                 <th>
-                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.PrioritySort">I Prioritetas</a>
+                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.PrioritySort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Priority)</a>
                 </th>
-                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().SignedAContract)</th>
-                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().StudentDataLocked)</th>
             </tr>
         </thead>
         <tbody>
