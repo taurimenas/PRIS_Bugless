@@ -92,7 +92,7 @@ namespace PRIS.Web.Controllers
             }
             return backToExam;
         }
-        //GET
+
         public async Task<IActionResult> Create()
         {
             StudentViewModel studentViewModel = new StudentViewModel();

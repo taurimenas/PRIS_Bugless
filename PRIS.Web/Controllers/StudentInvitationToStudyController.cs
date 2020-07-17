@@ -33,7 +33,6 @@ namespace PRIS.Web.Controllers
 
             var exams = await _repository.Query<Exam>()
                 .Include(x => x.Results)
-                .ThenInclude(x => x.Student)
                 .ToListAsync();
             var stringAcceptancePeriods = new List<SelectListItem>();
             var filteredExams = exams.DistinctBy(x => x.AcceptancePeriod).ToList();
@@ -54,7 +53,7 @@ namespace PRIS.Web.Controllers
             var stringCourses = new List<SelectListItem>();
             foreach (var p in courses)
             {
-                stringCourses.Add(new SelectListItem { Value = courses.FindIndex(a => a == p).ToString(), Text = p.Title });
+                stringCourses.Add(new SelectListItem { Value = courses.FindIndex(a => a == p).ToString(), Text = $"{p.Title} {p.StartYear.Year}" });
             }
 
             var students = await _repository.Query<Student>()
@@ -74,8 +73,7 @@ namespace PRIS.Web.Controllers
 
             var invitationToStudy = new List<StudentInvitationToStudyViewModel>();
             students.ForEach(x => invitationToStudy
-                .Add(StudentInvitationToStudyMappings
-                .StudentInvitationToStudyToViewModel(x, x.ConversationResult, x.StudentCourses, x.Result)));
+                .Add(StudentInvitationToStudyMappings.StudentInvitationToStudyToViewModel(x, x.ConversationResult, x.StudentCourses, x.Result)));
 
             if (!string.IsNullOrEmpty(searchString))
             {

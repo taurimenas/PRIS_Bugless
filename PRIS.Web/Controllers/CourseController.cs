@@ -22,17 +22,19 @@ namespace PRIS.Web.Controllers
         {
             _repository = repository;
         }
-        public async Task<IActionResult> Index(int? examId, int? courseId, int? cityId, string searchString, string sortOrder)
+        public async Task<IActionResult> Index(string examId, int? courseId, int? cityId, string searchString, string sortOrder)
         {
             ViewBag.PercentageGradeSort = string.IsNullOrEmpty(sortOrder) ? "PercentageGrade" : "";
             ViewBag.ConversationGradeSort = string.IsNullOrEmpty(sortOrder) ? "ConversationGrade" : "";
             ViewBag.FinalAverageGradeSort = string.IsNullOrEmpty(sortOrder) ? "FinalAverageGrade" : "";
             ViewBag.PrioritySort = string.IsNullOrEmpty(sortOrder) ? "Priority" : "";
 
-            var exams = await _repository.Query<Exam>().ToListAsync();
+            var exams = await _repository.Query<Exam>()
+                .Include(x => x.Results)
+                .ToListAsync();
             var stringAcceptancePeriods = new List<SelectListItem>();
             var filteredExams = exams.DistinctBy(x => x.AcceptancePeriod).ToList();
-            foreach (var ed in exams)
+            foreach (var ed in filteredExams)
             {
                 stringAcceptancePeriods.Add(new SelectListItem { Value = filteredExams.FindIndex(a => a == ed).ToString(), Text = ed.AcceptancePeriod });
             }
@@ -49,7 +51,7 @@ namespace PRIS.Web.Controllers
             var stringCourses = new List<SelectListItem>();
             foreach (var p in courses)
             {
-                stringCourses.Add(new SelectListItem { Value = courses.FindIndex(a => a == p).ToString(), Text = p.Title });
+                stringCourses.Add(new SelectListItem { Value = courses.FindIndex(a => a == p).ToString(), Text = $"{p.Title} {p.StartYear.Year}" });
             }
 
             var students = await _repository.Query<Student>()
@@ -60,22 +62,21 @@ namespace PRIS.Web.Controllers
                 .Include(x => x.StudentCourses)
                 .ThenInclude(x => x.Course)
                 .Where(x => x.PassedExam == true)
-                //.Where(x => x.Result.Exam.Date.ToString() == stringExamDates.ElementAt(exam).Text)
                 .ToListAsync();
+
+            if (examId != null)
+            {
+                students = students.Where(x => x.Result.Exam.AcceptancePeriod == examId).ToList();
+            }
 
             var studentEvaluations = new List<StudentEvaluationViewModel>();
             students.ForEach(x => studentEvaluations.Add(CourseMappings.ToViewModel(x, x.ConversationResult, x.StudentCourses, x.Result)));
 
-            //studentEvaluations = studentEvaluations.OrderByDescending(x => x.FinalAverageGrade).ToList();
             if (!string.IsNullOrEmpty(searchString))
             {
                 if (studentEvaluations.Where(s => s.LastName.Contains(searchString)).Count() == 0)
                     studentEvaluations = studentEvaluations.Where(s => s.FirstName.Contains(searchString)).ToList();
                 else studentEvaluations = studentEvaluations.Where(s => s.LastName.Contains(searchString)).ToList();
-            }
-            if (examId != null)
-            {
-                studentEvaluations = studentEvaluations.Where(e => e.ExamId == exams.ElementAt((int)examId).Id).ToList();
             }
             if (cityId != null)
             {
@@ -94,23 +95,20 @@ namespace PRIS.Web.Controllers
                 "Priority" => studentEvaluations.OrderByDescending(s => s.Priority).ToList(),
                 _ => studentEvaluations.OrderByDescending(s => s.FinalAverageGrade).ToList(),
             };
-            var SelectedAcceptancePeriod = "";
-            if (examId != null)
-                SelectedAcceptancePeriod = stringAcceptancePeriods.ElementAt((int)examId).Text;
-            var SelectedCity = "";
-            if (cityId != null)
-                SelectedCity = stringCities.ElementAt((int)cityId).Text;
-            var SelectedCourse = "";
-            if (courseId != null)
-                SelectedCourse = stringCities.ElementAt((int)courseId).Text;
+            //var SelectedAcceptancePeriod = "";
+            //if (examId != null)
+            //    SelectedAcceptancePeriod = stringAcceptancePeriods.ElementAt(0).Text; //TODO: vietoj 0 examId is kazkur turi ateit. Gal firstOrdefault pagal stringa is POSTO
+            //var SelectedCity = "";
+            //if (cityId != null)
+            //    SelectedCity = stringCities.ElementAt((int)cityId).Text;
+            //var SelectedCourse = "";
+            //if (courseId != null)
+            //    SelectedCourse = stringCourses.ElementAt((int)courseId).Text;
 
             var model = CourseMappings.ToViewModel(studentEvaluations);
             model.AcceptancePeriods = stringAcceptancePeriods;
             model.Cities = stringCities;
             model.Courses = stringCourses;
-
-            //model.SelectedAcceptancePeriod =
-            //TempData["SelectedAcceptancePeriod"] = SelectedAcceptancePeriod.Value;
 
             return View(model);
         }
@@ -123,7 +121,6 @@ namespace PRIS.Web.Controllers
                 .ThenInclude(x => x.Exam)
                 .Include(x => x.StudentCourses)
                 .ThenInclude(x => x.Course)
-                //kuriuos imti studentus is kokio saraso?
                 .Where(x => x.InvitedToStudy == true)
                 .ToListAsync();
             var studentDataLocking = new List<StudentLockDataViewModel>();
@@ -155,7 +152,6 @@ namespace PRIS.Web.Controllers
                     findStudents.SignedAContract = true;
                 }
 
-                //studento uzrakinimas jei studentas pasirase sutarti
                 var studentsForDataLock = new List<Student>();
                 for (int i = 0; i < studentId.Length; i++)
                 {
@@ -178,8 +174,8 @@ namespace PRIS.Web.Controllers
                                 ModelState.AddModelError("StudentDelete", "Studentas turi būti pasirašęs sutartį, kad būtų galima užrakinti studento duomenis");
                                 TempData["ErrorMessage"] = "Studentas turi būti pasirašęs sutartį, kad būtų galima užrakinti studento duomenis";
                             }
+                        }
                     }
-                }
                 }
                 await _repository.SaveAsync();
                 return RedirectToAction("LockingOfStudentData", "Course");

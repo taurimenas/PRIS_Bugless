@@ -23,21 +23,22 @@
     <form asp-action="Index" method="get" class="float-right d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100">
         <div class="input-group">
             <select name="ExamId" class="btn btn-outline-secondary float-right mr-3">
-                @*<option style="display:none">@Model.CurrentSelectedAcceptancePeriodId</option>*@
+                <option style="display:none">@Model.CurrentSelectedAcceptancePeriodId</option>
+
                 @foreach (var ap in Model.AcceptancePeriods)
                 {
-                    <option value="@ap.Value">@ap.Text</option>
+                    <option value="@ap.Text">@ap.Text</option>
                 }
             </select>
             <select name="CityId" class="btn btn-outline-secondary float-right mr-3">
-                @*<option style="display:none">@Model.CurrentSelectedCityId</option>*@
+                <option style="display:none">@Model.CurrentSelectedCityId</option>
                 @foreach (var ap in Model.Cities)
                 {
                     <option value="@ap.Value">@ap.Text</option>
                 }
             </select>
             <select name="CourseId" class="btn btn-outline-secondary float-right mr-3">
-                @*<option style="display:none">@Model.CurrentSelectedPriorityId</option>*@
+                <option style="display:none">@Model.CurrentSelectedPriorityId</option>
                 @foreach (var ap in Model.Courses)
                 {
                     <option value="@ap.Value">@ap.Text</option>
@@ -52,7 +53,6 @@
 </h3>
 
 <hr />
-@*<a asp-action="Create">Sukurti naują</a>*@
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 
 <table class="table table-bordered">
@@ -82,7 +82,6 @@
             <th>
                 III Prioritetas
             </th>
-            <th class="borderless-cell" width="100px"></th>
         </tr>
     </thead>
     <tbody>
@@ -118,16 +117,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => modelItem.StudentEvaluations.ElementAtOrDefault(i).Priority3)
-                </td>
-                <td class="borderless-cell">
-                    <!--<span class="dropdown">
-                    <a data-toggle="dropdown"><i class="fa fa-cog" style="color: slategray"></i></a>
-                    <span class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
-                    @*@Html.ActionLink("Kandidatai", "Index", "Students", new { id = item.Id }, new { @class = "dropdown-item" })
-                        @Html.ActionLink("Balų šablonas", "Edit", "TaskParameters", new { id = item.Id }, new { @class = "dropdown-item" })*@
-                    <!--</span>
-                    </span>-->
-                    @*@Html.ActionLink("", "Delete", new { id = item.Id }, new { @class = "fa fa-trash" })*@
                 </td>
             </tr>
         }
