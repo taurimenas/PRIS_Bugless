@@ -130,7 +130,6 @@ namespace PRIS.Web.Controllers
                 await _repository.SaveAsync();
                 studentViewModel = StudentsMappings.ToViewModel(student);
 
-                var selectedPriorityWithoutNullAndDuplictates = selectedPriority.Where(priority => !string.IsNullOrEmpty(priority)).Distinct().ToArray();
 
                 var programs = await _repository.Query<Core.Library.Entities.Program>().ToListAsync();
                 foreach (var program in programs)
@@ -167,12 +166,11 @@ namespace PRIS.Web.Controllers
                         studentCourse.Course = course;
                         await _repository.InsertAsync<Course>(course);
                     }
+
+                    var selectedPriorityWithoutNullAndDuplictates = selectedPriority.Where(priority => !string.IsNullOrEmpty(priority)).Distinct().ToArray();
                     var listOfSelectedPriority = selectedPriorityWithoutNullAndDuplictates.ToList();
-                    int? priority = listOfSelectedPriority.IndexOf(program.Name);
-                    if (priority == -1)
-                        studentCourse.Priority = null;
-                    else
-                        studentCourse.Priority = priority + 1;
+                    int priority = listOfSelectedPriority.IndexOf(program.Name);
+                    studentCourse.Priority = priority + 1;
 
                     await _repository.InsertAsync<StudentCourse>(studentCourse);
                 }
@@ -290,25 +288,16 @@ namespace PRIS.Web.Controllers
             {
                 try
                 {
-
-                    var selectedPriorityWithoutNullAndDuplictates = selectedPriority.Where(priority => !string.IsNullOrEmpty(priority)).Distinct().ToArray();
-
                     StudentsMappings.ToEntity(student, studentViewModel);
                     var studentCourses = student.StudentCourses.ToList();
+                    var selectedPriorityWithoutNullAndDuplictates = selectedPriority.Where(priority => !string.IsNullOrEmpty(priority)).Distinct().ToArray();
                     var listOfSelectedPriority = selectedPriorityWithoutNullAndDuplictates.ToList();
 
                     foreach (var studentCourse in studentCourses)
                     {
                         studentCourse.Priority = null;
-                        int? priority = listOfSelectedPriority.IndexOf(studentCourse.Course.Title);
-                        if (priority == -1)
-                        {
-                            studentCourse.Priority = null;
-                        }
-                        else
-                        {
-                            studentCourse.Priority = priority + 1;
-                        }
+                        int priority = listOfSelectedPriority.IndexOf(studentCourse.Course.Title);
+                        studentCourse.Priority = priority + 1;
                     }
                     await _repository.SaveAsync();
                 }

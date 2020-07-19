@@ -38,27 +38,26 @@
                 <span asp-validation-for="Comment" class="text-danger"></span>
             </div>
             <div>Kandidato prioritetai</div>
+            1
+            @Html.ValidationMessageFor(Model => Model.SelectedPriority[0], "", new { @class = "text-danger" })
+            <select asp-for="@Model.SelectedPriority[0]" class="form-control" required>
+                <option style="display:none"> @Model.SelectedPriority[0]</option>
+                @foreach (var ap in Model.Programs)
+                {
+                    <option value="@ap.Value">@ap.Text</option>
+                }
+            </select>
 
-            @for (int i = 1; i < Model.SelectedPriority.Length + 1; i++)
+            @for (int i = 2; i < Model.SelectedPriority.Length + 1; i++)
             {
                 @i
                 <select asp-for="@Model.SelectedPriority[i-1]" class="form-control">
-                    @*@if (Model.SelectedPriority[i - 1] == null)
+
+                    <option style="display:none">@Model.SelectedPriority[i - 1]</option>
+                    @foreach (var ap in Model.Programs)
                     {
-                        @foreach (var ap in Model.Programs)
-                        {
-                            <option value="@ap.Value">@ap.Text</option>
-                        }
-                        <option style="display:none"></option>
+                        <option value="@ap.Value">@ap.Text</option>
                     }
-                    else
-                    {*@
-                        <option style="display:none">@Model.SelectedPriority[i - 1]</option>
-                        @foreach (var ap in Model.Programs)
-                        {
-                            <option value="@ap.Value">@ap.Text</option>
-                        }
-                    @*}*@
                 </select>
             }
 
