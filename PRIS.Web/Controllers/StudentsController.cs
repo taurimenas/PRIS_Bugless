@@ -170,7 +170,10 @@ namespace PRIS.Web.Controllers
                     var selectedPriorityWithoutNullAndDuplictates = selectedPriority.Where(priority => !string.IsNullOrEmpty(priority)).Distinct().ToArray();
                     var listOfSelectedPriority = selectedPriorityWithoutNullAndDuplictates.ToList();
                     int priority = listOfSelectedPriority.IndexOf(program.Name);
-                    studentCourse.Priority = priority + 1;
+                    if (priority == -1)
+                        studentCourse.Priority = null;
+                    else
+                        studentCourse.Priority = priority + 1;
 
                     await _repository.InsertAsync<StudentCourse>(studentCourse);
                 }
@@ -297,7 +300,14 @@ namespace PRIS.Web.Controllers
                     {
                         studentCourse.Priority = null;
                         int priority = listOfSelectedPriority.IndexOf(studentCourse.Course.Title);
-                        studentCourse.Priority = priority + 1;
+                        if (priority == -1)
+                        {
+                            studentCourse.Priority = null;
+                        }
+                        else
+                        {
+                            studentCourse.Priority = priority + 1;
+                        }
                     }
                     await _repository.SaveAsync();
                 }
