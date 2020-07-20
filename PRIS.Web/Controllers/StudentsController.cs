@@ -47,7 +47,10 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
+
             var studentViewModels = new List<StudentsResultViewModel>();
+            var exam = _repository.Query<Exam>().Include(x => x.City).FirstOrDefault(x => x.Id == id);
+
             students.ForEach(x => studentViewModels.Add(StudentsMappings.ToViewModel(x, x.Result)));
             foreach (var item in students)
             {
@@ -57,8 +60,10 @@ namespace PRIS.Web.Controllers
                     var examDraft = _repository.Query<Exam>().FirstOrDefault(e => e.Id == student.ExamId);
                     double maxPoints = TaskParametersMappings.ToTaskParameterViewModel(examDraft).Tasks.Sum(x => x);
                     student.PercentageGrade = student.FinalPoints * 100 / maxPoints;
+                    student.ExamCityAndDate = $"{exam.City.Name}, {exam.Date.ToShortDateString()}";
                 }
             }
+
 
             studentViewModels = studentViewModels.OrderByDescending(x => x.FinalPoints).ToList();
 
@@ -95,6 +100,7 @@ namespace PRIS.Web.Controllers
 
         public async Task<IActionResult> Create()
         {
+            int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
             StudentViewModel studentViewModel = new StudentViewModel();
             var programs = await _repository.Query<Core.Library.Entities.Program>().ToListAsync();
             var stringPrograms = new List<SelectListItem>();
@@ -102,7 +108,11 @@ namespace PRIS.Web.Controllers
             {
                 stringPrograms.Add(new SelectListItem { Value = program.Name, Text = program.Name });
             }
+            var exam = _repository.Query<Exam>().Include(x => x.City).FirstOrDefault(x => x.Id == ExamId);
+            studentViewModel.ExamCityAndDate = $"{exam.City.Name}, {exam.Date.ToShortDateString()}";
+
             studentViewModel.Programs = stringPrograms;
+            TempData["ExamId"] = ExamId;
             return View(studentViewModel);
         }
 
@@ -224,7 +234,9 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-            var student = await _repository.FindByIdAsync<Student>(id);
+            var student = await _repository.Query<Student>()
+                .Include(x => x.Result)
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (student == null)
             {
                 return NotFound();
@@ -236,6 +248,8 @@ namespace PRIS.Web.Controllers
                 .OrderByDescending(x => x.Priority.HasValue)
                 .ThenBy(x => x.Priority)
                 .ToListAsync();
+            var exam = _repository.Query<Exam>().Include(x => x.City).FirstOrDefault(x => x.Id == student.Result.ExamId);
+            studentViewModel.ExamCityAndDate = $"{exam.City.Name}, {exam.Date.ToShortDateString()}";
             var stringPrograms = new List<SelectListItem>();
             studentViewModel.SelectedPriority = new string[studentCourses.Count()];
             List<string> listOfSelectedPriority = new List<string>();
@@ -336,19 +350,19 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-            var studentRequest = _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id == id);
-            var studentEntity = await studentRequest.FirstOrDefaultAsync();
+            var studentRequest = await _repository.Query<Student>().Include(x => x.Result).Where(x => x.Id == id).FirstOrDefaultAsync();
 
-            var resultEntity = await _repository.FindByIdAsync<Result>(studentEntity.Result.Id);
+            var resultEntity = await _repository.FindByIdAsync<Result>(studentRequest.Result.Id);
 
-            if (studentEntity == null)
+            if (studentRequest == null)
             {
                 return NotFound();
             }
-            var exam = await _repository.FindByIdAsync<Exam>(ExamId);
-            var studentViewModel = StudentsMappings.ToViewModel(studentEntity, resultEntity);
+            var exam = _repository.Query<Exam>().Include(x => x.City).FirstOrDefault(x => x.Id == studentRequest.Result.ExamId);
+            var studentViewModel = StudentsMappings.ToViewModel(studentRequest, resultEntity);
             if (resultEntity.Tasks == null)
-                studentViewModel.Tasks = new double[JsonSerializer.Deserialize<double[]>(exam.Tasks).Length];
+            studentViewModel.Tasks = new double[JsonSerializer.Deserialize<double[]>(exam.Tasks).Length];
+            studentViewModel.ExamCityAndDate = $"{exam.City.Name}, {exam.Date.ToShortDateString()}";
             TempData["ExamId"] = ExamId;
             return View(studentViewModel);
         }

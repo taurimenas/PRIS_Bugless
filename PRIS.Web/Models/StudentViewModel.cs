@@ -32,7 +32,7 @@ namespace PRIS.Web.Models
         public string ErrorMessage { get; set; }
         public int ExamId { get; set; }
         public List<SelectListItem> Programs { get; set; }
-        
+        public string ExamCityAndDate { get; set; }
         public string[] SelectedPriority { get; set; }
     } 
 }

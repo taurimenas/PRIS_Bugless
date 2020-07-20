@@ -33,9 +33,10 @@ namespace PRIS.Web.Models
         public Gender Gender { get; set; }
         [Display(Name = "Komentaras", Prompt = "Komentaras")]
         public string Comment { get; set; }
-        [Display(Name = "Kviečiamas")]
+        [Display(Name = "Kviečiamas į pokalbį")]
         public bool PassedExam { get; set; } = false;
         public string ErrorMessage { get; set; }
         public double? ConversationResult { get; set; }
+        public string ExamCityAndDate { get; set; }
     }
 }

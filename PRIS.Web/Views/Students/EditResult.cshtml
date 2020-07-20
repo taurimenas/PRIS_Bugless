@@ -7,12 +7,15 @@
 
 
 <h4>Redaguoti testo rezultatus</h4>
+
+
 <hr />
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 <div class="row">
     <form asp-action="EditResult">
         <div>
 
+<div>@Html.DisplayFor(model => model.ExamCityAndDate)</div>
             Kandidatas:
             @Html.DisplayFor(model => model.FirstName)
 

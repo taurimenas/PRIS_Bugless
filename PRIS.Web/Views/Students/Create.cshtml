@@ -6,7 +6,7 @@
 }
 
 <h3>Pridėti naują kandidatą</h3>
-
+@Html.DisplayFor(model => model.ExamCityAndDate)
 <hr />
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 <div class="row">
@@ -38,7 +38,7 @@
                 <span asp-validation-for="Comment" class="text-danger"></span>
             </div>
             <div>Kandidato prioritetai</div>
-           1
+            1
             @Html.ValidationMessageFor(Model => Model.SelectedPriority[0], "", new { @class = "text-danger" })
             <select asp-for="@Model.SelectedPriority[0]" class="form-control" required>
                 <option style="display:none"> </option>

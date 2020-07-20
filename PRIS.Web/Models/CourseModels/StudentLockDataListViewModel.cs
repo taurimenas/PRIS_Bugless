@@ -14,7 +14,7 @@ namespace PRIS.Web.Models.CourseModels
         public int? CurrentSelectedCityId { get; set; }
         public int? CurrentSelectedAcceptancePeriodId { get; set; }
         public int? CurrentSelectedPriorityId { get; set; }
-        public string SeletectedCity { get; set; }
+        public string SelectedCity { get; set; }
         public string SelectedAcceptancePeriod { get; set; }
         public string SelectedPriority { get; set; }
         public List<StudentLockDataViewModel> StudentDataLocking { get; set; }
