@@ -5,7 +5,8 @@
 }
 
 <h3>
-    Studentų sąrašas
+    Kandidatų sąrašas
+</h3>
     @Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
 
     <form asp-action="Index" method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
@@ -50,7 +51,6 @@
         </div>
     </form>
 
-</h3>
 
 <hr />
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>

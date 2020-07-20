@@ -107,12 +107,19 @@
                     <div id="collapsePages2" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Sąrašas:</h6>
-                            <a class="collapse-item" asp-controller="Course" asp-action="Index">Studentų sąrašas</a>
                             <a class="collapse-item" asp-controller="StudentInvitationToStudy" asp-action="Index">Kvietimai studijuoti</a>
                             <a class="collapse-item" asp-controller="Course" asp-action="LockingOfStudentData">Duomenų užrakinimas</a>
                             <div class="collapse-divider"></div>
                         </div>
                     </div>
+                </li>
+                <hr class="sidebar-divider">
+                <li class="nav-item active">
+                    <a class="nav-link"  asp-controller="Course" asp-action="Index">
+                        <i class="fas fa-fw fa-folder"></i>
+                        <span>Analizė</span>
+                    </a>
+              
                 </li>
                 <!-- Divider -->
                 <hr class="sidebar-divider d-none d-md-block">
