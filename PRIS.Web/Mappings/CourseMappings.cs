@@ -19,7 +19,7 @@ namespace PRIS.Web.Mappings
             double? percentageGrade = finalTestPoints * 100 / maxPoints;
             if (percentageGrade == null || conversationResult == null)
                 finalAverageGrade = null;
-            else finalAverageGrade = (percentageGrade / 10 + conversationResult.Grade) / 2;
+            else finalAverageGrade = (finalTestPoints + conversationResult.Grade) / 2;
             if (studentCourse.Count() > 0)
                 studentCourse = studentCourse.Where(q => q.Priority != null);
 
@@ -57,7 +57,7 @@ namespace PRIS.Web.Mappings
             double? percentageGrade = finalTestPoints * 100 / maxPoints;
             if (percentageGrade == null || conversationResult == null)
                 finalAverageGrade = null;
-            else finalAverageGrade = (percentageGrade / 10 + conversationResult.Grade) / 2;
+            else finalAverageGrade = (finalTestPoints + conversationResult.Grade) / 2;
 
             return new StudentLockDataViewModel
             {

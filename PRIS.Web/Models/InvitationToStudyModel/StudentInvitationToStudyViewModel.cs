@@ -17,11 +17,13 @@ namespace PRIS.Web.Models.InvitationToStudyModel
         public string Email { get; set; }
         [Display(Name = "Tel. numeris")]
         public string PhoneNumber { get; set; }
+        [DisplayFormat(DataFormatString = "{0:F1}")]
+        [Display(Name = "Testas")]
         public double? FinalTestPoints { get; set; }
         [Display(Name = "Procentai")]
         [DisplayFormat(DataFormatString = "{0:F1}")]
         public double? PercentageGrade { get; set; }
-        [Display(Name = "Pokalbio įvertinimas")]
+        [Display(Name = "Pokalbis")]
         public double? ConversationGrade { get; set; }
         [Display(Name = "Bendras vidurkis")]
         [DisplayFormat(DataFormatString = "{0:F2}")]
