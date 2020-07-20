@@ -28,18 +28,18 @@ namespace PRIS.Web.Controllers
                 .Where(x => x.PassedExam == true)
                 .Where(y => y.Result.Exam.Id == id)
                 .ToListAsync();
-
             var conversationResult = new List<ConversationResult>();
-
             foreach (var student in passedStudents)
             {
                 var p = await _repository.FindByIdAsync<ConversationResult>(student.ConversationResultId);
                 conversationResult.Add(p);
             }
-            List<ConversationResultViewModel> conversationResultViewModel = new List<ConversationResultViewModel>();
             List<StudentViewModel> studentViewModels = new List<StudentViewModel>();
             passedStudents.ForEach(x => studentViewModels.Add(ConversationResultMappings.ToStudentViewModel(x)));
+            var exam = await _repository.Query<Exam>().Include(x => x.City).FirstOrDefaultAsync(x => x.Id == id);
+            List<ConversationResultViewModel> conversationResultViewModel = new List<ConversationResultViewModel>();
             conversationResult.ForEach(x => conversationResultViewModel.Add(ConversationResultMappings.ToConversationResultViewModel(x)));
+            conversationResultViewModel.ForEach(x => x.ExamCityAndDate = $"{exam.City.Name}, {exam.Date.ToShortDateString()}");
             ConversationResultMappings.ToStudentAndConversationResultViewModel(studentViewModels, conversationResultViewModel, id);
 
             return View(ConversationResultMappings.ToStudentAndConversationResultViewModel(studentViewModels, conversationResultViewModel, id));
@@ -99,11 +99,11 @@ namespace PRIS.Web.Controllers
             int.TryParse(TempData["StudentId"].ToString(), out int studentId);
             int.TryParse(TempData["ExamId"].ToString(), out int examId);
             var studentFromDatabase = await _repository.FindByIdAsync<Student>(studentId);
-            if(studentFromDatabase.InvitedToStudy == true)
+            if (studentFromDatabase.InvitedToStudy == true)
             {
                 ModelState.AddModelError("ConversationResultEdit", "Studentas yra pakviestas studijuoti, pokalbio įvertinimo redaguoti negalima");
                 TempData["ErrorMessage"] = "Studentas yra pakviestas studijuoti, pokalbio įvertinimo redaguoti negalima";
-                return RedirectToAction("EditConversationResult", "ConversationResults", new { id = studentId});
+                return RedirectToAction("EditConversationResult", "ConversationResults", new { id = studentId });
             }
             if (ModelState.IsValid)
             {
