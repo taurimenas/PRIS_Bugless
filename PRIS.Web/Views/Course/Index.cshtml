@@ -35,14 +35,14 @@
                 <option style="display:none">@Model.SelectedCity</option>
                 @foreach (var ap in Model.Cities)
                 {
-                    <option value="@ap.Value">@ap.Text</option>
+                    <option value="@ap.Text">@ap.Text</option>
                 }
             </select>
             <select name="CourseId" class="btn btn-outline-secondary float-right mr-3">
                 <option style="display:none">@Model.SelectedPriority</option>
                 @foreach (var ap in Model.Courses)
                 {
-                    <option value="@ap.Value">@ap.Text</option>
+                    <option value="@ap.Text">@ap.Text</option>
                 }
             </select>
             <button class="btn btn-primary rounded-circle ml-1 mr-1" type="submit" value="Search">

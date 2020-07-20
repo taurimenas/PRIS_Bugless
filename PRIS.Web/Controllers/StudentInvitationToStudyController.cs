@@ -24,7 +24,7 @@ namespace PRIS.Web.Controllers
         {
             _repository = repository;
         }
-        public async Task<IActionResult> Index(string examId, int? courseId, int? cityId, string searchString, string sortOrder)
+        public async Task<IActionResult> Index(string examId, string courseId, string cityId, string searchString, string sortOrder)
         {
             ViewBag.PercentageGradeSort = string.IsNullOrEmpty(sortOrder) ? "PercentageGrade" : "";
             ViewBag.ConversationGradeSort = string.IsNullOrEmpty(sortOrder) ? "ConversationGrade" : "";
@@ -69,7 +69,14 @@ namespace PRIS.Web.Controllers
             {
                 students = students.Where(x => x.Result.Exam.AcceptancePeriod == examId).ToList();
             }
-
+            if (courseId != null)
+            {
+                courses = courses.Where(x => x.Title == courseId).ToList();
+            }
+            if (cityId != null)
+            {
+                students = students.Where(e => e.Result.Exam.City.Name == cityId).ToList();
+            }
             var invitationToStudy = new List<StudentInvitationToStudyViewModel>();
             students.ForEach(x => invitationToStudy
                 .Add(StudentInvitationToStudyMappings.StudentInvitationToStudyToViewModel(x, x.ConversationResult, x.StudentCourses, x.Result)));
@@ -79,15 +86,6 @@ namespace PRIS.Web.Controllers
                 if (invitationToStudy.Where(s => s.LastName.Contains(searchString)).Count() == 0)
                     invitationToStudy = invitationToStudy.Where(s => s.FirstName.Contains(searchString)).ToList();
                 else invitationToStudy = invitationToStudy.Where(s => s.LastName.Contains(searchString)).ToList();
-            }
-            if (cityId != null)
-            {
-                invitationToStudy = invitationToStudy.Where(e => e.CityId == cities.ElementAt((int)cityId).Id).ToList();
-
-            }
-            if (courseId != null)
-            {
-                invitationToStudy = invitationToStudy.Where(e => e.CourseId == courses.ElementAt((int)courseId).Id).ToList();
             }
 
             invitationToStudy = sortOrder switch
@@ -100,6 +98,7 @@ namespace PRIS.Web.Controllers
             };
 
             var model = StudentInvitationToStudyMappings.ToListViewModel(invitationToStudy);
+            model.AcceptancePeriods = stringAcceptancePeriods;
             var selectedAcceptancePeriods = stringAcceptancePeriods.FirstOrDefault(x => x.Text == examId);
             if (selectedAcceptancePeriods == null)
                 model.SelectedAcceptancePeriod = null;
@@ -107,14 +106,14 @@ namespace PRIS.Web.Controllers
                 model.SelectedAcceptancePeriod = selectedAcceptancePeriods.Text;
 
             model.Cities = stringCities;
-            var selectedCity = stringCities.FirstOrDefault(x => x.Value == cityId.ToString());
+            var selectedCity = stringCities.FirstOrDefault(x => x.Text == cityId);
             if (selectedCity == null)
                 model.SelectedCity = null;
             else
                 model.SelectedCity = selectedCity.Text;
 
             model.Courses = stringCourses;
-            var selectedCourse = stringCourses.FirstOrDefault(x => x.Value == cityId.ToString());
+            var selectedCourse = stringCourses.FirstOrDefault(x => x.Text == courseId);
             if (selectedCourse == null)
                 model.SelectedPriority = null;
             else
