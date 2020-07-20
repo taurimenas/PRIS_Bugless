@@ -14,6 +14,7 @@ using PRIS.Web.Storage;
 
 namespace PRIS.Web.Controllers
 {
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class CourseController : Controller
     {
         private readonly IRepository _repository;

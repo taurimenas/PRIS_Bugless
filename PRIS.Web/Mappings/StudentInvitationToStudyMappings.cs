@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace PRIS.Web.Mappings
 {
+    [Microsoft.AspNetCore.Authorization.Authorize]
     public class StudentInvitationToStudyMappings
     {
         public static StudentInvitationToStudyViewModel StudentInvitationToStudyToViewModel(Student student, ConversationResult conversationResult, IEnumerable<StudentCourse> studentCourse, Result result)
@@ -20,6 +21,14 @@ namespace PRIS.Web.Mappings
                 finalAverageGrade = null;
             else finalAverageGrade = (finalTestPoints + conversationResult.Grade) / 2;
 
+            if (studentCourse.Count() > 0)
+                studentCourse = studentCourse.Where(q => q.Priority != null);
+
+            var priorities = "";
+            priorities += studentCourse.Count() >= 1 ? "1) " + studentCourse?.FirstOrDefault(x => x?.Priority == 1).Course?.Title : "";
+            priorities += studentCourse.Count() >= 2 ? "  2) " + studentCourse?.FirstOrDefault(x => x?.Priority == 2).Course?.Title : "";
+            priorities += studentCourse.Count() >= 3 ? "  3) " + studentCourse?.FirstOrDefault(x => x?.Priority == 3).Course?.Title : "";
+
             return new StudentInvitationToStudyViewModel
             {
                 Id = student.Id,
@@ -31,7 +40,7 @@ namespace PRIS.Web.Mappings
                 PercentageGrade = percentageGrade,
                 ConversationGrade = conversationResult?.Grade,
                 FinalAverageGrade = finalAverageGrade,
-                Priority = studentCourse.Count() >= 1 ? studentCourse?.FirstOrDefault(x => x?.Priority == 1).Course?.Title : null,
+                Priority = priorities,
                 InvitedToStudy = student.InvitedToStudy,
                 CityId = result?.Exam.City.Id,
                 ExamId = result?.Exam.Id,
