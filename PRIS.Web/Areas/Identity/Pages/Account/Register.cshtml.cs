@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace PRIS.Web.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
+    [Authorize]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
