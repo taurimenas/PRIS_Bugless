@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace PRIS.Web.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
+    [Authorize]
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;
