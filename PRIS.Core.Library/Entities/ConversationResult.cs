@@ -9,5 +9,6 @@ namespace PRIS.Core.Library.Entities
 
         public int? StudentForeignKey { get; set; }
         public Student Student { get; set; }
+        public List<ConversationForm> ConversationForm { get; set; }
     }
 }
