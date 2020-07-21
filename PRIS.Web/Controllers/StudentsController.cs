@@ -230,6 +230,8 @@ namespace PRIS.Web.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
+            var returnPath = HttpContext.Request.Headers["Referer"].ToString();
+            TempData["ReturnPath"] = returnPath;
             if (id == null)
             {
                 return NotFound();
@@ -282,9 +284,9 @@ namespace PRIS.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, string[] selectedPriority, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
+        public async Task<IActionResult> Edit(int id, string[] selectedPriority, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel, string previousURl)
         {
-            int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
+
 
             var student = await _repository.Query<Student>()
                 .Include(x => x.StudentCourses)
@@ -336,7 +338,8 @@ namespace PRIS.Web.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index", "Students", new { id = ExamId });
+                var previousUrl = TempData["ReturnPath"].ToString();
+                return Redirect(previousUrl);
             }
             return View(student);
         }
@@ -361,7 +364,7 @@ namespace PRIS.Web.Controllers
             var exam = _repository.Query<Exam>().Include(x => x.City).FirstOrDefault(x => x.Id == studentRequest.Result.ExamId);
             var studentViewModel = StudentsMappings.ToViewModel(studentRequest, resultEntity);
             if (resultEntity.Tasks == null)
-            studentViewModel.Tasks = new double[JsonSerializer.Deserialize<double[]>(exam.Tasks).Length];
+                studentViewModel.Tasks = new double[JsonSerializer.Deserialize<double[]>(exam.Tasks).Length];
             studentViewModel.ExamCityAndDate = $"{exam.City.Name}, {exam.Date.ToShortDateString()}";
             TempData["ExamId"] = ExamId;
             return View(studentViewModel);

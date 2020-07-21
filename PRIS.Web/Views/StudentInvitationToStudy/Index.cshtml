@@ -53,8 +53,10 @@
     <table class="table table-bordered">
         <thead>
             <tr class="text-centers">
-                <th>@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().FirstName)</th>
-                <th>@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().LastName)</th>
+                <th>
+                @Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().FirstName), 
+                @Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().LastName)
+                </th>
                 <th>@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().Email)</th>
                 <th>
                     @Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().PhoneNumber)
@@ -84,11 +86,11 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy[i].FirstName)
+                        <a asp-action="Edit" asp-controller="Students" asp-route-id="@Model.StudentInvitationToStudy[i].Id">
+                            @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy[i].FirstName) 
+                            @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy[i].LastName)
+                        </a>
                         <input type="hidden" name="studentId" value="@Model.StudentInvitationToStudy[i].Id" class="text" asp-for="@Model.StudentInvitationToStudy[i].FirstName" />
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy[i].LastName)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy[i].Email)
