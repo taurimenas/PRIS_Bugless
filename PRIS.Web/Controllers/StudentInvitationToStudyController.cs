@@ -143,5 +143,13 @@ namespace PRIS.Web.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
+
+        public async Task<IActionResult> EditComment(int? id)
+        {
+            var student = await _repository.FindByIdAsync<Student>(id);
+            StudentComment studentModel = new StudentComment();
+            studentModel.Comment = student.Comment;
+            return View(studentModel);
+        }
     }
 }
