@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace PRIS.Web.Mappings
 {
-    [Microsoft.AspNetCore.Authorization.Authorize]
     public class StudentInvitationToStudyMappings
     {
         public static StudentInvitationToStudyViewModel StudentInvitationToStudyToViewModel(Student student, ConversationResult conversationResult, IEnumerable<StudentCourse> studentCourse, Result result)
