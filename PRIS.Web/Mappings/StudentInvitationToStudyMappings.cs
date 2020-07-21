@@ -54,5 +54,11 @@ namespace PRIS.Web.Mappings
                 StudentInvitationToStudy = studentInvitationToStudy,
             };
         }
+        public static Student EditEntity(Student student, StudentComment studentFromModel)
+        {
+            student.Id = studentFromModel.Id;
+            student.Comment = studentFromModel.Comment;
+            return student;
+        }
     }
 }
