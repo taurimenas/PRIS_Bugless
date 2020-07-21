@@ -163,6 +163,7 @@ namespace PRIS.Web.Controllers
                 var student = await _repository.FindByIdAsync<Student>(model.Id);
                 student.Comment = model.Comment;
                 await _repository.SaveAsync();
+                return RedirectToAction("Index", "StudentInvitationToStudy");
             }
             return RedirectToAction("Index", "Home");
         }
