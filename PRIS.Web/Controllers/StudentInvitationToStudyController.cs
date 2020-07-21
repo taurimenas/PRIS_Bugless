@@ -149,7 +149,9 @@ namespace PRIS.Web.Controllers
             var student = await _repository.FindByIdAsync<Student>(id);
             StudentComment studentModel = new StudentComment
             {
-                Comment = student.Comment
+                StudentFirstName = student.FirstName,
+                StudentLastName = student.LastName,
+                Comment = student.Comment,
             };
             return View(studentModel);
         }
