@@ -16,5 +16,8 @@ namespace PRIS.Web.Models.InvitationToStudyModel
         public int? CurrentSelectedAcceptancePeriodId { get; set; }
         public int? CurrentSelectedPriorityId { get; set; }
         public List<StudentInvitationToStudyViewModel> StudentInvitationToStudy { get; set; }
+        public string SelectedCity { get; set; }
+        public string SelectedAcceptancePeriod { get; set; }
+        public string SelectedPriority { get; set; }
     }
 }

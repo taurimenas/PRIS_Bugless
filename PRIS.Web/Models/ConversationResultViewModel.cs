@@ -26,5 +26,6 @@ namespace PRIS.Web.Models
         [Range(0.0, 10.0)]
         public double? Grade { get; set; }
         public int? ExamId { get; set; }
+        public string ExamCityAndDate { get; set; }
     }
 }

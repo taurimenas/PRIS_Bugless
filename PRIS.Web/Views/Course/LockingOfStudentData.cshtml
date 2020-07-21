@@ -23,7 +23,7 @@
     <form asp-action="LockingOfStudentData" method="get" class="float-right d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100">
         <div class="input-group">
             <select name="ExamId" class="btn btn-outline-secondary float-right mr-3">
-                <option style="display:none">@Model.CurrentSelectedAcceptancePeriodId</option>
+                <option style="display:none">@Model.SelectedAcceptancePeriod</option>
 
                 @foreach (var ap in Model.AcceptancePeriods)
                 {
@@ -31,17 +31,17 @@
                 }
             </select>
             <select name="CityId" class="btn btn-outline-secondary float-right mr-3">
-                <option style="display:none">@Model.CurrentSelectedCityId</option>
+                <option style="display:none">@Model.SelectedCity</option>
                 @foreach (var ap in Model.Cities)
                 {
-                    <option value="@ap.Value">@ap.Text</option>
+                    <option value="@ap.Text">@ap.Text</option>
                 }
             </select>
             <select name="CourseId" class="btn btn-outline-secondary float-right mr-3">
-                <option style="display:none">@Model.CurrentSelectedPriorityId</option>
+                <option style="display:none">@Model.SelectedPriority</option>
                 @foreach (var ap in Model.Courses)
                 {
-                    <option value="@ap.Value">@ap.Text</option>
+                    <option value="@ap.Text">@ap.Text</option>
                 }
             </select>
             <button class="btn btn-primary rounded-circle ml-1 mr-1" type="submit" value="Search">
@@ -106,7 +106,15 @@
                         @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].Priority)
                     </td>
                     <td class="text-center">
-                        <input type="checkbox" name="HasSignedAContract" asp-for="@Model.StudentDataLocking[i].SignedAContract" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">
+                      @if (@Model.StudentDataLocking[i].StudentDataLocked == true)
+                       {
+                            <input type="checkbox" checked="checked" disabled="disabled" />
+                            <input type="hidden" name="HasSignedAContract" asp-for="@Model.StudentDataLocking[i].SignedAContract" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">
+                       }
+                       else
+                        {
+                            <input type="checkbox" name="HasSignedAContract" asp-for="@Model.StudentDataLocking[i].SignedAContract" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">
+                       }
                     </td>
                     <td class="text-center">
                         <input type="checkbox" name="HasStudentDataLocked" asp-for="@Model.StudentDataLocking[i].StudentDataLocked" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">

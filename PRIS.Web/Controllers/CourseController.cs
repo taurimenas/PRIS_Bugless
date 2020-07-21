@@ -23,7 +23,7 @@ namespace PRIS.Web.Controllers
         {
             _repository = repository;
         }
-        public async Task<IActionResult> Index(string examId, int? courseId, int? cityId, string searchString, string sortOrder)
+        public async Task<IActionResult> Index(string examId, string courseId, string cityId, string searchString, string sortOrder)
         {
             AddSorting(sortOrder);
 
@@ -60,7 +60,7 @@ namespace PRIS.Web.Controllers
                 .ThenInclude(x => x.Course)
                 .Where(x => x.PassedExam == true)
                 .ToListAsync();
-            List<StudentEvaluationViewModel> studentEvaluations = AddFilterOnViewModel(examId, courseId, cityId, searchString, cities, courses, ref students);
+            List<StudentEvaluationViewModel> studentEvaluations = AddFilterOnViewModel(examId, courseId, cityId, searchString, ref courses, ref students);
 
             studentEvaluations = SortOnSwitch(sortOrder, studentEvaluations);
             //TODO:
@@ -75,16 +75,25 @@ namespace PRIS.Web.Controllers
             //    SelectedCourse = stringCourses.ElementAt((int)courseId).Text;
 
             var model = CourseMappings.ToViewModel(studentEvaluations);
-            model.AcceptancePeriods = stringAcceptancePeriods;
-            model.Cities = stringCities;
-            model.Courses = stringCourses;
 
+            model.AcceptancePeriods = stringAcceptancePeriods;
+            var selectedAcceptancePeriods = stringAcceptancePeriods.FirstOrDefault(x => x.Text == examId);
+            model.SelectedAcceptancePeriod = selectedAcceptancePeriods?.Text;
+
+            model.Cities = stringCities;
+            var selectedCity = stringCities.FirstOrDefault(x => x.Text == cityId);
+            model.SelectedCity = selectedCity?.Text;
+
+            model.Courses = stringCourses;
+            var selectedCourse = stringCourses.FirstOrDefault(x => x.Text == courseId);
+            model.SelectedPriority = selectedCourse?.Text;
+           
             return View(model);
         }
 
 
 
-        public async Task<IActionResult> LockingOfStudentData(string examId, int? courseId, int? cityId, string searchString, string sortOrder)
+        public async Task<IActionResult> LockingOfStudentData(string examId, string courseId, string cityId, string searchString, string sortOrder)
         {
             AddSorting(sortOrder);
 
@@ -121,7 +130,7 @@ namespace PRIS.Web.Controllers
                 .Where(x => x.InvitedToStudy == true)
                 .ToListAsync();
 
-            List<StudentLockDataViewModel> studentDataLocking = AddFilterOnStudentLockDataViewModel(examId, courseId, cityId, searchString, cities, courses, ref students);
+            List<StudentLockDataViewModel> studentDataLocking = AddFilterOnStudentLockDataViewModel(examId, courseId, cityId, searchString, ref courses, ref students);
 
             //var studentDataLocking = new List<StudentLockDataViewModel>();
 
@@ -132,9 +141,18 @@ namespace PRIS.Web.Controllers
             studentDataLocking = SortOnSwitch(sortOrder, studentDataLocking);
 
             var model = CourseMappings.StudentLockDataListToViewModel(studentDataLocking);
+
             model.AcceptancePeriods = stringAcceptancePeriods;
+            var selectedAcceptancePeriods = stringAcceptancePeriods.FirstOrDefault(x => x.Text == examId);
+            model.SelectedAcceptancePeriod = selectedAcceptancePeriods?.Text;
+
             model.Cities = stringCities;
+            var selectedCity = stringCities.FirstOrDefault(x => x.Text == cityId);
+            model.SelectedCity = selectedCity?.Text;
+
             model.Courses = stringCourses;
+            var selectedCourse = stringCourses.FirstOrDefault(x => x.Text == courseId);
+            model.SelectedPriority = selectedCourse?.Text;
 
             return View(model);
         }
@@ -215,13 +233,20 @@ namespace PRIS.Web.Controllers
             return studentEvaluations;
         }
 
-        private static List<StudentEvaluationViewModel> AddFilterOnViewModel(string examId, int? courseId, int? cityId, string searchString, List<City> cities, List<Course> courses, ref List<Student> students)
+        private static List<StudentEvaluationViewModel> AddFilterOnViewModel(string examId, string courseId, string cityId, string searchString, ref  List<Course> courses, ref List<Student> students)
         {
             if (examId != null)
             {
                 students = students.Where(x => x.Result.Exam.AcceptancePeriod == examId).ToList();
             }
-
+            if (courseId != null)
+            {
+                courses = courses.Where(x => x.Title == courseId).ToList();
+            }
+            if (cityId != null)
+            {
+                students = students.Where(e => e.Result.Exam.City.Name == cityId).ToList();
+            }
             var studentEvaluations = new List<StudentEvaluationViewModel>();
             students.ForEach(x => studentEvaluations.Add(CourseMappings.ToViewModel(x, x.ConversationResult, x.StudentCourses, x.Result)));
 
@@ -231,25 +256,25 @@ namespace PRIS.Web.Controllers
                     studentEvaluations = studentEvaluations.Where(s => s.FirstName.Contains(searchString)).ToList();
                 else studentEvaluations = studentEvaluations.Where(s => s.LastName.Contains(searchString)).ToList();
             }
-            if (cityId != null)
-            {
-                studentEvaluations = studentEvaluations.Where(e => e.CityId == cities.ElementAt((int)cityId).Id).ToList();
-            }
-            if (courseId != null)
-            {
-                studentEvaluations = studentEvaluations.Where(e => e.CourseId == courses.ElementAt((int)courseId).Id).ToList();
-            }
 
             return studentEvaluations;
         }
 
-        private static List<StudentLockDataViewModel> AddFilterOnStudentLockDataViewModel(string examId, int? courseId, int? cityId, string searchString, List<City> cities, List<Course> courses, ref List<Student> students)
+        private static List<StudentLockDataViewModel> AddFilterOnStudentLockDataViewModel(string examId, string courseId, string cityId, string searchString, ref List<Course> courses, ref List<Student> students)
         {
             if (examId != null)
             {
                 students = students.Where(x => x.Result.Exam.AcceptancePeriod == examId).ToList();
             }
 
+            if (courseId != null)
+            {
+                courses = courses.Where(x => x.Title == courseId).ToList();
+            }
+            if (cityId != null)
+            {
+                students = students.Where(e => e.Result.Exam.City.Name == cityId).ToList();
+            }
             var studentEvaluations = new List<StudentLockDataViewModel>();
             students.ForEach(x => studentEvaluations.Add(CourseMappings.StudentLockDataToViewModel(x, x.ConversationResult, x.StudentCourses, x.Result)));
 
@@ -258,14 +283,6 @@ namespace PRIS.Web.Controllers
                 if (studentEvaluations.Where(s => s.LastName.Contains(searchString)).Count() == 0)
                     studentEvaluations = studentEvaluations.Where(s => s.FirstName.Contains(searchString)).ToList();
                 else studentEvaluations = studentEvaluations.Where(s => s.LastName.Contains(searchString)).ToList();
-            }
-            if (cityId != null)
-            {
-                studentEvaluations = studentEvaluations.Where(e => e.CityId == cities.ElementAt((int)cityId).Id).ToList();
-            }
-            if (courseId != null)
-            {
-                studentEvaluations = studentEvaluations.Where(e => e.CourseId == courses.ElementAt((int)courseId).Id).ToList();
             }
 
             return studentEvaluations;

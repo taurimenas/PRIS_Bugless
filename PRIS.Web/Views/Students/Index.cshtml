@@ -4,9 +4,12 @@
     ViewData["Title"] = "Index";
 }
 @Html.ActionLink("Grįžti", "Index", "Exams", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
+@Html.DisplayFor(model => model.FirstOrDefault().ExamCityAndDate)
 <form asp-action="Index">
-    <h3>Kandidatų sąrašas</h3>
+    <h4>
+        Kandidatų sąrašas
 
+    </h4>
     <hr />
     <a asp-action="Create">Pridėti naują kandidatą</a>
 
@@ -60,9 +63,18 @@
                     </td>
                     <td class="points" id="@item.Id">
                         @Html.DisplayFor(modelItem => item.FinalPoints)
-                        <span class="float-right text-secondary">
-                            @Html.ActionLink("", "EditResult", new { id = item.Id, resultId = item.ResultId }, new { @class = "fas fa-pen-square" })
-                        </span>
+                        @if (item.ConversationResult >= 0)
+                        {
+                            <span class="float-right text-secondary">
+                                @Html.ActionLink("", "EditResult", new { id = item.Id, resultId = item.ResultId }, new { @class = "fas fa-eye" })
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="float-right text-secondary">
+                                @Html.ActionLink("", "EditResult", new { id = item.Id, resultId = item.ResultId }, new { @class = "fas fa-pen-square" })
+                            </span>
+                        }
                     </td>
                     <td class="text-center">
                         @if (item.ConversationResult >= 0)
