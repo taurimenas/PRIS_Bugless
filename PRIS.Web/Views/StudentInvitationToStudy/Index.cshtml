@@ -60,7 +60,7 @@
                     @Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().PhoneNumber)
                 </th>
                 <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.PercentageGradeSort">@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().PercentageGrade)</a>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.PercentageGradeSort">@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().FinalTestPoints)</a>
                 </th>
                 <th>
                     <a asp-action="Index" asp-route-sortOrder="@ViewBag.ConversationGradeSort">@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().ConversationGrade)</a>
@@ -97,7 +97,7 @@
                         @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy[i].PhoneNumber)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy[i].PercentageGrade)
+                        @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy[i].FinalTestPoints)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy[i].ConversationGrade)

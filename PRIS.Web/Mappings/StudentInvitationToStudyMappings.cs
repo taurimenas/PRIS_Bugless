@@ -18,7 +18,15 @@ namespace PRIS.Web.Mappings
             double? percentageGrade = finalTestPoints * 100 / maxPoints;
             if (percentageGrade == null || conversationResult == null)
                 finalAverageGrade = null;
-            else finalAverageGrade = (percentageGrade / 10 + conversationResult.Grade) / 2;
+            else finalAverageGrade = (finalTestPoints + conversationResult.Grade) / 2;
+
+            if (studentCourse.Count() > 0)
+                studentCourse = studentCourse.Where(q => q.Priority != null);
+
+            var priorities = "";
+            priorities += studentCourse.Count() >= 1 ? "1) " + studentCourse?.FirstOrDefault(x => x?.Priority == 1).Course?.Title : "";
+            priorities += studentCourse.Count() >= 2 ? "  2) " + studentCourse?.FirstOrDefault(x => x?.Priority == 2).Course?.Title : "";
+            priorities += studentCourse.Count() >= 3 ? "  3) " + studentCourse?.FirstOrDefault(x => x?.Priority == 3).Course?.Title : "";
 
             return new StudentInvitationToStudyViewModel
             {
@@ -31,7 +39,7 @@ namespace PRIS.Web.Mappings
                 PercentageGrade = percentageGrade,
                 ConversationGrade = conversationResult?.Grade,
                 FinalAverageGrade = finalAverageGrade,
-                Priority = studentCourse.Count() >= 1 ? studentCourse?.FirstOrDefault(x => x?.Priority == 1).Course?.Title : null,
+                Priority = priorities,
                 InvitedToStudy = student.InvitedToStudy,
                 CityId = result?.Exam.City.Id,
                 ExamId = result?.Exam.Id,

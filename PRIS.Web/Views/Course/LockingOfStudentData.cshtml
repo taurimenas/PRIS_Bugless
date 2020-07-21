@@ -61,7 +61,7 @@
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Email)</th>
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().PhoneNumber)</th>
                 <th>
-                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.PercentageGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().PercentageGrade)</a>
+                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.PercentageGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalTestPoints)</a>
                 </th>
                 <th>
                     <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.ConversationGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().ConversationGrade)</a>
@@ -94,7 +94,7 @@
                         @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].PhoneNumber)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].PercentageGrade)
+                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].FinalTestPoints)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].ConversationGrade)
