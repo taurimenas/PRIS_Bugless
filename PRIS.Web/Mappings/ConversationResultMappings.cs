@@ -10,7 +10,7 @@ namespace PRIS.Web.Mappings
 {
     public class ConversationResultMappings
     {
-        public static ConversationResultViewModel ToViewModel(Student studentEntity, ConversationResult conversationResultEntity, int? examId)
+        public static ConversationResultViewModel ToViewModel(Student studentEntity, ConversationResult conversationResultEntity, int? examId, ConversationForm conversationForm)
         {
             return new ConversationResultViewModel
             {
@@ -22,7 +22,8 @@ namespace PRIS.Web.Mappings
                 ConversationResultComment = conversationResultEntity.Comment,
                 ConversationResultId = (int)studentEntity.ConversationResultId,
                 Grade = conversationResultEntity.Grade == null?0:conversationResultEntity.Grade,
-                ExamId = examId
+                ExamId = examId,
+                Field = conversationForm.Field
             };
         }
         public static void EditEntity(ConversationResult conversationResult, ConversationResultViewModel model)
