@@ -26,6 +26,11 @@ namespace PRIS.Web.Controllers
         }
         public async Task<IActionResult> Index(string examId, string courseId, string cityId, string searchString, string sortOrder)
         {
+            //Venkite viewbag'ų, geriau susikurkite atitinkamą modelį ir įkelkite jo default' reikšmes
+            // https://tech.trailmax.info/2013/12/asp-net-mvc-viewbag-is-bad/
+            // https://stackoverflow.com/questions/4766062/is-using-viewbag-in-mvc-bad
+            // https://www.reddit.com/r/csharp/comments/2sfcla/when_to_use_viewbag/
+
             ViewBag.PercentageGradeSort = string.IsNullOrEmpty(sortOrder) ? "PercentageGrade" : "";
             ViewBag.ConversationGradeSort = string.IsNullOrEmpty(sortOrder) ? "ConversationGrade" : "";
             ViewBag.FinalAverageGradeSort = string.IsNullOrEmpty(sortOrder) ? "FinalAverageGrade" : "";
@@ -54,6 +59,10 @@ namespace PRIS.Web.Controllers
             {
                 stringCourses.Add(new SelectListItem { Value = courses.FindIndex(a => a == p).ToString(), Text = $"{p.Title} {p.StartYear.Year}" });
             }
+
+
+            //Jeigu čia gauname studentus su miestais, kursais, egzaminais, kam mums reikalingos prieš tai buvusios užklausos? (49,56,39 eil.)
+            //Stenkimės atlikti kuo mažiau užklausų į duomenų bazę
 
             var students = await _repository.Query<Student>()
                 .Include(x => x.ConversationResult)
@@ -88,6 +97,7 @@ namespace PRIS.Web.Controllers
                 else invitationToStudy = invitationToStudy.Where(s => s.LastName.Contains(searchString)).ToList();
             }
 
+            //venkite switchų, jei įmanoma :)
             invitationToStudy = sortOrder switch
             {
                 "PercentageGrade" => invitationToStudy.OrderByDescending(s => s.PercentageGrade).ToList(),
@@ -100,6 +110,8 @@ namespace PRIS.Web.Controllers
             var model = StudentInvitationToStudyMappings.ToListViewModel(invitationToStudy);
             model.AcceptancePeriods = stringAcceptancePeriods;
             var selectedAcceptancePeriods = stringAcceptancePeriods.FirstOrDefault(x => x.Text == examId);
+
+            // apacioje esanti if'a galima uzrasyti tiesiog model.SelectedAcceptancePeriod = selectedAcceptancePeriods?.Text;
             if (selectedAcceptancePeriods == null)
                 model.SelectedAcceptancePeriod = null;
             else
@@ -107,6 +119,8 @@ namespace PRIS.Web.Controllers
 
             model.Cities = stringCities;
             var selectedCity = stringCities.FirstOrDefault(x => x.Text == cityId);
+
+            //apacioje esantis ifas turbut issireikstu i model.SelectedCity = selectedCity?.Text;
             if (selectedCity == null)
                 model.SelectedCity = null;
             else
@@ -119,6 +133,7 @@ namespace PRIS.Web.Controllers
             else
                 model.SelectedPriority = selectedCourse.Text;
 
+            //Nice, kad sukraunate i viena modeli pries atvaizduodami, o ne i keleta modeliu ar modeliu array kaip budavo anksciau :)
             return View(model);
         }
         [HttpPost]
@@ -127,6 +142,8 @@ namespace PRIS.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                //kadangi nenaudojate serviso layerio, gal taip ir ok, bet dažnai repozitorijos veiksmus perteikiame servisui, o kontroleris tik
+                //kreipiasi i servisa, jam nereikia zinoti apie save ir pan.
                 var students = new List<Student>();
                 for (int i = 0; i < studentId.Length; i++)
                 {
