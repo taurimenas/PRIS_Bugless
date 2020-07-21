@@ -8,6 +8,7 @@ namespace PRIS.Web.Models.InvitationToStudyModel
 {
     public class StudentComment
     {
+        public int Id { get; set; }
         [Display(Name = "Komentaras")]
         public string Comment { get; set; }
     }

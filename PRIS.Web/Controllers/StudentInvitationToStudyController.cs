@@ -147,9 +147,24 @@ namespace PRIS.Web.Controllers
         public async Task<IActionResult> EditComment(int? id)
         {
             var student = await _repository.FindByIdAsync<Student>(id);
-            StudentComment studentModel = new StudentComment();
-            studentModel.Comment = student.Comment;
+            StudentComment studentModel = new StudentComment
+            {
+                Comment = student.Comment
+            };
             return View(studentModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditComment(StudentComment model)
+        {
+            if (ModelState.IsValid)
+            {
+                var student = await _repository.FindByIdAsync<Student>(model.Id);
+                student.Comment = model.Comment;
+                await _repository.SaveAsync();
+            }
+            return RedirectToAction("Index", "Home");
         }
     }
 }
