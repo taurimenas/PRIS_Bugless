@@ -8,7 +8,7 @@ namespace PRIS.Web.Models
 {
     public class ProgramViewModel
     {
-        public List<PRIS.Core.Library.Entities.Program> ProgramNames { get; set; }
-        public List<City> CityNames { get; set; }
+        public List<ProgramCreateModel> ProgramNames { get; set; }
+        public List<CityCreateModel> CityNames { get; set; }
     }
 }
