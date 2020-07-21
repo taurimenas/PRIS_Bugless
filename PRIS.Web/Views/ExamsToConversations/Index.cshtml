@@ -1,0 +1,40 @@
+﻿@model PRIS.Web.Models.ExamsViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>
+    Testai
+    @Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
+
+    <select class="btn btn-outline-secondary float-right mr-3" onchange="callChangefunc(this.value)">
+        <option style="display:none">@Model.SelectedAcceptancePeriod</option>
+        @foreach (var ap in Model.AcceptancePeriod)
+        {
+            <option value="@ap.Value">@ap.Text</option>
+        }
+    </select>
+</h3>
+<p>Pasirinkite testą, kad matytumėte kandidatus atrinktus į pokalbį</p>
+<hr />
+<div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
+
+<div class="list-group container">
+    <div class="row">
+        <div class="list-group-item col-11 font-weight-bold d-flex align-items-center">Miestas | Data </div>
+
+        @foreach (var item in Model.ExamViewModels)
+        {
+            <a asp-action="Index" asp-controller="ConversationResults" asp-route-id="@item.Id" class="col-11 list-group-item list-group-item-action list-group-item-light d-flex align-items-center">
+                @Html.DisplayFor(modelItem => item.SelectedCity) | @Html.DisplayFor(modelItem => item.Date)
+            </a>
+        }
+    </div>
+</div>
+
+<script>
+    function callChangefunc(value) {
+        window.location.href = "/Exams/Index?value=" + value;
+    }
+</script>

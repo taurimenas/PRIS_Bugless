@@ -11,26 +11,34 @@ using PRIS.Web.Models;
 using PRIS.Core.Library.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Cryptography.X509Certificates;
+using PRIS.Web.Storage;
 
 namespace PRIS.Web.Controllers
 {
     [Authorize]
     public class ProgramsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository _repository;
 
-        public ProgramsController(ApplicationDbContext context)
+        public ProgramsController(IRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         public async Task<IActionResult> Index()
         {
             ProgramViewModel programViewModel = new ProgramViewModel();
-            var programResult = await _context.Programs.ToListAsync();
-            programViewModel.ProgramNames = programResult;
 
-            programViewModel.CityNames = await _context.Cities.ToListAsync();
+            var programResult = await _repository.Query<Core.Library.Entities.Program>().ToListAsync();
+            List<ProgramCreateModel> programsList = new List<ProgramCreateModel>();
+            programResult.ForEach(program => programsList.Add(ProgramMappings.ToProgramListViewModel(program)));
+            programViewModel.ProgramNames = programsList;
+
+            var cities = await _repository.Query<City>().ToListAsync();
+            List<CityCreateModel> citiesList = new List<CityCreateModel>();
+            cities.ForEach(city => citiesList.Add(ProgramMappings.ToCityListViewModel(city)));
+            programViewModel.CityNames = citiesList;
 
             return View(programViewModel);
         }
@@ -48,8 +56,7 @@ namespace PRIS.Web.Controllers
             if (ModelState.IsValid)
             {
                 var result = ProgramMappings.ToProgramEntity(programCreateModel);
-                _context.Programs.Add(result);
-                await _context.SaveChangesAsync();
+                await _repository.InsertAsync<Core.Library.Entities.Program>(result);
                 return RedirectToAction(nameof(Index));
             }
             return View(programCreateModel);
@@ -66,8 +73,7 @@ namespace PRIS.Web.Controllers
             if (ModelState.IsValid)
             {
                 var result = ProgramMappings.ToCityEntity(cityCreateModel);
-                _context.Cities.Add(result);
-                await _context.SaveChangesAsync();
+                await _repository.InsertAsync<City>(result);
                 return RedirectToAction(nameof(Index));
             }
             return View(cityCreateModel);
@@ -78,22 +84,21 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-            var program = await _context.Programs
+            var program = await _repository.Query<Core.Library.Entities.Program>()
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (program == null)
             {
                 return NotFound();
             }
-            var programById = await _context.Programs.FindAsync(id);
-            var course = await _context.Courses.FirstOrDefaultAsync(x => x.ProgramId == programById.Id);
+            var programById = await _repository.FindByIdAsync<Core.Library.Entities.Program>(id);
+            var course = await _repository.FindByIdAsync<Course>(id);
             if (course != null)
             {
                 return await BadRequest(course, "Programos negalima ištrinti, nes prie jos jau yra priskirta kandidatų.");
             }
             else
             {
-                _context.Programs.Remove(programById);
-                await _context.SaveChangesAsync();
+                await _repository.DeleteAsync<Core.Library.Entities.Program>(programById.Id);
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -104,30 +109,33 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-
-            var city = await _context.Cities.FirstOrDefaultAsync(m => m.Id == id);
+            var city = await _repository.FindByIdAsync<City>(id);
             if (city == null)
             {
                 return NotFound();
             }
 
-            var cityById = await _context.Cities.FindAsync(id);
-            var course = await _context.Courses.FirstOrDefaultAsync(x => x.CityId == cityById.Id);
-            if (course != null)
+            var exam = await _repository.Query<Exam>().FirstOrDefaultAsync(x => x.CityId == city.Id);
+            if (exam != null)
             {
-                return await BadRequest(course, "Miesto negalima ištrinti, nes prie jo jau yra priskirta kandidatų.");
+                var exams = await _repository.Query<Exam>().ToListAsync();
+                var studentCourse = exams.Where(x => x.Id == exam.Id);
+                if (studentCourse.Any())
+                {
+                    TempData["ErrorMessage"] = "Miesto negalima ištrinti, nes prie jo jau yra priskirta kandidatų.";
+                }
+                return RedirectToAction(nameof(Index));
             }
             else
             {
-                _context.Cities.Remove(cityById);
-                await _context.SaveChangesAsync();
+                await _repository.DeleteAsync<City>(city.Id);
                 return RedirectToAction(nameof(Index));
             }
         }
 
         private async Task<IActionResult> BadRequest(Course course, string errorMessage)
         {
-            var studentsCourses = await _context.StudentsCourses.ToListAsync();
+            var studentsCourses = await _repository.Query<StudentCourse>().ToListAsync();
             var studentCourse = studentsCourses.Where(x => x.CourseId == course.Id);
             if (studentCourse.Any())
             {
