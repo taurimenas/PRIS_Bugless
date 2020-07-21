@@ -56,8 +56,8 @@
     <table class="table table-bordered">
         <thead>
             <tr class="text-center">
-                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FirstName)</th>
-                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().LastName)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FirstName), 
+                @Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().LastName)</th>
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Email)</th>
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().PhoneNumber)</th>
                 <th>
@@ -81,12 +81,13 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].FirstName)
+                        <a asp-action="Edit" asp-controller="Students" asp-route-id="@Model.StudentDataLocking[i].Id">
+                            @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].FirstName)
+                            @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].LastName)
+                        </a>
                         <input type="hidden" name="studentId" value="@Model.StudentDataLocking[i].Id" class="text" asp-for="@Model.StudentDataLocking[i].FirstName" />
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].LastName)
-                    </td>
+                   
                     <td>
                         @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].Email)
                     </td>

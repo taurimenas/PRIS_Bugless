@@ -11,7 +11,7 @@ namespace PRIS.Web.Models.CourseModels
         public int Id { get; set; }
         [Display(Name = "Vardas")]
         public string FirstName { get; set; }
-        [Display(Name = "Pavardė")]
+        [Display(Name = "pavardė")]
         public string LastName { get; set; }
         [Display(Name = "El. paštas")]
         public string Email { get; set; }
