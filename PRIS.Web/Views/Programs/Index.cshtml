@@ -15,10 +15,10 @@
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Name)
+                                @Html.DisplayFor(modelItem => item.ProgramName)
                             </td>
                             <td>
-                                <a asp-action="Delete" asp-route-id="@item.Id">Ištrinti</a>
+                                <a asp-action="Delete" asp-route-id="@item.ProgramNameId">Ištrinti</a>
                             </td>
                         </tr>
                     }
@@ -33,10 +33,10 @@
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Name)
+                                @Html.DisplayFor(modelItem => item.CityName)
                             </td>
                             <td>
-                                <a asp-action="DeleteCity" asp-route-id="@item.Id">Ištrinti</a>
+                                <a asp-action="DeleteCity" asp-route-id="@item.CityNameId">Ištrinti</a>
                             </td>
                         </tr>
                     }

@@ -2,9 +2,12 @@
 @{
     ViewData["Title"] = "Index";
 }
+<<<<<<< HEAD
+@Html.ActionLink("Grįžti", "Index", "Students", new { id = Model.ExamId }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
 @Html.DisplayFor(model => model.ConvResults.FirstOrDefault().ExamCityAndDate)
-
+=======
 @Html.ActionLink("Grįžti", "Index", "ExamsToConversations", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
+>>>>>>> ConversationToNav
 <h3>Kandidatai atrinkti į pokalbį</h3>
 <div class="col-12 border p-3">
     <table class="table table-striped table-bordered " style="width:100%">
