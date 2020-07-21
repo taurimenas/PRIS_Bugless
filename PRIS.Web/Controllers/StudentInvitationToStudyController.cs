@@ -98,26 +98,18 @@ namespace PRIS.Web.Controllers
             };
 
             var model = StudentInvitationToStudyMappings.ToListViewModel(invitationToStudy);
+
             model.AcceptancePeriods = stringAcceptancePeriods;
             var selectedAcceptancePeriods = stringAcceptancePeriods.FirstOrDefault(x => x.Text == examId);
-            if (selectedAcceptancePeriods == null)
-                model.SelectedAcceptancePeriod = null;
-            else
-                model.SelectedAcceptancePeriod = selectedAcceptancePeriods.Text;
+            model.SelectedAcceptancePeriod = selectedAcceptancePeriods?.Text;
 
             model.Cities = stringCities;
             var selectedCity = stringCities.FirstOrDefault(x => x.Text == cityId);
-            if (selectedCity == null)
-                model.SelectedCity = null;
-            else
-                model.SelectedCity = selectedCity.Text;
+            model.SelectedCity = selectedCity?.Text;
 
             model.Courses = stringCourses;
             var selectedCourse = stringCourses.FirstOrDefault(x => x.Text == courseId);
-            if (selectedCourse == null)
-                model.SelectedPriority = null;
-            else
-                model.SelectedPriority = selectedCourse.Text;
+            model.SelectedPriority = selectedCourse?.Text;
 
             return View(model);
         }
