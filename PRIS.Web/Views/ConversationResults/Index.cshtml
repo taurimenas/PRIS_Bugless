@@ -15,6 +15,7 @@
                 <th>@Html.DisplayNameFor(model => model.Students.FirstOrDefault().Email)</th>
                 <th>@Html.DisplayNameFor(model => model.Students.FirstOrDefault().PhoneNumber)</th>
                 <th>@Html.DisplayNameFor(model => model.ConvResults.FirstOrDefault().Grade)</th>
+                <th>@Html.DisplayNameFor(model => model.ConversationForm.FirstOrDefault().ConversationFormName)</th>
             </tr>
         </thead>
         <tbody>
@@ -37,6 +38,12 @@
                         @Html.DisplayFor(modelItem => modelItem.ConvResults.ElementAtOrDefault(i).Grade)
                         <span class="float-right">
                             @Html.ActionLink("", "EditConversationResult", "ConversationResults", new { Id = Model.Students.ElementAtOrDefault(i).Id }, new { @class = "fas fa-pen-square" })
+                        </span>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.ConversationForm.ElementAtOrDefault(i).ConversationFormName)
+                        <span class="float-right text-secondary">
+                            @Html.ActionLink("", "EditConversationForm", new { id = Model.ConvResults.ElementAtOrDefault(i).ConversationResultId}, new { @class = "fas fa-eye" })
                         </span>
                     </td>
                 </tr>

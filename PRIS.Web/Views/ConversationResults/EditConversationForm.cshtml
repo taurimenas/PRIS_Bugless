@@ -1,0 +1,84 @@
+﻿@model PRIS.Web.Models.ConversationFormViewModel
+
+@{
+    ViewData["Title"] = "EditConversationResult";
+}
+@Html.ActionLink("Grįžti", "Index", "ConversationResults", new { id = Model.ExamId }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
+<h4>Redaguoti pokalbio anketą</h4>
+<hr />
+<div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
+<div class="row pl-3">
+    <form asp-action="EditConversationForm">
+        <div>
+            Kandidatas:
+            @Html.DisplayFor(model => model.FirstName)
+
+            @Html.DisplayFor(model => model.LastName)
+        </div>
+        <br />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="input-group">
+        <div class="input-group-prepend row col-12">
+            <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field1)</span>
+            <textarea asp-for="Field1" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
+        </div>
+    </div>
+        <div class="input-group">
+            <div class="input-group-prepend row col-12">
+                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field2)</span>
+                <textarea asp-for="Field2" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
+            </div>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend row col-12">
+                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field3)</span>
+                <textarea asp-for="Field3" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
+            </div>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend row col-12">
+                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field4)</span>
+                <textarea asp-for="Field4" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
+            </div>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend row col-12">
+                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field5)</span>
+                <textarea asp-for="Field5" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
+            </div>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend row col-12">
+                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field6)</span>
+                <textarea asp-for="Field6" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
+            </div>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend row col-12">
+                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field7)</span>
+                <textarea asp-for="Field7" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
+            </div>
+        </div>
+        <div class="input-group">
+            <div class="input-group-prepend row col-12">
+                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field8)</span>
+                <textarea asp-for="Field8" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
+            </div>
+        </div>        <div class="input-group">
+            <div class="input-group-prepend row col-12">
+                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field9)</span>
+                <textarea asp-for="Field9" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
+            </div>
+        </div>        <div class="input-group">
+            <div class="input-group-prepend row col-12">
+                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field10)</span>
+                <textarea asp-for="Field10" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
+            </div>
+        </div>
+
+        <br />
+        <div class="form-group">
+            <input type="submit" value="Išsaugoti" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
