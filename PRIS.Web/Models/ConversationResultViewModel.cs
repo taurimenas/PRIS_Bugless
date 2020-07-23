@@ -25,7 +25,6 @@ namespace PRIS.Web.Models
         [Display(Name = "Pokalbio įvertinimas", Prompt = "Pokalbio įvertinimas")]
         [Range(0.0, 10.0)]
         public double? Grade { get; set; }
-        public string Field { get; set; }
         public int? ExamId { get; set; }
         public string ExamCityAndDate { get; set; }
     }

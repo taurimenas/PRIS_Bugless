@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using PRIS.Core.Library.Entities;
 using PRIS.Web.Mappings;
@@ -7,7 +6,6 @@ using PRIS.Web.Models;
 using PRIS.Web.Storage;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Threading.Tasks;
 
 namespace PRIS.Web.Controllers
@@ -136,13 +134,13 @@ namespace PRIS.Web.Controllers
         }
 
         //GET
-        public async Task<IActionResult> EditConversationForm(int id, int examId)
+        public async Task<IActionResult> EditConversationForm(int id)
         {
-            int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
+            int.TryParse(TempData["ExamId"].ToString(), out int examId);
             var conversationForms = await _repository
                 .Query<ConversationForm>()
                 .Include(x => x.ConversationResult)
-                .ThenInclude(x => x.Student) 
+                .ThenInclude(x => x.Student)
                 .Where(x => x.ConversationResultId == id)
                 .ToListAsync();
             List<ConversationForm> newConversationForms = new List<ConversationForm>();
@@ -161,8 +159,7 @@ namespace PRIS.Web.Controllers
                     .Where(x => x.ConversationResultId == id)
                     .ToListAsync();
             }
-            TempData["ExamId"] = ExamId;
-            examId = ExamId;
+            TempData["ExamId"] = examId;
             var student = conversationForms.Select(x => x.ConversationResult?.Student).FirstOrDefault();
             TempData["ConversationResultId"] = student.ConversationResultId;
             TempData["StudentId"] = student.Id;
@@ -187,19 +184,6 @@ namespace PRIS.Web.Controllers
                 try
                 {
                     var conversationForm = await _repository.Query<ConversationForm>().Where(x => x.ConversationResultId == conversationResultId).ToListAsync();
-                    if (conversationForm.Count() == 0)
-                    {
-                        List<ConversationForm> conversationForms = new List<ConversationForm>();
-                        for (int i = 0; i < 10; i++)
-                        {
-                            conversationForms.Add(new ConversationForm { ConversationResultId = conversationResultId });
-                        }
-                        foreach (var form in conversationForms)
-                        {
-                            await _repository.InsertAsync<ConversationForm>(form);
-                        }
-                        conversationForm = conversationForms;
-                    }
                     ConversationResultMappings.EditConversationFormEntity(conversationForm, model);
                     await _repository.SaveAsync();
                 }
