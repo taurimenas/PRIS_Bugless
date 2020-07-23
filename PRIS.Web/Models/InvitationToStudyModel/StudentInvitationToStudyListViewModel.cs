@@ -19,5 +19,6 @@ namespace PRIS.Web.Models.InvitationToStudyModel
         public string SelectedCity { get; set; }
         public string SelectedAcceptancePeriod { get; set; }
         public string SelectedPriority { get; set; }
+
     }
 }
