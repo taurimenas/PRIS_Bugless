@@ -172,14 +172,11 @@ namespace PRIS.Web.Controllers
         public async Task<IActionResult> EditConversationForm(ConversationFormViewModel model)
         {
             int.TryParse(TempData["ConversationResultId"].ToString(), out int conversationResultId);
-            //int.TryParse(TempData["StudentId"].ToString(), out int studentId);
             int.TryParse(TempData["ExamId"].ToString(), out int examId);
-            //int.TryParse(TempData["ConversationFormId"].ToString(), out int conversationFormId);
             if (ModelState.IsValid)
             {
                 try
                 {
-
                     var conversationForm = await _repository.Query<ConversationForm>().Where(x => x.ConversationResultId == conversationResultId).ToListAsync();
                     if (conversationForm.Count() == 0)
                     {
@@ -191,12 +188,10 @@ namespace PRIS.Web.Controllers
                         foreach (var form in conversationForms)
                         {
                             await _repository.InsertAsync<ConversationForm>(form);
-
                         }
                         conversationForm = conversationForms;
                     }
                     ConversationResultMappings.EditConversationFormEntity(conversationForm, model);
-
                     await _repository.SaveAsync();
                 }
                 catch (DbUpdateConcurrencyException)

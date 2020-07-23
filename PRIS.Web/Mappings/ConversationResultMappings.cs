@@ -46,7 +46,6 @@ namespace PRIS.Web.Mappings
         }
         public static void EditConversationFormEntity(List<ConversationForm> conversationForm, ConversationFormViewModel model)
         {
-
             conversationForm.ElementAt(0).Field = model.Field1;
             conversationForm.ElementAt(1).Field = model.Field2;
             conversationForm.ElementAt(2).Field = model.Field3;
@@ -57,7 +56,6 @@ namespace PRIS.Web.Mappings
             conversationForm.ElementAt(7).Field = model.Field8;
             conversationForm.ElementAt(8).Field = model.Field9;
             conversationForm.ElementAt(9).Field = model.Field10;
-
         }
         public static ConversationFormViewModel ToConversationFormViewModel(ConversationForm conversationFormEntity)
         {
