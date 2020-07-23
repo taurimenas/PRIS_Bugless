@@ -36,80 +36,13 @@ namespace PRIS.Web.Controllers
                 .Where(x => x.PassedExam == true)
                 .ToListAsync();
 
-            var stringAcceptancePeriods = new List<SelectListItem>();
-            var filteredExams = students.Select(x => x.Result.Exam).DistinctBy(x => x.AcceptancePeriod).ToList();
-            foreach (var ed in filteredExams)
-            {
-                stringAcceptancePeriods.Add(new SelectListItem { Value = filteredExams.FindIndex(a => a == ed).ToString(), Text = ed.AcceptancePeriod });
-            }
-
-            var cities = students.Select(x => x.Result.Exam.City).DistinctBy(x => x.Name).ToList();
-            var stringCities = new List<SelectListItem>();
-            foreach (var c in cities)
-            {
-                stringCities.Add(new SelectListItem { Value = cities.FindIndex(a => a == c).ToString(), Text = c.Name });
-            }
-
-            var courses = students.Select(x => x.StudentCourses?.FirstOrDefault(y => y.Priority == 1)?.Course).DistinctBy(x => $"{x.Title} {x.StartYear.Year}").ToList();
-            var stringCourses = new List<SelectListItem>();
-            foreach (var p in courses)
-            {
-                stringCourses?.Add(new SelectListItem { Value = courses?.FindIndex(a => a == p).ToString(), Text = $"{p.Title} {p.StartYear.Year}" });
-            }
-
-            if (examId != null)
-            {
-                students = students.Where(x => x.Result.Exam.AcceptancePeriod == examId).ToList();
-            }
-            if (courseId != null)
-            {
-                var selected = courses.FirstOrDefault(x => $"{x.Title} {x.StartYear.Year}" == courseId);
-                students = students.Where(x => x.StudentCourses.FirstOrDefault(x => x.Priority == 1).Course == selected).ToList();
-            }
-            if (cityId != null)
-            {
-                students = students.Where(e => e.Result.Exam.City.Name == cityId).ToList();
-            }
-            var invitationToStudy = new List<StudentInvitationToStudyViewModel>();
-            students.ForEach(x => invitationToStudy
-                .Add(StudentInvitationToStudyMappings.StudentInvitationToStudyToViewModel(x, x.ConversationResult, x.StudentCourses, x.Result)));
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                if (invitationToStudy.Where(s => s.LastName.Contains(searchString)).Count() == 0)
-                    invitationToStudy = invitationToStudy.Where(s => s.FirstName.Contains(searchString)).ToList();
-                else invitationToStudy = invitationToStudy.Where(s => s.LastName.Contains(searchString)).ToList();
-            }
-
-            var model = StudentInvitationToStudyMappings.ToListViewModel(invitationToStudy);
-            var sort = new Dictionary<string, List<StudentInvitationToStudyViewModel>>
-            {
-                { "PercentageGrade", invitationToStudy.OrderByDescending(s => s.PercentageGrade).ToList() },
-                { "ConversationGrade", invitationToStudy.OrderByDescending(s => s.ConversationGrade).ToList() },
-                { "FinalAverageGrade", invitationToStudy.OrderByDescending(s => s.FinalAverageGrade).ToList() },
-                { "Priority", invitationToStudy.OrderByDescending(s => s.Priority).ToList() }
-            };
-
-            if (sortOrder != null)
-            {
-                if (sort.ContainsKey(sortOrder))
-                    model.StudentInvitationToStudy = sort[sortOrder];
-            }
-
-            model.AcceptancePeriods = stringAcceptancePeriods;
-            var selectedAcceptancePeriods = stringAcceptancePeriods.FirstOrDefault(x => x.Text == examId);
-            model.SelectedAcceptancePeriod = selectedAcceptancePeriods?.Text;
-
-            model.Cities = stringCities;
-            var selectedCity = stringCities.FirstOrDefault(x => x.Text == cityId);
-            model.SelectedCity = selectedCity?.Text;
-
-            model.Courses = stringCourses;
-            var selectedCourse = stringCourses.FirstOrDefault(x => x.Text == courseId);
-            model.SelectedPriority = selectedCourse?.Text;
+            var model = StudentData.PrepareData(examId, courseId, cityId, searchString, sortOrder, ref students);
 
             return View(model);
         }
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(int[] studentId, int[] HasInvitedToStudy)
