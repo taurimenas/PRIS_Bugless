@@ -1,0 +1,13 @@
+﻿
+
+@{
+    ViewData["Title"] = "ImportCSV";
+}
+<h2>Upload and read CSV file in ASP.Net MVC</h2>
+
+<form asp-controller="ImportCSV" asp-action="ImportCSV" enctype="multipart/form-data" method="post">
+
+    <input name="file" type="file">
+
+    <input class="btn" type="submit" />
+</form>

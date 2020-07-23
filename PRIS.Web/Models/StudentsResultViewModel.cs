@@ -11,6 +11,7 @@ namespace PRIS.Web.Models
     {
         public int ResultId { get; set; }
         public double[] Tasks { get; set; }
+        public string[] TasksString { get; set; }
         [Display(Name = "Testo balai")]
         public double? FinalPoints { get; set; }
         [Display(Name = "Procentai")]

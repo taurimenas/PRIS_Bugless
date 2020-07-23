@@ -365,6 +365,12 @@ namespace PRIS.Web.Controllers
             var studentViewModel = StudentsMappings.ToViewModel(studentRequest, resultEntity);
             if (resultEntity.Tasks == null)
                 studentViewModel.Tasks = new double[JsonSerializer.Deserialize<double[]>(exam.Tasks).Length];
+            studentViewModel.TasksString = new string[studentViewModel.Tasks.Length];
+            for (int i = 0; i < studentViewModel.TasksString.Length; i++)
+            {
+                studentViewModel.TasksString[i] = studentViewModel.Tasks[i].ToString().Replace(",", ".");
+
+            }
             studentViewModel.ExamCityAndDate = $"{exam.City.Name}, {exam.Date.ToShortDateString()}";
             TempData["ExamId"] = ExamId;
             return View(studentViewModel);
@@ -372,7 +378,7 @@ namespace PRIS.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditResult(double[] Tasks)
+        public async Task<IActionResult> EditResult(string[] tasksString)
         {
             int.TryParse(TempData["ResultId"].ToString(), out int resultId);
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
@@ -380,11 +386,17 @@ namespace PRIS.Web.Controllers
             {
                 try
                 {
+                    double[] Tasks = new double[tasksString.Length];
+                    for (int i = 0; i < Tasks.Length; i++)
+                    {
+                        Tasks[i] = double.Parse(tasksString[i], System.Globalization.CultureInfo.InvariantCulture);
+                    }
                     var studentRequest = _repository.Query<Student>().Include(x => x.Result).ThenInclude(y => y.Exam).Where(x => x.Id > 0);
                     var result = await _repository.FindByIdAsync<Result>(resultId);
                     var student = await studentRequest.FirstOrDefaultAsync(x => x.Id == result.StudentForeignKey);
                     var studentResultViewModel = StudentsMappings.ToStudentsResultViewModel(Tasks);
                     var examTasks = StudentsMappings.ToStudentsResultViewModel(result).Tasks;
+                    
                     if (student.PassedExam)
                     {
                         TempData["ErrorMessage"] = "Studentas yra pakviestas į pokalbį, todėl jo duomenų negalima redaguoti.";
