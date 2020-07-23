@@ -136,7 +136,7 @@ namespace PRIS.Web.Controllers
         }
 
         //GET
-        public async Task<IActionResult> EditConversationForm(int? id, int examId)
+        public async Task<IActionResult> EditConversationForm(int id, int examId)
         {
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
             var conversationForms = await _repository
