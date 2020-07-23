@@ -165,6 +165,7 @@ namespace PRIS.Web.Controllers
             examId = ExamId;
             var student = conversationForms.Select(x => x.ConversationResult?.Student).FirstOrDefault();
             TempData["ConversationResultId"] = student.ConversationResultId;
+            TempData["StudentId"] = student.Id;
             return View(ConversationResultMappings.ToConversationFormViewModel(conversationForms, student, examId));
         }
         [HttpPost]
@@ -173,6 +174,14 @@ namespace PRIS.Web.Controllers
         {
             int.TryParse(TempData["ConversationResultId"].ToString(), out int conversationResultId);
             int.TryParse(TempData["ExamId"].ToString(), out int examId);
+            int.TryParse(TempData["StudentId"].ToString(), out int studentId);
+            var studentFromDatabase = await _repository.FindByIdAsync<Student>(studentId);
+            if (studentFromDatabase.InvitedToStudy == true)
+            {
+                ModelState.AddModelError("ConversationFormEdit", "Studentas yra pakviestas studijuoti, pokalbio anketos redaguoti negalima");
+                TempData["ErrorMessage"] = "Studentas yra pakviestas studijuoti, pokalbio anketos redaguoti negalima";
+                return RedirectToAction("EditConversationForm", "ConversationResults", new { id = conversationResultId });
+            }
             if (ModelState.IsValid)
             {
                 try
