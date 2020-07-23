@@ -41,8 +41,6 @@ namespace PRIS.Web.Controllers
             return View(model);
         }
 
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(int[] studentId, int[] HasInvitedToStudy)
