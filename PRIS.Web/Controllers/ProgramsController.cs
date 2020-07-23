@@ -1,18 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PRIS.Core.Library.Entities;
+using PRIS.Web.Mappings;
+using PRIS.Web.Models;
+using PRIS.Web.Storage;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using PRIS.Web.Data;
-using PRIS.Web.Mappings;
-using PRIS.Web.Models;
-using PRIS.Core.Library.Entities;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Cryptography.X509Certificates;
-using PRIS.Web.Storage;
 
 namespace PRIS.Web.Controllers
 {

@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MoreLinq;
 using PRIS.Core.Library.Entities;
 using PRIS.Web.Mappings;
-using PRIS.Web.Models;
 using PRIS.Web.Models.CourseModels;
 using PRIS.Web.Storage;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PRIS.Web.Controllers
 {
@@ -87,7 +85,7 @@ namespace PRIS.Web.Controllers
             model.Courses = stringCourses;
             var selectedCourse = stringCourses.FirstOrDefault(x => x.Text == courseId);
             model.SelectedPriority = selectedCourse?.Text;
-           
+
             return View(model);
         }
 
@@ -195,8 +193,8 @@ namespace PRIS.Web.Controllers
                             }
                             else
                             {
-                                ModelState.AddModelError("StudentDelete", "Studentas turi būti pasirašęs sutartį, kad būtų galima užrakinti studento duomenis");
-                                TempData["ErrorMessage"] = "Studentas turi būti pasirašęs sutartį, kad būtų galima užrakinti studento duomenis";
+                                ModelState.AddModelError("StudentDelete", "Kandidatas turi būti pasirašęs sutartį, kad būtų galima užrakinti kandidato duomenis");
+                                TempData["ErrorMessage"] = "Kandidatas turi būti pasirašęs sutartį, kad būtų galima užrakinti kandidato duomenis";
                             }
                         }
                     }
@@ -233,7 +231,7 @@ namespace PRIS.Web.Controllers
             return studentEvaluations;
         }
 
-        private static List<StudentEvaluationViewModel> AddFilterOnViewModel(string examId, string courseId, string cityId, string searchString, ref  List<Course> courses, ref List<Student> students)
+        private static List<StudentEvaluationViewModel> AddFilterOnViewModel(string examId, string courseId, string cityId, string searchString, ref List<Course> courses, ref List<Student> students)
         {
             if (examId != null)
             {
