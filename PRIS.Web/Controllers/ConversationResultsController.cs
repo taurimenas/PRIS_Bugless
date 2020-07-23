@@ -178,8 +178,8 @@ namespace PRIS.Web.Controllers
             var studentFromDatabase = await _repository.FindByIdAsync<Student>(studentId);
             if (studentFromDatabase.InvitedToStudy == true)
             {
-                ModelState.AddModelError("ConversationFormEdit", "Studentas yra pakviestas studijuoti, pokalbio anketos redaguoti negalima");
-                TempData["ErrorMessage"] = "Studentas yra pakviestas studijuoti, pokalbio anketos redaguoti negalima";
+                ModelState.AddModelError("ConversationFormEdit", "Kandidatas yra pakviestas studijuoti, pokalbio anketos redaguoti negalima");
+                TempData["ErrorMessage"] = "Kandidatas yra pakviestas studijuoti, pokalbio anketos redaguoti negalima";
                 return RedirectToAction("EditConversationForm", "ConversationResults", new { id = conversationResultId });
             }
             if (ModelState.IsValid)
