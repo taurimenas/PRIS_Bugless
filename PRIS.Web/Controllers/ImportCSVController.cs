@@ -8,6 +8,7 @@ using System.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using CsvHelper;
+using System.Text.RegularExpressions;
 
 namespace PRIS.Web.Controllers
 {
@@ -34,11 +35,19 @@ namespace PRIS.Web.Controllers
             }
             using (StreamReader streamReader = new StreamReader("file.csv"))
             {
-                string line;
-                while ((line = streamReader.ReadLine()) != null)
+                string studentDataFromCSV;
+                while ((studentDataFromCSV = streamReader.ReadLine()) != null)
                 {
-                    Console.WriteLine(line);
+                    Console.WriteLine(studentDataFromCSV);
+                    
+                    var result = studentDataFromCSV.Split(";");
+
+                    foreach (var item in result)
+                    {
+                        Console.WriteLine(item);
+                    }
                 }
+               
             };
 
             return RedirectToAction("Index");
