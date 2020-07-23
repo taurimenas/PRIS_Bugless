@@ -6,8 +6,8 @@
 
 @Html.ActionLink("Grįžti", "Index", "ExamsToConversations", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
 <h3>Kandidatai atrinkti į pokalbį</h3>
-<div class="col-12 border p-3">
-    <table class="table table-bordered " style="width:100%">
+<hr />
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>@Html.DisplayNameFor(model => model.Students.FirstOrDefault().FirstName)</th>
@@ -50,4 +50,3 @@
             }
         </tbody>
     </table>
-</div>
