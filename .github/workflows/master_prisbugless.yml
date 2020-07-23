@@ -31,5 +31,5 @@ jobs:
       with:
         app-name: 'prisbugless'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_491c840872784b978e4919097c15dfb8 }}
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_85A3F9FF397E4CE09AADCA3192A49A4C }}
         package: ${{env.DOTNET_ROOT}}/myapp 
