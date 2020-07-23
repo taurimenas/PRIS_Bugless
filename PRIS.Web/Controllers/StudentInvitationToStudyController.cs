@@ -26,35 +26,6 @@ namespace PRIS.Web.Controllers
         }
         public async Task<IActionResult> Index(string examId, string courseId, string cityId, string searchString, string sortOrder)
         {
-            ViewBag.PercentageGradeSort = string.IsNullOrEmpty(sortOrder) ? "PercentageGrade" : "";
-            ViewBag.ConversationGradeSort = string.IsNullOrEmpty(sortOrder) ? "ConversationGrade" : "";
-            ViewBag.FinalAverageGradeSort = string.IsNullOrEmpty(sortOrder) ? "FinalAverageGrade" : "";
-            ViewBag.PrioritySort = string.IsNullOrEmpty(sortOrder) ? "Priority" : "";
-
-            var exams = await _repository.Query<Exam>()
-                .Include(x => x.Results)
-                .ToListAsync();
-            var stringAcceptancePeriods = new List<SelectListItem>();
-            var filteredExams = exams.DistinctBy(x => x.AcceptancePeriod).ToList();
-            foreach (var ed in filteredExams)
-            {
-                stringAcceptancePeriods.Add(new SelectListItem { Value = filteredExams.FindIndex(a => a == ed).ToString(), Text = ed.AcceptancePeriod });
-            }
-
-            var cities = await _repository.Query<City>().ToListAsync();
-            var stringCities = new List<SelectListItem>();
-            foreach (var c in cities)
-            {
-                stringCities.Add(new SelectListItem { Value = cities.FindIndex(a => a == c).ToString(), Text = c.Name });
-            }
-
-            var courses = await _repository.Query<Course>().ToListAsync();
-            var stringCourses = new List<SelectListItem>();
-            foreach (var p in courses)
-            {
-                stringCourses.Add(new SelectListItem { Value = courses.FindIndex(a => a == p).ToString(), Text = $"{p.Title} {p.StartYear.Year}" });
-            }
-
             var students = await _repository.Query<Student>()
                 .Include(x => x.ConversationResult)
                 .Include(x => x.Result)
@@ -65,13 +36,35 @@ namespace PRIS.Web.Controllers
                 .Where(x => x.PassedExam == true)
                 .ToListAsync();
 
+            var stringAcceptancePeriods = new List<SelectListItem>();
+            var filteredExams = students.Select(x => x.Result.Exam).DistinctBy(x => x.AcceptancePeriod).ToList();
+            foreach (var ed in filteredExams)
+            {
+                stringAcceptancePeriods.Add(new SelectListItem { Value = filteredExams.FindIndex(a => a == ed).ToString(), Text = ed.AcceptancePeriod });
+            }
+
+            var cities = students.Select(x => x.Result.Exam.City).DistinctBy(x => x.Name).ToList();
+            var stringCities = new List<SelectListItem>();
+            foreach (var c in cities)
+            {
+                stringCities.Add(new SelectListItem { Value = cities.FindIndex(a => a == c).ToString(), Text = c.Name });
+            }
+
+            var courses = students.Select(x => x.StudentCourses?.FirstOrDefault(y => y.Priority == 1)?.Course).DistinctBy(x => $"{x.Title} {x.StartYear.Year}").ToList();
+            var stringCourses = new List<SelectListItem>();
+            foreach (var p in courses)
+            {
+                stringCourses?.Add(new SelectListItem { Value = courses?.FindIndex(a => a == p).ToString(), Text = $"{p.Title} {p.StartYear.Year}" });
+            }
+
             if (examId != null)
             {
                 students = students.Where(x => x.Result.Exam.AcceptancePeriod == examId).ToList();
             }
             if (courseId != null)
             {
-                courses = courses.Where(x => x.Title == courseId).ToList();
+                var selected = courses.FirstOrDefault(x => $"{x.Title} {x.StartYear.Year}" == courseId);
+                students = students.Where(x => x.StudentCourses.FirstOrDefault(x => x.Priority == 1).Course == selected).ToList();
             }
             if (cityId != null)
             {
@@ -88,16 +81,20 @@ namespace PRIS.Web.Controllers
                 else invitationToStudy = invitationToStudy.Where(s => s.LastName.Contains(searchString)).ToList();
             }
 
-            invitationToStudy = sortOrder switch
+            var model = StudentInvitationToStudyMappings.ToListViewModel(invitationToStudy);
+            var sort = new Dictionary<string, List<StudentInvitationToStudyViewModel>>
             {
-                "PercentageGrade" => invitationToStudy.OrderByDescending(s => s.PercentageGrade).ToList(),
-                "ConversationGrade" => invitationToStudy.OrderByDescending(s => s.ConversationGrade).ToList(),
-                "FinalAverageGrade" => invitationToStudy.OrderBy(s => s.FinalAverageGrade).ToList(),
-                "Priority" => invitationToStudy.OrderByDescending(s => s.Priority).ToList(),
-                _ => invitationToStudy.OrderByDescending(s => s.FinalAverageGrade).ToList(),
+                { "PercentageGrade", invitationToStudy.OrderByDescending(s => s.PercentageGrade).ToList() },
+                { "ConversationGrade", invitationToStudy.OrderByDescending(s => s.ConversationGrade).ToList() },
+                { "FinalAverageGrade", invitationToStudy.OrderByDescending(s => s.FinalAverageGrade).ToList() },
+                { "Priority", invitationToStudy.OrderByDescending(s => s.Priority).ToList() }
             };
 
-            var model = StudentInvitationToStudyMappings.ToListViewModel(invitationToStudy);
+            if (sortOrder != null)
+            {
+                if (sort.ContainsKey(sortOrder))
+                    model.StudentInvitationToStudy = sort[sortOrder];
+            }
 
             model.AcceptancePeriods = stringAcceptancePeriods;
             var selectedAcceptancePeriods = stringAcceptancePeriods.FirstOrDefault(x => x.Text == examId);
