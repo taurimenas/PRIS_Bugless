@@ -46,49 +46,16 @@ namespace PRIS.Web.Mappings
         }
         public static void EditConversationFormEntity(List<ConversationForm> conversationForm, ConversationFormViewModel model)
         {
-            conversationForm.ElementAt(0).Field = model.Field1;
-            conversationForm.ElementAt(1).Field = model.Field2;
-            conversationForm.ElementAt(2).Field = model.Field3;
-            conversationForm.ElementAt(3).Field = model.Field4;
-            conversationForm.ElementAt(4).Field = model.Field5;
-            conversationForm.ElementAt(5).Field = model.Field6;
-            conversationForm.ElementAt(6).Field = model.Field7;
-            conversationForm.ElementAt(7).Field = model.Field8;
-            conversationForm.ElementAt(8).Field = model.Field9;
-            conversationForm.ElementAt(9).Field = model.Field10;
-        }
-        public static ConversationFormViewModel ToConversationFormViewModel(ConversationForm conversationFormEntity)
-        {
-            return new ConversationFormViewModel
+            for (int i = 0; i < conversationForm.Count(); i++)
             {
-                Id = conversationFormEntity.Id,
-                ConversationFormName = conversationFormEntity.Field,
-                Field1 = conversationFormEntity.Field,
-                Field2 = conversationFormEntity.Field,
-                Field3 = conversationFormEntity.Field,
-                Field4 = conversationFormEntity.Field,
-                Field5 = conversationFormEntity.Field,
-                Field6 = conversationFormEntity.Field,
-                Field7 = conversationFormEntity.Field,
-                Field8 = conversationFormEntity.Field,
-                Field9 = conversationFormEntity.Field,
-                Field10 = conversationFormEntity.Field,
-            };
+                conversationForm.ElementAt(i).Field = model.Fields.ElementAt(i);
+            }
         }
         public static ConversationFormViewModel ToConversationFormViewModel(List<ConversationForm> conversationFormEntity, Student student, int? examId)
         {
             return new ConversationFormViewModel
             {
-                Field1 = conversationFormEntity.ElementAt(0).Field,
-                Field2 = conversationFormEntity.ElementAt(1).Field,
-                Field3 = conversationFormEntity.ElementAt(2).Field,
-                Field4 = conversationFormEntity.ElementAt(3).Field,
-                Field5 = conversationFormEntity.ElementAt(4).Field,
-                Field6 = conversationFormEntity.ElementAt(5).Field,
-                Field7 = conversationFormEntity.ElementAt(6).Field,
-                Field8 = conversationFormEntity.ElementAt(7).Field,
-                Field9 = conversationFormEntity.ElementAt(8).Field,
-                Field10 = conversationFormEntity.ElementAt(9).Field,
+                Fields = conversationFormEntity.Select(x=>x.Field).ToArray(),
                 FirstName = student.FirstName,
                 LastName = student.LastName,
                 StudentId = student.Id,

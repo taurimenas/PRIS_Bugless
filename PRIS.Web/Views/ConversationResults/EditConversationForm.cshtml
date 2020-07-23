@@ -17,65 +17,28 @@
         </div>
         <br />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="input-group">
-            <div class="input-group-prepend row col-12">
-                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field1)</span>
-                <textarea asp-for="Field1" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
+        @{
+            var conversationFormNames = new string[] { 
+                "1. Ar dirba/studijuoja? Jei planuoja tą tęsti ir mokymosi metu – kiek norės skirti laiko kitoms veikloms, ir kaip tikisi suderinti (studijas/ darbą ir mokslus akademijoje)?",
+                "2. Kokios IT veiklos sritys labiausiai domina?",
+                "3. Ko tikisi iš IT akademijos?",
+                "4. Ką norėtų veikti baigęs IT akademiją?",
+                "5. Kas motyvuoja tapti programuotoju/a ar testuotoju/-a? Kodėl nori kurti/testuoti programas?",
+                "6. Kaip domisi IT? Skaito knygas/forumus?",
+                "7. Ar kažką kūrė ar testavo savarankiškai? Žaidimus/puslapius/programėles?",
+                "8. Ar mokėsi mokykloje informatiką? Koks lygis? (optional)",
+                "9. When was the last time you used English - speaking, writing, reading?",
+                "10. Papildomi komentarai" };
+        }
+        @for (int i = 0; i < Model.Fields.Length; i++)
+        {
+            <div class="input-group">
+                <div class="input-group-prepend row col-12">
+                    <span class="input-group-text col-12">@conversationFormNames[i]</span>
+                    <textarea asp-for="Fields[i]" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
+                </div>
             </div>
-        </div>
-        <div class="input-group">
-            <div class="input-group-prepend row col-12">
-                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field2)</span>
-                <textarea asp-for="Field2" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
-            </div>
-        </div>
-        <div class="input-group">
-            <div class="input-group-prepend row col-12">
-                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field3)</span>
-                <textarea asp-for="Field3" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
-            </div>
-        </div>
-        <div class="input-group">
-            <div class="input-group-prepend row col-12">
-                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field4)</span>
-                <textarea asp-for="Field4" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
-            </div>
-        </div>
-        <div class="input-group">
-            <div class="input-group-prepend row col-12">
-                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field5)</span>
-                <textarea asp-for="Field5" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
-            </div>
-        </div>
-        <div class="input-group">
-            <div class="input-group-prepend row col-12">
-                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field6)</span>
-                <textarea asp-for="Field6" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
-            </div>
-        </div>
-        <div class="input-group">
-            <div class="input-group-prepend row col-12">
-                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field7)</span>
-                <textarea asp-for="Field7" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
-            </div>
-        </div>
-        <div class="input-group">
-            <div class="input-group-prepend row col-12">
-                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field8)</span>
-                <textarea asp-for="Field8" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
-            </div>
-        </div>        <div class="input-group">
-            <div class="input-group-prepend row col-12">
-                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field9)</span>
-                <textarea asp-for="Field9" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
-            </div>
-        </div>        <div class="input-group">
-            <div class="input-group-prepend row col-12">
-                <span class="input-group-text col-12">@Html.DisplayNameFor(model => model.Field10)</span>
-                <textarea asp-for="Field10" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
-            </div>
-        </div>
-
+        }
         <br />
         <div class="form-group">
             <input type="submit" value="Išsaugoti" class="btn btn-primary" />
