@@ -37,12 +37,17 @@ namespace PRIS.Web.Controllers
             List<StudentViewModel> studentViewModels = new List<StudentViewModel>();
             passedStudents.ForEach(x => studentViewModels.Add(ConversationResultMappings.ToStudentViewModel(x)));
             var exam = await _repository.Query<Exam>().Include(x => x.City).FirstOrDefaultAsync(x => x.Id == id);
+
             List<ConversationResultViewModel> conversationResultViewModel = new List<ConversationResultViewModel>();
             conversationResult.ForEach(x => conversationResultViewModel.Add(ConversationResultMappings.ToConversationResultViewModel(x)));
             conversationResultViewModel.ForEach(x => x.ExamCityAndDate = $"{exam.City.Name}, {exam.Date.ToShortDateString()}");
-            ConversationResultMappings.ToStudentAndConversationResultViewModel(studentViewModels, conversationResultViewModel, id);
 
-            return View(ConversationResultMappings.ToStudentAndConversationResultViewModel(studentViewModels, conversationResultViewModel, id));
+            List<ConversationFormViewModel> conversationFormViewModels = new List<ConversationFormViewModel>();
+
+
+            ConversationResultMappings.ToStudentAndConversationResultViewModel(studentViewModels, conversationResultViewModel, id, conversationFormViewModels);
+
+            return View(ConversationResultMappings.ToStudentAndConversationResultViewModel(studentViewModels, conversationResultViewModel, id, conversationFormViewModels));
 
         }
         //GET
@@ -128,5 +133,69 @@ namespace PRIS.Web.Controllers
             return RedirectToAction("EditConversationResult", "ConversationResults", new { id = studentId });
         }
 
+        //GET
+        public async Task<IActionResult> EditConversationForm(int id)
+        {
+            int.TryParse(TempData["ExamId"].ToString(), out int examId);
+            var conversationForms = await _repository
+                .Query<ConversationForm>()
+                .Include(x => x.ConversationResult)
+                .ThenInclude(x => x.Student)
+                .Where(x => x.ConversationResultId == id)
+                .ToListAsync();
+            List<ConversationForm> newConversationForms = new List<ConversationForm>();
+            if (conversationForms.Count() == 0)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    newConversationForms.Add(new ConversationForm { ConversationResultId = id });
+                    await _repository.InsertAsync<ConversationForm>(newConversationForms.ElementAt(i));
+                }
+                conversationForms = newConversationForms;
+                conversationForms = await _repository
+                    .Query<ConversationForm>()
+                    .Include(x => x.ConversationResult)
+                    .ThenInclude(x => x.Student)
+                    .Where(x => x.ConversationResultId == id)
+                    .ToListAsync();
+            }
+            TempData["ExamId"] = examId;
+            var student = conversationForms.Select(x => x.ConversationResult?.Student).FirstOrDefault();
+            TempData["ConversationResultId"] = student.ConversationResultId;
+            TempData["StudentId"] = student.Id;
+            return View(ConversationResultMappings.ToConversationFormViewModel(conversationForms, student, examId));
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditConversationForm(ConversationFormViewModel model)
+        {
+            int.TryParse(TempData["ConversationResultId"].ToString(), out int conversationResultId);
+            int.TryParse(TempData["ExamId"].ToString(), out int examId);
+            int.TryParse(TempData["StudentId"].ToString(), out int studentId);
+            var studentFromDatabase = await _repository.FindByIdAsync<Student>(studentId);
+            if (studentFromDatabase.InvitedToStudy == true)
+            {
+                ModelState.AddModelError("ConversationFormEdit", "Kandidatas yra pakviestas studijuoti, pokalbio anketos redaguoti negalima");
+                TempData["ErrorMessage"] = "Kandidatas yra pakviestas studijuoti, pokalbio anketos redaguoti negalima";
+                return RedirectToAction("EditConversationForm", "ConversationResults", new { id = conversationResultId });
+            }
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var conversationForm = await _repository.Query<ConversationForm>().Where(x => x.ConversationResultId == conversationResultId).ToListAsync();
+                    ConversationResultMappings.EditConversationFormEntity(conversationForm, model);
+                    await _repository.SaveAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    throw;
+                }
+                return RedirectToAction("Index", "ConversationResults", new { id = examId });
+            }
+            return RedirectToAction("EditConversationForm", "ConversationResults", new { id = conversationResultId });
+
+
+        }
     }
 }
