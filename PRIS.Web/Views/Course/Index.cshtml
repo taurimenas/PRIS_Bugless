@@ -55,7 +55,7 @@
 <hr />
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 
-<table class="table table-bordered">
+<table class="table table-bordered AnalizeTable">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().FirstName)</th>
@@ -127,4 +127,24 @@
     function callChangefunc(name, value) {
         window.location.href = `/Course/Index?${name}=${value}`;
     }
+    $.extend(true, $.fn.dataTable.defaults, {
+        "searching": true,
+        "ordering": false
+    })
+    $('.AnalizeTable').DataTable({
+        language: {
+            search: "Paieška",
+            info: "Nuo _START_ iki _END_ iš _TOTAL_ įrašų",
+            "lengthMenu": "Rodyti _MENU_ įrašų",
+            zeroRecords: "Įrašų nerasta",
+            infoEmpty: "Įrašai rodomi nuo 0 iki 0 iš 0 įrašų",
+            infoFiltered: "(ieškota iš _MAX_ įrašų)",
+            paginate: {
+                first: "Pirmas",
+                previous: "Ankstesnis",
+                next: "Sekantis",
+                last: "Paskutinis",
+            }
+        }
+    });
 </script>
