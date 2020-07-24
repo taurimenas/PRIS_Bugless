@@ -15,7 +15,7 @@
 
     <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 
-    <table class="table table-bordered dataTablesPagination">
+    <table class="table table-bordered ResultsTable">
         <thead>
             <tr>
                 <th>
@@ -99,12 +99,13 @@
 </form>
 
 <script>
-    var points = document.getElementsByClassName("points");
-    var items = [];
-    for (var i = 0; i < points.length; i++) {
-        items.push({ points: parseInt(points[i].innerText), id: points[i].id });
-    }
+
     function clickThis(e, id) {
+        var points = document.getElementsByClassName("points");
+        var items = [];
+        for (var i = 0; i < points.length; i++) {
+            items.push({ points: parseInt(points[i].innerText), id: points[i].id });
+        }
         var theOne = items.find(i => i.id === id).points
         var theOneCheckBox = document.getElementById(`checkbox-${id}`);
         if (!theOneCheckBox.checked) {
@@ -126,7 +127,7 @@
         "searching": true,
         "ordering": false
     })
-    $('.dataTablesPagination').DataTable({
+    $('.ResultsTable').DataTable({
         language: {
             search: "Paieška",
             info: "Nuo _START_ iki _END_ iš _TOTAL_ įrašų",
