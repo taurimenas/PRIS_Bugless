@@ -15,7 +15,7 @@
 
     <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 
-    <table class="table table-bordered">
+    <table class="table table-bordered dataTablesPagination">
         <thead>
             <tr>
                 <th>
@@ -95,8 +95,9 @@
             }
         </tbody>
     </table>
-    <input type="submit" value="Išsaugoti kviečiamus studentus" class="btn btn-secondary float-right mr-5" />
+    <input type="submit" value="Išsaugoti kviečiamus studentus" class="btn btn-secondary float-right mt-3" />
 </form>
+
 <script>
     var points = document.getElementsByClassName("points");
     var items = [];
@@ -121,7 +122,28 @@
             })
         }
     }
+    $.extend(true, $.fn.dataTable.defaults, {
+        "searching": true,
+        "ordering": false
+    })
+    $('.dataTablesPagination').DataTable({
+        language: {
+            search: "Paieška",
+            info: "Nuo _START_ iki _END_ iš _TOTAL_ įrašų",
+            "lengthMenu": "Rodyti _MENU_ įrašų",
+            zeroRecords: "Įrašų nerasta",
+            infoEmpty: "Įrašai rodomi nuo 0 iki 0 iš 0 įrašų",
+            infoFiltered: "(ieškota iš _MAX_ įrašų)",
+            paginate: {
+                first: "Pirmas",
+                previous: "Ankstesnis",
+                next: "Sekantis",
+                last: "Paskutinis",
+            }
+        }
+    });
 </script>
+
 
 
 
