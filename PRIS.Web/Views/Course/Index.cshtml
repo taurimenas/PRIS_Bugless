@@ -65,16 +65,16 @@
                 @Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().PhoneNumber)
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PercentageGradeSort">@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().FinalTestPoints)</a>
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().FinalTestPoints), "Index", new { sortOrder = "PercentageGrade" })
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.ConversationGradeSort">@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().ConversationGrade)</a>
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().ConversationGrade), "Index", new { sortOrder = "ConversationGrade" })
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.FinalAverageGradeSort">Galutinis balas</a>
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().FinalAverageGrade), "Index", new { sortOrder = "FinalAverageGrade" })
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PrioritySort">I Prioritetas</a>
+                @Html.ActionLink(@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().Priority), "Index", new { sortOrder = "Priority" })
             </th>
             <th>
                 II Prioritetas
