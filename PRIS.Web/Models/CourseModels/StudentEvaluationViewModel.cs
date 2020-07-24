@@ -22,9 +22,13 @@ namespace PRIS.Web.Models.CourseModels
         [Display(Name = "Pokalbis")]
         public double? ConversationGrade { get; set; }
         [DisplayFormat(DataFormatString = "{0:F2}")]
+        [Display(Name = "Bendras vidurkis")]
         public double? FinalAverageGrade { get; set; }
+        [Display(Name = "I Prioritetas")]
         public string Priority { get; set; }
+        [Display(Name = "II Prioritetas")]
         public string Priority2 { get; set; }
+        [Display(Name = "III Prioritetas")]
         public string Priority3 { get; set; }
         public int? CityId { get; set; }
         public int? ExamId { get; set; }

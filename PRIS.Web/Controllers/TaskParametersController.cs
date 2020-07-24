@@ -25,17 +25,23 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-            return View(TaskParametersMappings.ToTaskParameterViewModel(tasks));
+            var setTaskParameterModel = TaskParametersMappings.ToTaskParameterViewModel(tasks);
+            setTaskParameterModel.TaskString = new string[setTaskParameterModel.Tasks.Length];
+            for (int i = 0; i < setTaskParameterModel.TaskString.Length; i++)
+            {
+                setTaskParameterModel.TaskString[i] = setTaskParameterModel.Tasks[i].ToString().Replace(",", ".");
+            }
+            return View(setTaskParameterModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, double[] tasks)
+        public async Task<ActionResult> Edit(int id, string[] tasksString)
         {
             int.TryParse(TempData["Count"].ToString(), out int studentsCountInAcceptancePeriod);
             int.TryParse(TempData["SelectedAcceptancePeriod"].ToString(), out int SelectedAcceptancePeriod);
             TempData["ExamId"] = id;
-
+            double[] tasks = new double[tasksString.Length];
             if (studentsCountInAcceptancePeriod > 0)
             {
                 TempData["ErrorMessage"] = "Šablono keisti negalima, nes prie jo jau yra priskirta kandidatų.";
@@ -51,6 +57,10 @@ namespace PRIS.Web.Controllers
                 }
                 if (ModelState.IsValid)
                 {
+                    for (int i = 0; i < tasksString.Length; i++)
+                    {
+                        tasks[i] = double.Parse(tasksString[i], System.Globalization.CultureInfo.InvariantCulture);
+                    }
                     TaskParametersMappings.EditTaskParametersEntity(exam, tasks);
                     await _context.SaveChangesAsync();
                     return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");
