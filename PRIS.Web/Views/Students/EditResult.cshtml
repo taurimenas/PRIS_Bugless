@@ -37,7 +37,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">@taskNames[i]</span>
                 </div>
-                <input name="Tasks" type="number" step="0.5" min="0" asp-for="@Model.Tasks[i]" class="form-control" required
+                <input name="tasksString" type="number" step="0.5" min="0" asp-for="@Model.TasksString[i]" class="form-control" required
                        oninvalid="this.setCustomValidity('Balas neįvestas arba įvestas mažiau negu 0')"
                        oninput="this.setCustomValidity('')">
             }

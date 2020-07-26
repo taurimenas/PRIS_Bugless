@@ -20,7 +20,7 @@ namespace PRIS.Web.Controllers
             _repository = repository;
         }
         public async Task<IActionResult> Index(string examId, string courseId, string cityId, string searchString, string sortOrder)
-        {
+        {           
             var students = await _repository.Query<Student>()
                 .Include(x => x.ConversationResult)
                 .Include(x => x.Result)
@@ -54,7 +54,8 @@ namespace PRIS.Web.Controllers
                     findStudents.InvitedToStudy = true;
                 }
                 await _repository.SaveAsync();
-                return RedirectToAction("Index", "StudentInvitationToStudy");
+                var currentUrl = HttpContext.Request.Headers["Referer"];
+                return Redirect(currentUrl);
             }
             return RedirectToAction("Index", "Home");
         }
@@ -80,7 +81,10 @@ namespace PRIS.Web.Controllers
                 var student = await _repository.FindByIdAsync<Student>(model.Id);
                 student.Comment = model.Comment;
                 await _repository.SaveAsync();
-                return RedirectToAction("Index", "StudentInvitationToStudy");
+
+                var currentUrl = HttpContext.Request.Headers["Referer"];
+                return Redirect(currentUrl);
+
             }
             return RedirectToAction("Index", "Home");
         }
