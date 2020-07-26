@@ -98,7 +98,7 @@ namespace PRIS.Web.Controllers
                 return NotFound();
             }
             var programById = await _repository.FindByIdAsync<Core.Library.Entities.Program>(id);
-            var course = await _repository.FindByIdAsync<Course>(id);
+            var course = await _repository.Query<Course>().FirstOrDefaultAsync(x => x.Title == program.Name);
             if (course != null)
             {
                 return await BadRequest(course, "Programos negalima ištrinti, nes prie jos jau yra priskirta kandidatų.");
