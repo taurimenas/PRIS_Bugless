@@ -1,0 +1,47 @@
+﻿@model PRIS.Web.Models.ConversationFormViewModel
+
+@{
+    ViewData["Title"] = "EditConversationResult";
+}
+@Html.ActionLink("Grįžti", "Index", "ConversationResults", new { id = Model.ExamId }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
+<h4>Redaguoti pokalbio anketą</h4>
+<hr />
+<div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
+<div class="row pl-3">
+    <form asp-action="EditConversationForm">
+        <div>
+            Kandidatas:
+            @Html.DisplayFor(model => model.FirstName)
+
+            @Html.DisplayFor(model => model.LastName)
+        </div>
+        <br />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @{
+            var conversationFormNames = new string[] { 
+                "1. Ar dirba/studijuoja? Jei planuoja tą tęsti ir mokymosi metu – kiek norės skirti laiko kitoms veikloms, ir kaip tikisi suderinti (studijas/ darbą ir mokslus akademijoje)?",
+                "2. Kokios IT veiklos sritys labiausiai domina?",
+                "3. Ko tikisi iš IT akademijos?",
+                "4. Ką norėtų veikti baigęs IT akademiją?",
+                "5. Kas motyvuoja tapti programuotoju/a ar testuotoju/-a? Kodėl nori kurti/testuoti programas?",
+                "6. Kaip domisi IT? Skaito knygas/forumus?",
+                "7. Ar kažką kūrė ar testavo savarankiškai? Žaidimus/puslapius/programėles?",
+                "8. Ar mokėsi mokykloje informatiką? Koks lygis? (optional)",
+                "9. When was the last time you used English - speaking, writing, reading?",
+                "10. Papildomi komentarai" };
+        }
+        @for (int i = 0; i < Model.Fields.Length; i++)
+        {
+            <div class="input-group">
+                <div class="input-group-prepend row col-12">
+                    <span class="input-group-text col-12">@conversationFormNames[i]</span>
+                    <textarea asp-for="Fields[i]" type="text" class="form-control mb-3" aria-label="With textarea"></textarea>
+                </div>
+            </div>
+        }
+        <br />
+        <div class="form-group">
+            <input type="submit" value="Išsaugoti" class="btn btn-primary" />
+        </div>
+    </form>
+</div>

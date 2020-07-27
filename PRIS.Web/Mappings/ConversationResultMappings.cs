@@ -1,10 +1,7 @@
 ﻿using PRIS.Core.Library.Entities;
-using PRIS.Web.Data.Migrations;
 using PRIS.Web.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace PRIS.Web.Mappings
 {
@@ -21,7 +18,7 @@ namespace PRIS.Web.Mappings
                 PhoneNumber = studentEntity.PhoneNumber,
                 ConversationResultComment = conversationResultEntity.Comment,
                 ConversationResultId = (int)studentEntity.ConversationResultId,
-                Grade = conversationResultEntity.Grade == null?0:conversationResultEntity.Grade,
+                Grade = conversationResultEntity.Grade == null ? 0 : conversationResultEntity.Grade,
                 ExamId = examId
             };
         }
@@ -37,14 +34,32 @@ namespace PRIS.Web.Mappings
                 FirstName = model.FirstName,
             };
         }
-        public static ConversationAndStudentViewModel ToStudentAndConversationResultViewModel(List<StudentViewModel> studentViewModels, List<ConversationResultViewModel> conversationResultViewModels, int? examId)
+        public static ConversationAndStudentViewModel ToStudentAndConversationResultViewModel(List<StudentViewModel> studentViewModels, List<ConversationResultViewModel> conversationResultViewModels, int? examId, List<ConversationFormViewModel> conversationFormViewModels)
         {
             return new ConversationAndStudentViewModel
             {
                 Students = studentViewModels,
                 ConvResults = conversationResultViewModels,
+                ExamId = examId,
+                ConversationForm = conversationFormViewModels
+            };
+        }
+        public static void EditConversationFormEntity(List<ConversationForm> conversationForm, ConversationFormViewModel model)
+        {
+            for (int i = 0; i < conversationForm.Count(); i++)
+            {
+                conversationForm.ElementAt(i).Field = model.Fields.ElementAt(i);
+            }
+        }
+        public static ConversationFormViewModel ToConversationFormViewModel(List<ConversationForm> conversationFormEntity, Student student, int? examId)
+        {
+            return new ConversationFormViewModel
+            {
+                Fields = conversationFormEntity.Select(x=>x.Field).ToArray(),
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                StudentId = student.Id,
                 ExamId = examId
-
             };
         }
         public static StudentViewModel ToStudentViewModel(Student studentEntity)
@@ -59,14 +74,14 @@ namespace PRIS.Web.Mappings
             };
         }
         public static ConversationResultViewModel ToConversationResultViewModel(ConversationResult conversationResultEntity)
-        {   
-            if(conversationResultEntity == null)
+        {
+            if (conversationResultEntity == null)
             {
                 return new ConversationResultViewModel
                 {
                     Grade = null,
                     ConversationResultComment = null,
-                };   
+                };
             }
             return new ConversationResultViewModel
             {

@@ -1,7 +1,5 @@
 ﻿using PRIS.Core.Library.Entities;
 using PRIS.Web.Models;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 
 namespace PRIS.Web.Mappings

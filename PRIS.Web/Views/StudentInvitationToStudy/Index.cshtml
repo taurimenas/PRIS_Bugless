@@ -62,16 +62,16 @@
                     @Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().PhoneNumber)
                 </th>
                 <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.PercentageGradeSort">@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().FinalTestPoints)</a>
+                    @Html.ActionLink(@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().FinalTestPoints), "Index", new { sortOrder = "PercentageGrade" })
                 </th>
                 <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.ConversationGradeSort">@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().ConversationGrade)</a>
+                    @Html.ActionLink(@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().ConversationGrade), "Index", new { sortOrder = "ConversationGrade" })
                 </th>
                 <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.FinalAverageGradeSort">@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().FinalAverageGrade)</a>
+                    @Html.ActionLink(@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().FinalAverageGrade), "Index", new { sortOrder = "FinalAverageGrade" })
                 </th>
                 <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.PrioritySort">@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().Priority)</a>
+                    @Html.ActionLink(@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().Priority), "Index", new { sortOrder = "Priority" })
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().InvitedToStudy)
@@ -112,6 +112,7 @@
                     </td>
                     <td class="text-center">
                         <input type="checkbox" name="HasInvitedToStudy" asp-for="@Model.StudentInvitationToStudy[i].InvitedToStudy" value="@Model.StudentInvitationToStudy[i].Id" id="checkbox-@Model.StudentInvitationToStudy[i].Id" class="checkbox-inline text-center">
+                        @Html.ActionLink("", "EditComment", "StudentInvitationToStudy", new { id = Model.StudentInvitationToStudy[i].Id }, new { @class = "fa fa-comments text-secondary float-right" })
                     </td>
                 </tr>
             }

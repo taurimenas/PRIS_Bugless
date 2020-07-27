@@ -1,12 +1,7 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using PRIS.Core.Library;
 using PRIS.Core.Library.Entities;
 using PRIS.Web.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using PRIS.Core.Library;
+using System.Text.Json;
 
 namespace PRIS.Web.Mappings
 {

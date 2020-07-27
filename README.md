@@ -1,2 +1,2 @@
 # PRIS_Bugless
-https://buglesspris.azurewebsites.net/
+https://prisbugless.azurewebsites.net/

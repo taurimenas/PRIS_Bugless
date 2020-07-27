@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using PRIS.Web.Data;
 using PRIS.Web.Mappings;
-using PRIS.Web.Models;
+using System.Threading.Tasks;
 
 namespace PRIS.Web.Controllers
 {

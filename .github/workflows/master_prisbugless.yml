@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - buglesspris
+name: Build and deploy ASP.Net Core app to Azure Web App - prisbugless
 
 on:
   push:
@@ -24,12 +24,12 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: dotnet publish
-      run: dotnet publish PRIS.Web/PRIS.Web.csproj --configuration Release -o ./output/
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v1
       with:
-        app-name: 'buglesspris'
+        app-name: 'prisbugless'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_e28797b9fd8449c299c6d3d5f90149a2 }}
-        package: ./output/ 
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_85A3F9FF397E4CE09AADCA3192A49A4C }}
+        package: ${{env.DOTNET_ROOT}}/myapp 

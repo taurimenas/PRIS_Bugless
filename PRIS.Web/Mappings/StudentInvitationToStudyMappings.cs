@@ -1,10 +1,8 @@
 ﻿using PRIS.Core.Library.Entities;
 using PRIS.Web.Models.InvitationToStudyModel;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace PRIS.Web.Mappings
 {
@@ -53,6 +51,12 @@ namespace PRIS.Web.Mappings
             {
                 StudentInvitationToStudy = studentInvitationToStudy,
             };
+        }
+        public static Student EditEntity(Student student, StudentComment studentFromModel)
+        {
+            student.Id = studentFromModel.Id;
+            student.Comment = studentFromModel.Comment;
+            return student;
         }
     }
 }

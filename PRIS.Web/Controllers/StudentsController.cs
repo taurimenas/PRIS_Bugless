@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
-using Microsoft.Extensions.Caching.Memory;
 using PRIS.Core.Library.Entities;
-using PRIS.Web.Data;
 using PRIS.Web.Mappings;
 using PRIS.Web.Models;
 using PRIS.Web.Storage;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace PRIS.Web.Controllers
 {
@@ -214,8 +208,8 @@ namespace PRIS.Web.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("StudentDelete", "Toks studentas neegzistuoja.");
-                    TempData["ErrorMessage"] = "Toks studentas neegzistuoja.";
+                    ModelState.AddModelError("StudentDelete", "Toks kandidatas neegzistuoja.");
+                    TempData["ErrorMessage"] = "Toks kandidatas neegzistuoja.";
                     return RedirectToAction("Index", "Students", new { id = ExamId });
                 }
                 return RedirectToAction("Index", "Students", new { id = ExamId });
@@ -299,8 +293,8 @@ namespace PRIS.Web.Controllers
             }
             if (student.StudentDataLocked == true)
             {
-                ModelState.AddModelError("StudentEdit", "Studento duomenys yra užrakinti, redaguoti studento negalima");
-                TempData["ErrorMessage"] = "Studento duomenys yra užrakinti, redaguoti studento negalima";
+                ModelState.AddModelError("StudentEdit", "Kandidato duomenys yra užrakinti, redaguoti kandidato negalima");
+                TempData["ErrorMessage"] = "Kandidato duomenys yra užrakinti, redaguoti kandidato negalima";
                 return RedirectToAction("Edit", "Students", new { id = student.Id });
             }
             if (ModelState.IsValid)
@@ -399,7 +393,7 @@ namespace PRIS.Web.Controllers
                     
                     if (student.PassedExam)
                     {
-                        TempData["ErrorMessage"] = "Studentas yra pakviestas į pokalbį, todėl jo duomenų negalima redaguoti.";
+                        TempData["ErrorMessage"] = "Kandidatas yra pakviestas į pokalbį, todėl jo duomenų negalima redaguoti.";
                         return RedirectToAction("EditResult", "Students", new { resultId });
                     }
 
