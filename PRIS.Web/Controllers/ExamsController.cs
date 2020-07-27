@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PRIS.Core.Library.Entities;
 using PRIS.Web.Mappings;
 using PRIS.Web.Models;
@@ -17,14 +18,22 @@ namespace PRIS.Web.Controllers
     public class ExamsController : Controller
     {
         private readonly IRepository _repository;
+        private readonly ILogger<ExamsController> _logger;
+        private readonly string _user;
 
-        public ExamsController(IRepository repository)
+        public ExamsController(IRepository repository, ILogger<ExamsController> logger, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
+            _logger = logger;
+            _user = httpContextAccessor.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value;
         }
 
         public async Task<IActionResult> Index(int value, [Bind("SelectedCity")] ExamsViewModel viewModel)
         {
+            //_logger.LogInformation("This is an information log");
+            //_logger.LogWarning("This is a warning log");
+            //_logger.LogError("Error");
+            //_logger.LogCritical("Critical");
             var exams = await _repository.Query<Exam>()
                 .Include(exam => exam.City)
                 .ToListAsync();
@@ -55,6 +64,7 @@ namespace PRIS.Web.Controllers
                 studentsCountInAcceptancePeriod += results.Count(x => x.ExamId == examId);
             }
             TempData["Count"] = studentsCountInAcceptancePeriod;
+            _logger.LogInformation("Found {Count} records. At {Time}. User {User}.", viewModel.ExamViewModels.Count(), DateTime.UtcNow, _user);
             return View(viewModel);
         }
 
@@ -84,7 +94,6 @@ namespace PRIS.Web.Controllers
                 var latestDate = _repository.Query<Exam>()
                                 .OrderBy(x => x.Created)
                                 .LastOrDefault();
-
                 var exam = ExamMappings.ToEntity(examViewModel);
                 var city = await _repository.Query<City>().FirstOrDefaultAsync(x => x.Name == examViewModel.SelectedCity);
                 exam.CityId = city.Id;
@@ -93,7 +102,12 @@ namespace PRIS.Web.Controllers
                 {
                     exam.Tasks = latestDate.Tasks;
                     await _repository.InsertAsync(exam);
+                    _logger.LogInformation("New exam added to DB. At {Time}. User {User}.", DateTime.UtcNow, _user);
                     return Redirect(previousUrl);
+                }
+                else
+                {
+                    _logger.LogWarning("Exam was null. Nothing added to DB. At {Time}. User {User}.", DateTime.UtcNow, _user);
                 }
                 await _repository.InsertAsync(exam);
                 return Redirect(previousUrl);
@@ -105,6 +119,7 @@ namespace PRIS.Web.Controllers
         {
             if (id == null)
             {
+                _logger.LogWarning("Exam not found. At {Time}", DateTime.UtcNow);
                 return NotFound();
             }
 
@@ -112,6 +127,7 @@ namespace PRIS.Web.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (exam == null)
             {
+                _logger.LogWarning("Can not find exam by provided id. At {Time}. User {User}.", DateTime.UtcNow, _user);
                 return NotFound();
             }
             var examById = await _repository.FindByIdAsync<Exam>(id);
@@ -120,23 +136,28 @@ namespace PRIS.Web.Controllers
 
             if (result != null)
             {
+                _logger.LogInformation("Exam has result.");
                 var studentById = await _repository.FindByIdAsync<Student>(result.StudentForeignKey);
                 if (studentById != null)
                 {
+                    _logger.LogWarning("Unsuccessful exam delete, exam has one or more students that have passed exam. At {Time}. User {User}.", DateTime.UtcNow, _user);
                     TempData["ErrorMessage"] = "Testo negalima ištrinti, nes prie jo jau yra priskirta testą išlaikiusių kandidatų.";
                     ModelState.AddModelError("AssignedStudent", "Testo negalima ištrinti, nes prie jo jau yra priskirta testą išlaikiusių kandidatų.");
                 }
                 else
                 {
                     await RemoveFromExams(examById);
+                    _logger.LogInformation("Exam {City} {Date} deleted from DB. At {Time}", examById.City, examById.Date, DateTime.UtcNow);
                     return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");
                 }
                 return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");
             }
             else
             {
+                _logger.LogInformation("Exam has no result.");
                 var oldestExam = await _repository.Query<Exam>().OrderBy(m => m.Date).FirstOrDefaultAsync();
                 await RemoveFromExams(examById);
+                _logger.LogInformation("Exam {City} {Date} deleted from DB. At {Time}. User {User}.", examById.City, examById.Date, DateTime.UtcNow, _user);
                 if (examById.Date == oldestExam.Date)
                     return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod - 1}");
                 return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");
@@ -175,7 +196,6 @@ namespace PRIS.Web.Controllers
                 }
                 await _repository.SaveAsync();
             }
-
             return AcceptancePeriod;
         }
     }
