@@ -52,79 +52,82 @@
 </h3>
 <hr />
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
+<div class="text-success">@ViewContext.TempData["SuccessMessage"]</div>
 <form asp-action="LockingOfStudentData">
     <table class="table table-bordered">
         <thead>
             <tr class="text-center">
-                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FirstName), 
-                @Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().LastName)</th>
-                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Email)</th>
-                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().PhoneNumber)</th>
                 <th>
-                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.PercentageGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalTestPoints)</a>
-                </th>
-                <th>
-                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.ConversationGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().ConversationGrade)</a>
-                </th>
-                <th>
-                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.FinalAverageGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalAverageGrade)</a>
-                </th>
-                <th>
-                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.PrioritySort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Priority)</a>
-                </th>
-                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().SignedAContract)</th>
-                <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().StudentDataLocked)</th>
+                    @Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FirstName),
+                @Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().LastName)
+            </th>
+            <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Email)</th>
+            <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().PhoneNumber)</th>
+            <th>
+                <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.PercentageGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalTestPoints)</a>
+            </th>
+            <th>
+                <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.ConversationGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().ConversationGrade)</a>
+            </th>
+            <th>
+                <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.FinalAverageGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalAverageGrade)</a>
+            </th>
+            <th>
+                <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.PrioritySort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Priority)</a>
+            </th>
+            <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().SignedAContract)</th>
+            <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().StudentDataLocked)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.StudentDataLocking.Count(); i++)
+        {
+            <tr>
+                <td>
+                    <a asp-action="Edit" asp-controller="Students" asp-route-id="@Model.StudentDataLocking[i].Id">
+                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].FirstName)
+                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].LastName)
+                    </a>
+                    <input type="hidden" name="studentId" value="@Model.StudentDataLocking[i].Id" class="text" asp-for="@Model.StudentDataLocking[i].FirstName" />
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].PhoneNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].FinalTestPoints)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].ConversationGrade)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].FinalAverageGrade)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].Priority)
+                </td>
+                <td class="text-center">
+                    @if (@Model.StudentDataLocking[i].StudentDataLocked == true)
+                    {
+                        <input type="checkbox" checked="checked" disabled="disabled" />
+                        <input type="hidden" name="HasSignedAContract" asp-for="@Model.StudentDataLocking[i].SignedAContract" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">
+                    }
+                    else
+                    {
+                        <input type="checkbox" name="HasSignedAContract" asp-for="@Model.StudentDataLocking[i].SignedAContract" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">
+                    }
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" name="HasStudentDataLocked" asp-for="@Model.StudentDataLocking[i].StudentDataLocked" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @for (int i = 0; i < Model.StudentDataLocking.Count(); i++)
-            {
-                <tr>
-                    <td>
-                        <a asp-action="Edit" asp-controller="Students" asp-route-id="@Model.StudentDataLocking[i].Id">
-                            @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].FirstName)
-                            @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].LastName)
-                        </a>
-                        <input type="hidden" name="studentId" value="@Model.StudentDataLocking[i].Id" class="text" asp-for="@Model.StudentDataLocking[i].FirstName" />
-                    </td>
-                   
-                    <td>
-                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].Email)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].PhoneNumber)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].FinalTestPoints)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].ConversationGrade)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].FinalAverageGrade)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => modelItem.StudentDataLocking[i].Priority)
-                    </td>
-                    <td class="text-center">
-                      @if (@Model.StudentDataLocking[i].StudentDataLocked == true)
-                       {
-                            <input type="checkbox" checked="checked" disabled="disabled" />
-                            <input type="hidden" name="HasSignedAContract" asp-for="@Model.StudentDataLocking[i].SignedAContract" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">
-                       }
-                       else
-                        {
-                            <input type="checkbox" name="HasSignedAContract" asp-for="@Model.StudentDataLocking[i].SignedAContract" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">
-                       }
-                    </td>
-                    <td class="text-center">
-                        <input type="checkbox" name="HasStudentDataLocked" asp-for="@Model.StudentDataLocking[i].StudentDataLocked" value="@Model.StudentDataLocking[i].Id" id="checkbox-@Model.StudentDataLocking[i].Id" class="checkbox-inline text-center">
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <input type="submit" value="Išsaugoti" class="btn btn-secondary float-right mr-5" />
+        }
+    </tbody>
+</table>
+<input type="submit" value="Išsaugoti" class="btn btn-secondary float-right mr-5" />
 </form>
 
 <script>

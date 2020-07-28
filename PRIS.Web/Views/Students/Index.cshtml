@@ -15,6 +15,7 @@
     <a asp-controller="ImportCSV" asp-action="Index" class="float-right">Įkelti studentų sąrašą iš CSV </a>
 
     <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
+    <div class="text-success">@ViewContext.TempData["SuccessMessage"]</div>
 
     <table class="table table-bordered">
         <thead>

@@ -45,13 +45,9 @@ namespace PRIS.Web.Controllers
                 return RedirectToAction("ImportCSV", "Index");
             }
             int.TryParse(TempData["ExamId"].ToString(), out int examId);
-            var dir = _environment.ContentRootPath;
-            using (var fileStream = new FileStream(Path.Combine(dir, "file.csv"), FileMode.Create, FileAccess.Write))
-            {
-                file.CopyTo(fileStream);
-            }
+            
             var programs = await _repository.Query<Core.Library.Entities.Program>().ToListAsync();
-            using (StreamReader streamReaderValidation = new StreamReader("file.csv"))
+            using (StreamReader streamReaderValidation = new StreamReader(file.OpenReadStream()))
             {
                 string dataFromCSV;
                 while ((dataFromCSV = streamReaderValidation.ReadLine()) != null)
@@ -93,7 +89,7 @@ namespace PRIS.Web.Controllers
                     }
                 }
             }
-            using (StreamReader streamReader = new StreamReader("file.csv"))
+            using (StreamReader streamReader = new StreamReader(file.OpenReadStream()))
             {
                 string studentDataFromCSV;
                 while ((studentDataFromCSV = streamReader.ReadLine()) != null)
