@@ -12,6 +12,7 @@
     </h4>
     <hr />
     <a asp-action="Create">Pridėti naują kandidatą</a>
+    <a asp-controller="ImportCSV" asp-action="Index" class="float-right">Įkelti studentų sąrašą iš CSV </a>
 
     <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 

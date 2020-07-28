@@ -1,13 +1,52 @@
 ﻿
 
-@{
+@*@{
     ViewData["Title"] = "ImportCSV";
 }
-<h2>Upload and read CSV file in ASP.Net MVC</h2>
 
-<form asp-controller="ImportCSV" asp-action="ImportCSV" enctype="multipart/form-data" method="post">
+<h4>
+    Įkelkite studentų sąrašą
+    <a class="btn btn-outline-secondary float-right rounded-pill" href='javascript:history.go(-1)'>Grįžti</a>
+</h4>
+<hr />
+<div class="font-weight-bold">CSV failo formatas:</div>
+<p class="mb-0">Skirtuvas (delimiter): kabliataškis (<b>;</b>)</p>
+<p class="mb-0">Dešimtainis skyriklis (decimal separator): kablelis (<b>,</b>)</p>
+<p class="mb-0">Stulpelių skaičius: 18</p>
+<p>Stulpelių eiliškumas:</p>
+<p>Nr | Vardas ir Pavardė |I Prioritetas | Užduoties įvertinimas x10| V/M | Ar pakviestas į pokalbį? | Pokalbio balas | Kvietimas studijuoti | Sutartis pasirašyta</p>
+<p>CSV faile stulpelių pavadinimai yra nereikalingi.</p>
+<div>
+    <p class="font-weight-bold">CSV failo pavyzdys:</p>
+    <div>
+        <p class="mb-0">1;Jonas Jonaitis;.NET;0,5;0,5;1;1;1;1;1;1;1;4;v;Taip;10;ne;ne</p>
+        <p class="mb-0">2;Petras Petraitis;Java;0,5;0,5;1;1;1;1;1;1;1;4;v;Taip;5;Taip;Ne</p>
+        <p>3;Ona Onaite;Java;0,5;0,5;1;1;1;1;1;1;3;3;m;Ne;;Ne;Ne</p>
+    </div>
 
-    <input name="file" type="file">
+</div>
+<div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
+<form asp-controller="ImportCSV" asp-action="Index" enctype="multipart/form-data" method="post">
 
-    <input class="btn" type="submit" />
+    <input id="filename" type="text" class="pr-5 mb-2 form-control col-6" placeholder="Failas nėra pasirinktas" readonly />
+    <div id="upload_button">
+
+        <label>
+            <input name="file" type="file" ngf-select ng-model="new_files" ng-change="fs.uploadFiles(new_files)" multiple id="upload" onchange="uploadOnChange(this)" />
+            <span class="btn btn-primary btn-sm">Įkelkite failą</span>
+        </label>
+    </div>
+    <div>
+        <input class="btn btn-secondary mt-5" type="submit" value="Išsaugoti" />
+    </div>
 </form>
+
+<script>
+    function uploadOnChange(e) {
+        var filename = e.value; var lastIndex = filename.lastIndexOf("\\");
+        if (lastIndex >= 0) {
+            filename = filename.substring(lastIndex + 1);
+        }
+        document.getElementById('filename').value = filename;
+    }
+</script>*@
