@@ -118,7 +118,7 @@
             }
         </tbody>
     </table>
-    <input type="submit" value="Išsaugoti" class="btn btn-secondary float-right mt-3" />
+    <input type="submit" value="Išsaugoti" class="btn btn-secondary float-right mt-3 mb-3" />
 </form>
 <script>
     function callChangefunc(name, value) {
@@ -137,6 +137,10 @@
                 x.checked = false);
         }
     }
+    $.extend(true, $.fn.dataTable.defaults, {
+        "searching": true,
+        "ordering": false
+    })
     $('.StudentInvitationToStudyTable').DataTable({
         language: {
             search: "Paieška",
