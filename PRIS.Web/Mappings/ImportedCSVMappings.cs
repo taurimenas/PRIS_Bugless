@@ -10,13 +10,28 @@ namespace PRIS.Web.Mappings
 {
     public class ImportedCSVMappings
     {
-        public static void ToEntity(Student student, Result result, ConversationResult conversationResult, ImportStudentsDataModel importStudentsDataModel)
+        public static void ToEntityWithoutConversationResult(Student student, Result result, ImportedStudentsDataModel importedStudentsDataModel)
         {
-            student.FirstName = importStudentsDataModel.FirstName;
-            student.LastName = importStudentsDataModel.LastName;
-            student.PassedExam = importStudentsDataModel.PassedExam;
-            student.InvitedToStudy = importStudentsDataModel.InvitationToStudy;
-            student.SignedAContract = importStudentsDataModel.SignedAContract;
+            student.FirstName = importedStudentsDataModel.FirstName;
+            student.LastName = importedStudentsDataModel.LastName;
+            student.PassedExam = importedStudentsDataModel.PassedExam;
+            student.InvitedToStudy = importedStudentsDataModel.InvitationToStudy;
+            student.SignedAContract = importedStudentsDataModel.SignedAContract;
+            student.ResultId = result.Id;
+            student.Result = result;
+            student.Email = "-";
+            student.PhoneNumber = "-";
+            result.Student = student;
+            result.StudentForeignKey = student.Id;
+            result.Tasks = importedStudentsDataModel.Tasks;
+        }
+        public static void ToEntity(Student student, Result result, ConversationResult conversationResult, ImportedStudentsDataModel importedStudentsDataModel)
+        {
+            student.FirstName = importedStudentsDataModel.FirstName;
+            student.LastName = importedStudentsDataModel.LastName;
+            student.PassedExam = importedStudentsDataModel.PassedExam;
+            student.InvitedToStudy = importedStudentsDataModel.InvitationToStudy;
+            student.SignedAContract = importedStudentsDataModel.SignedAContract;
             student.ResultId = result.Id;
             student.Result = result;
             student.ConversationResultId = conversationResult.Id;
@@ -25,8 +40,8 @@ namespace PRIS.Web.Mappings
             student.PhoneNumber = "-";
             result.Student = student;
             result.StudentForeignKey = student.Id;
-            result.Tasks = importStudentsDataModel.Tasks;
-            conversationResult.Grade = importStudentsDataModel.ConversationResult;
+            result.Tasks = importedStudentsDataModel.Tasks;
+            conversationResult.Grade = importedStudentsDataModel.ConversationResult;
             conversationResult.StudentForeignKey = student.Id;
             conversationResult.Student = student;
         }
