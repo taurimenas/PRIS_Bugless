@@ -134,6 +134,8 @@ namespace PRIS.Web.Controllers
             {
                 stringCourses?.Add(new SelectListItem { Value = courses?.FindIndex(a => a == p).ToString(), Text = $"{p.Title} {p.StartYear.Year}" });
             }
+            stringCourses.Add(new SelectListItem { Value = null, Text = "" });
+
         }
 
         private static List<SelectListItem> DropdownForCities(List<Student> students)
@@ -144,6 +146,7 @@ namespace PRIS.Web.Controllers
             {
                 stringCities.Add(new SelectListItem { Value = cities.FindIndex(a => a == c).ToString(), Text = c.Name });
             }
+            stringCities.Add(new SelectListItem { Value = null, Text = "" });
 
             return stringCities;
         }
@@ -156,6 +159,7 @@ namespace PRIS.Web.Controllers
             {
                 stringAcceptancePeriods.Add(new SelectListItem { Value = filteredExams.FindIndex(a => a == ed).ToString(), Text = ed.AcceptancePeriod });
             }
+            stringAcceptancePeriods.Add(new SelectListItem { Value = null, Text = "" });
 
             return stringAcceptancePeriods;
         }

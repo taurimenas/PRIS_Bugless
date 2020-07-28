@@ -42,7 +42,6 @@ namespace PRIS.Web.Controllers
             int.TryParse(TempData["SelectedAcceptancePeriod"].ToString(), out int SelectedAcceptancePeriod);
             TempData["ExamId"] = id;
             double[] tasks = new double[tasksString.Length];
-
             if (studentsCountInAcceptancePeriod > 0)
             {
                 TempData["ErrorMessage"] = "Šablono keisti negalima, nes prie jo jau yra priskirta kandidatų.";

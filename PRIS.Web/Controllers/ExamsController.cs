@@ -60,6 +60,8 @@ namespace PRIS.Web.Controllers
 
         public async Task<IActionResult> Create()
         {
+            var returnPath = HttpContext.Request.Headers["Referer"].ToString();
+            TempData["ReturnPath"] = returnPath;
             ExamViewModel examViewModel = new ExamViewModel();
             List<City> cities = await _repository.Query<City>().ToListAsync();
 
@@ -86,14 +88,15 @@ namespace PRIS.Web.Controllers
                 var exam = ExamMappings.ToEntity(examViewModel);
                 var city = await _repository.Query<City>().FirstOrDefaultAsync(x => x.Name == examViewModel.SelectedCity);
                 exam.CityId = city.Id;
+                var previousUrl = TempData["ReturnPath"].ToString();
                 if (latestDate != null)
                 {
                     exam.Tasks = latestDate.Tasks;
                     await _repository.InsertAsync(exam);
-                    return RedirectToAction(nameof(Index));
+                    return Redirect(previousUrl);
                 }
                 await _repository.InsertAsync(exam);
-                return RedirectToAction(nameof(Index));
+                return Redirect(previousUrl);
             }
             return RedirectToAction(nameof(Index));
         }

@@ -51,6 +51,12 @@ namespace PRIS.Web.Controllers
             if (ModelState.IsValid)
             {
                 var result = ProgramMappings.ToProgramEntity(programCreateModel);
+                var beforeCreatedProgam = _repository.Query<Core.Library.Entities.Program>().FirstOrDefault(x => x.Name == result.Name);
+                if (beforeCreatedProgam != null)
+                {
+                    TempData["ErrorMessage"] = "Ši programa jau yra sukurta";
+                    return RedirectToAction(nameof(Create));
+                }
                 await _repository.InsertAsync<Core.Library.Entities.Program>(result);
                 return RedirectToAction(nameof(Index));
             }
@@ -68,6 +74,12 @@ namespace PRIS.Web.Controllers
             if (ModelState.IsValid)
             {
                 var result = ProgramMappings.ToCityEntity(cityCreateModel);
+                var beforeCreatedCity = _repository.Query<City>().FirstOrDefault(x => x.Name == result.Name);
+                if (beforeCreatedCity != null)
+                {
+                    TempData["ErrorMessage"] = "Šis miestas jau yra sukurtas";
+                    return RedirectToAction(nameof(CreateNewCity));
+                }
                 await _repository.InsertAsync<City>(result);
                 return RedirectToAction(nameof(Index));
             }
@@ -86,7 +98,7 @@ namespace PRIS.Web.Controllers
                 return NotFound();
             }
             var programById = await _repository.FindByIdAsync<Core.Library.Entities.Program>(id);
-            var course = await _repository.FindByIdAsync<Course>(id);
+            var course = await _repository.Query<Course>().FirstOrDefaultAsync(x => x.Title == program.Name);
             if (course != null)
             {
                 return await BadRequest(course, "Programos negalima ištrinti, nes prie jos jau yra priskirta kandidatų.");

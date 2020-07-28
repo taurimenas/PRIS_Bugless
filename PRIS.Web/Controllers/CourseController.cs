@@ -100,7 +100,8 @@ namespace PRIS.Web.Controllers
                     }
                 }
                 await _repository.SaveAsync();
-                return RedirectToAction("LockingOfStudentData", "Course");
+                var currentUrl = HttpContext.Request.Headers["Referer"];
+                return Redirect(currentUrl);
             }
             return RedirectToAction("Index", "Home");
         }

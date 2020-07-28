@@ -39,5 +39,6 @@ namespace PRIS.Web.Models
         public string ErrorMessage { get; set; }
         public double? ConversationResult { get; set; }
         public string ExamCityAndDate { get; set; }
+        public string[] TasksString { get; set; }
     }
 }

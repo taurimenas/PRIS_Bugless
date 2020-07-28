@@ -14,6 +14,7 @@ namespace PRIS.Web.Models
         public DateTime Date { get; set; }
         [Required(ErrorMessage = "Įveskite {0} užduoties maksimalų balą")]
         public double[] Tasks { get; set; }
-        public  string[] TaskString { get; set; }
+        public string[] TaskString { get; set; }
+
     }
 }

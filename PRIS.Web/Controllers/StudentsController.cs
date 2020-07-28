@@ -84,6 +84,11 @@ namespace PRIS.Web.Controllers
                 {
                     var findStudents = students.FirstOrDefault(x => x.Id == HasPassedExam[i]);
                     findStudents.PassedExam = true;
+                    if (findStudents.Result.Tasks == null)
+                    {
+                        TempData["ErrorMessage"] = "Negalima kviesti kandidato į pokalbį, jei jis neturi įrašytų testo rezultatų.";
+                        return RedirectToAction("Index", "Students", new { id = ExamId });
+                    }
                 }
 
                 await _repository.SaveAsync();
@@ -278,7 +283,7 @@ namespace PRIS.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, string[] selectedPriority, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel, string previousURl)
+        public async Task<IActionResult> Edit(int id, string[] selectedPriority, [Bind("Id, FirstName, LastName, Email, PhoneNumber, Gender, Comment")] StudentViewModel studentViewModel)
         {
 
 
