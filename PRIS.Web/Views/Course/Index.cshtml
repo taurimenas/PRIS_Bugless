@@ -127,11 +127,13 @@
     function callChangefunc(name, value) {
         window.location.href = `/Course/Index?${name}=${value}`;
     }
-    $.extend(true, $.fn.dataTable.defaults, {
-        "searching": true,
-        "ordering": false
-    })
     $('.AnalizeTable').DataTable({
+        "order": [[6, "desc"]],
+        "columnDefs": [
+            {
+                "orderable": false, "targets": [0, 1, 2, 3, 8, 9],
+            },
+        ],
         language: {
             search: "Paieška",
             info: "Nuo _START_ iki _END_ iš _TOTAL_ įrašų",
