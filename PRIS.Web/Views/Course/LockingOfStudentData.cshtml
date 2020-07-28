@@ -131,11 +131,12 @@
     function callChangefunc(name, value) {
         window.location.href = `/Course/Index?${name}=${value}`;
     }
-    $.extend(true, $.fn.dataTable.defaults, {
-        "searching": true,
-        "ordering": true
-    })
     $('.StudentDataLockingTable').DataTable({
+        "columnDefs": [
+            {
+                "orderable": false, "targets": [0, 1, 2, 7, 8],
+            },
+        ],
         language: {
             search: "Paieška",
             info: "Nuo _START_ iki _END_ iš _TOTAL_ įrašų",

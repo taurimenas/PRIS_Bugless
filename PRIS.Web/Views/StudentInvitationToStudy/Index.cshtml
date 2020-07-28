@@ -137,11 +137,12 @@
                 x.checked = false);
         }
     }
-    $.extend(true, $.fn.dataTable.defaults, {
-        "searching": true,
-        "ordering": false
-    })
     $('.StudentInvitationToStudyTable').DataTable({
+        "columnDefs": [
+            {
+                "orderable": false, "targets": [0, 1, 2, 7],
+            },
+        ],
         language: {
             search: "Paieška",
             info: "Nuo _START_ iki _END_ iš _TOTAL_ įrašų",
