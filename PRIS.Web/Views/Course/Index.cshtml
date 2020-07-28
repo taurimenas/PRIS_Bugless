@@ -128,6 +128,7 @@
         window.location.href = `/Course/Index?${name}=${value}`;
     }
     $('.AnalizeTable').DataTable({
+        "order": [[6, "desc"]],
         "columnDefs": [
             {
                 "orderable": false, "targets": [0, 1, 2, 3, 8, 9],

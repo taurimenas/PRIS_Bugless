@@ -132,6 +132,7 @@
         window.location.href = `/Course/Index?${name}=${value}`;
     }
     $('.StudentDataLockingTable').DataTable({
+        "order": [[5, "desc"]],
         "columnDefs": [
             {
                 "orderable": false, "targets": [0, 1, 2, 7, 8],
