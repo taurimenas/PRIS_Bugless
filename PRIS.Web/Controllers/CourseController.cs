@@ -100,6 +100,7 @@ namespace PRIS.Web.Controllers
                     }
                 }
                 await _repository.SaveAsync();
+                TempData["SuccessMessage"] = "Duomenys sėkmingai išsaugoti";
                 var currentUrl = HttpContext.Request.Headers["Referer"];
                 return Redirect(currentUrl);
             }

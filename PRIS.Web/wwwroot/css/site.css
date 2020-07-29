@@ -5,6 +5,7 @@ for details on configuring this project to bundle and minify static web assets. 
 .logo {
     align-content: flex-start;
 }
+
 .logo-name {
     width: 130px;
 }
@@ -13,6 +14,7 @@ for details on configuring this project to bundle and minify static web assets. 
     background-image: url(../img/duk.png) !important;
     background-position: center;
 }
+
 .bg-footer-header {
     background-image: url(../img/duk.png) !important;
 }
@@ -75,7 +77,12 @@ Provide sufficient contrast against white background a {
     border-color: #1861ac;
 }
 
-
+#upload_button {
+    display: inline-block;
+}
+    #upload_button input[type=file] {
+        display: none;
+    }
 /* Sticky footer styles
 -------------------------------------------------- */
 
@@ -128,4 +135,3 @@ footer {
     line-height: 60px;
     background-image: url(../img/duk.png) !important;
 }
-

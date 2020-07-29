@@ -6,56 +6,57 @@
 <h3>
     Kandidatų kvietimas studijuoti
 </h3>
-    @*TODO: sutvarkyti grizti mygtuka*@
-    @Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
-    <form asp-action="Index" method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-        <div class="input-group">
-            <input type="text" name="searchString" value="" class="form-control bg-light border-1 rounded small" placeholder="Ieškoti..." aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary rounded-circle ml-1 mr-1" type="submit" value="Search">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-                <a class="fa fa-times ml-1 mr-1 center" asp-action="Index" aria-hidden="true"></a>
-            </div>
-        </div>
-    </form>
-    <form asp-action="Index" method="get" class="float-right d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100">
-        <div class="input-group">
-            <select name="ExamId" class="btn btn-outline-secondary float-right mr-3">
-                <option style="display:none">@Model.SelectedAcceptancePeriod</option>
-                @foreach (var ap in Model.AcceptancePeriods)
-                {
-                    <option value="@ap.Text">@ap.Text</option>
-                }
-            </select>
-            <select name="CityId" class="btn btn-outline-secondary float-right mr-3">
-                <option style="display:none">@Model.SelectedCity</option>
-                @foreach (var ap in Model.Cities)
-                {
-                    <option value="@ap.Text">@ap.Text</option>
-                }
-            </select>
-            <select name="CourseId" class="btn btn-outline-secondary float-right mr-3">
-                <option style="display:none">@Model.SelectedPriority</option>
-                @foreach (var ap in Model.Courses)
-                {
-                    <option value="@ap.Text">@ap.Text</option>
-                }
-            </select>
+@Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
+
+<form asp-action="Index" method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+    <div class="input-group">
+        <input type="text" name="searchString" value="" class="form-control bg-light border-1 rounded small" placeholder="Ieškoti..." aria-label="Search" aria-describedby="basic-addon2">
+        <div class="input-group-append">
             <button class="btn btn-primary rounded-circle ml-1 mr-1" type="submit" value="Search">
                 <i class="fas fa-search fa-sm"></i>
             </button>
+            <a class="fa fa-times ml-1 mr-1 center" asp-action="Index" aria-hidden="true"></a>
         </div>
-    </form>
+    </div>
+</form>
+<form asp-action="Index" method="get" class="float-right d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100">
+    <div class="input-group">
+        <select name="ExamId" class="btn btn-outline-secondary float-right mr-3">
+            <option style="display:none">@Model.SelectedAcceptancePeriod</option>
+            @foreach (var ap in Model.AcceptancePeriods)
+            {
+                <option value="@ap.Text">@ap.Text</option>
+            }
+        </select>
+        <select name="CityId" class="btn btn-outline-secondary float-right mr-3">
+            <option style="display:none">@Model.SelectedCity</option>
+            @foreach (var ap in Model.Cities)
+            {
+                <option value="@ap.Text">@ap.Text</option>
+            }
+        </select>
+        <select name="CourseId" class="btn btn-outline-secondary float-right mr-3">
+            <option style="display:none">@Model.SelectedPriority</option>
+            @foreach (var ap in Model.Courses)
+            {
+                <option value="@ap.Text">@ap.Text</option>
+            }
+        </select>
+        <button class="btn btn-primary rounded-circle ml-1 mr-1" type="submit" value="Search">
+            <i class="fas fa-search fa-sm"></i>
+        </button>
+    </div>
+</form>
 <hr />
+<div class="text-success">@ViewContext.TempData["SuccessMessage"]</div>
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
 <form asp-action="Index">
     <table class="table table-bordered StudentInvitationToStudyTable">
         <thead>
             <tr class="text-centers">
                 <th>
-                @Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().FirstName), 
-                @Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().LastName)
+                    @Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().FirstName),
+                    @Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().LastName)
                 </th>
                 <th>@Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().Email)</th>
                 <th>
@@ -75,9 +76,9 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.StudentInvitationToStudy.FirstOrDefault().InvitedToStudy)
-                    
+
                     <input type="checkbox" class="checkbox-inline text-center ml-2" id="selectAll" onclick="clickThis(event)">
-                                           
+
                 </th>
             </tr>
         </thead>
@@ -87,7 +88,7 @@
                 <tr>
                     <td>
                         <a asp-action="Edit" asp-controller="Students" asp-route-id="@Model.StudentInvitationToStudy[i].Id">
-                            @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy[i].FirstName) 
+                            @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy[i].FirstName)
                             @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy[i].LastName)
                         </a>
                         <input type="hidden" name="studentId" value="@Model.StudentInvitationToStudy[i].Id" class="text" asp-for="@Model.StudentInvitationToStudy[i].FirstName" />

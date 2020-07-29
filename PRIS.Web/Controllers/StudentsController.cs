@@ -87,12 +87,13 @@ namespace PRIS.Web.Controllers
                     if (findStudents.Result.Tasks == null)
                     {
                         TempData["ErrorMessage"] = "Negalima kviesti kandidato į pokalbį, jei jis neturi įrašytų testo rezultatų.";
-                        return RedirectToAction("Index", "Students", new { id = ExamId });
+                        return backToExam;
                     }
                 }
 
                 await _repository.SaveAsync();
-                return RedirectToAction("Index", "Students", new { id = ExamId });
+                TempData["SuccessMessage"] = "Duomenys sėkmingai išsaugoti";
+                return backToExam;
             }
             return backToExam;
         }
@@ -395,6 +396,7 @@ namespace PRIS.Web.Controllers
                     var student = await studentRequest.FirstOrDefaultAsync(x => x.Id == result.StudentForeignKey);
                     var studentResultViewModel = StudentsMappings.ToStudentsResultViewModel(Tasks);
                     var examTasks = StudentsMappings.ToStudentsResultViewModel(result).Tasks;
+                    
                     if (student.PassedExam)
                     {
                         TempData["ErrorMessage"] = "Kandidatas yra pakviestas į pokalbį, todėl jo duomenų negalima redaguoti.";
