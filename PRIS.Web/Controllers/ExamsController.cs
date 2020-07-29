@@ -30,10 +30,7 @@ namespace PRIS.Web.Controllers
 
         public async Task<IActionResult> Index(int value, [Bind("SelectedCity")] ExamsViewModel viewModel)
         {
-            //_logger.LogInformation("This is an information log");
-            //_logger.LogWarning("This is a warning log");
-            //_logger.LogError("Error");
-            //_logger.LogCritical("Critical");
+
             var exams = await _repository.Query<Exam>()
                 .Include(exam => exam.City)
                 .ToListAsync();
