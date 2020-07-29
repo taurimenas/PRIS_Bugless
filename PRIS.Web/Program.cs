@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Configuration;
 using Serilog;
+using Serilog.Sinks.MSSqlServer.Sinks.MSSqlServer.Options;
 
 namespace PRIS.Web
 {
