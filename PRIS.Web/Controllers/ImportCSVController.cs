@@ -38,11 +38,15 @@ namespace PRIS.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(IFormFile file)
         {
-
+            if(file == null)
+            {
+                TempData["ErrorMessage"] = "Nėra įkeltas failas.";
+                return RedirectToAction("Index", "ImportCSV");
+            }
             if (!file.FileName.EndsWith(".csv"))
             {
                 TempData["ErrorMessage"] = "Prašome įkelti .csv failą.";
-                return RedirectToAction("ImportCSV", "Index");
+                return RedirectToAction("Index", "ImportCSV");
             }
             int.TryParse(TempData["ExamId"].ToString(), out int examId);
             
