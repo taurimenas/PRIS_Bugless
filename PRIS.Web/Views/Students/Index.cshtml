@@ -17,7 +17,7 @@
     <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
     <div class="text-success">@ViewContext.TempData["SuccessMessage"]</div>
 
-    <table class="table table-bordered">
+    <table class="table table-bordered ResultsTable borderless-cell">
         <thead>
             <tr>
                 <th>
@@ -97,15 +97,16 @@
             }
         </tbody>
     </table>
-    <input type="submit" value="Išsaugoti kviečiamus studentus" class="btn btn-secondary float-right mr-5" />
+    <input type="submit" value="Išsaugoti kviečiamus studentus" class="btn btn-secondary float-right mt-3 mb-3" />
 </form>
+
 <script>
-    var points = document.getElementsByClassName("points");
-    var items = [];
-    for (var i = 0; i < points.length; i++) {
-        items.push({ points: parseInt(points[i].innerText), id: points[i].id });
-    }
     function clickThis(e, id) {
+        var points = document.getElementsByClassName("points");
+        var items = [];
+        for (var i = 0; i < points.length; i++) {
+            items.push({ points: parseInt(points[i].innerText), id: points[i].id });
+        }
         var theOne = items.find(i => i.id === id).points
         var theOneCheckBox = document.getElementById(`checkbox-${id}`);
         if (!theOneCheckBox.checked) {
@@ -123,7 +124,28 @@
             })
         }
     }
+    $.extend(true, $.fn.dataTable.defaults, {
+        "searching": true,
+        "ordering": false
+    })
+    $('.ResultsTable').DataTable({
+        language: {
+            search: "Paieška",
+            info: "Nuo _START_ iki _END_ iš _TOTAL_ įrašų",
+            "lengthMenu": "Rodyti _MENU_ įrašų",
+            zeroRecords: "Įrašų nerasta",
+            infoEmpty: "Įrašai rodomi nuo 0 iki 0 iš 0 įrašų",
+            infoFiltered: "(ieškota iš _MAX_ įrašų)",
+            paginate: {
+                first: "Pirmas",
+                previous: "Ankstesnis",
+                next: "Sekantis",
+                last: "Paskutinis",
+            }
+        }
+    });
 </script>
+
 
 
 

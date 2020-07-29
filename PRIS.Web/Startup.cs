@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using PRIS.Core.Library.Entities;
 using PRIS.Web.Storage;
+using Serilog;
 
 namespace PRIS.Web
 {
@@ -64,6 +65,8 @@ namespace PRIS.Web
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseSerilogRequestLogging();
 
             app.UseRouting();
 
