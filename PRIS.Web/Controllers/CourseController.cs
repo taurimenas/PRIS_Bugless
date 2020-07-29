@@ -8,6 +8,7 @@ using PRIS.Web.Models.CourseModels;
 using PRIS.Web.Storage;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace PRIS.Web.Controllers
@@ -104,6 +105,11 @@ namespace PRIS.Web.Controllers
                 return Redirect(currentUrl);
             }
             return RedirectToAction("Index", "Home");
+        }
+        //exam kpi view
+        public IActionResult ExamKpi()
+        {
+            return View();
         }
     }
 }

@@ -65,7 +65,8 @@
                 @Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().PhoneNumber)
             </th>
             <th>
-                @Html.ActionLink(@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().FinalTestPoints), "Index", new { sortOrder = "PercentageGrade" })
+                @Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().FinalTestPoints)
+                @Html.ActionLink("KPI", "ExamKpi", "Course")
             </th>
             <th>
                 @Html.ActionLink(@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().ConversationGrade), "Index", new { sortOrder = "ConversationGrade" })
