@@ -49,16 +49,16 @@
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Email)</th>
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().PhoneNumber)</th>
                 <th>
-                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.PercentageGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalTestPoints)</a>
+                    @Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalTestPoints)
                 </th>
                 <th>
-                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.ConversationGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().ConversationGrade)</a>
+                    @Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().ConversationGrade)
                 </th>
                 <th>
-                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.FinalAverageGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalAverageGrade)</a>
+                    @Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalAverageGrade)
                 </th>
                 <th>
-                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.PrioritySort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Priority)</a>
+                    @Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Priority)
                 </th>
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().SignedAContract)</th>
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().StudentDataLocked)</th>
