@@ -38,7 +38,7 @@ namespace PRIS.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(IFormFile file)
         {
-            if(file == null)
+            if (file == null)
             {
                 TempData["ErrorMessage"] = "Nėra įkeltas failas.";
                 return RedirectToAction("Index", "ImportCSV");
@@ -49,7 +49,7 @@ namespace PRIS.Web.Controllers
                 return RedirectToAction("Index", "ImportCSV");
             }
             int.TryParse(TempData["ExamId"].ToString(), out int examId);
-            
+
             var programs = await _repository.Query<Core.Library.Entities.Program>().ToListAsync();
             using (StreamReader streamReaderValidation = new StreamReader(file.OpenReadStream()))
             {
@@ -57,12 +57,12 @@ namespace PRIS.Web.Controllers
                 while ((dataFromCSV = streamReaderValidation.ReadLine()) != null)
                 {
                     var seperatedData = dataFromCSV.Split(";");
-                    if (seperatedData.Length > 18)
+                    if (seperatedData.Length > 20)
                     {
                         TempData["ErrorMessage"] = $"Jūsų faile yra per daug stulpelių arba CSV faile tarp duomenų yra naudojamas kabliataškis(;).";
                         return RedirectToAction("ImportCSV", "ImportCSV");
                     }
-                    if (seperatedData.Length < 18)
+                    if (seperatedData.Length < 20)
                     {
                         TempData["ErrorMessage"] = $"Jūsų faile yra per mažai stulpelių arba CSV failo skirtuvas yra blogas.";
                         return RedirectToAction("Index", "ImportCSV");
@@ -73,7 +73,7 @@ namespace PRIS.Web.Controllers
                         return RedirectToAction("Index", "ImportCSV");
                     }
 
-                    var programFromCSV = programs.FirstOrDefault(x => x.Name == seperatedData[2]);
+                    var programFromCSV = programs.FirstOrDefault(x => x.Name == seperatedData[5]);
                     if (programFromCSV == null)
                     {
                         TempData["ErrorMessage"] = $"Jūsų faile {seperatedData[0]} eilutėje yra programa, kuri neegzistuoja sitemoje. Pirma sukurkite programą, tada kelkite failą.";
@@ -91,6 +91,27 @@ namespace PRIS.Web.Controllers
                         TempData["ErrorMessage"] = $"Jūsų faile {seperatedData[0]} eilutėje yra kandidatas, kurio pavardės negalima aptikti.";
                         return RedirectToAction("Index", "ImportCSV");
                     }
+                    if (seperatedData[16].ToLower() != "taip" && seperatedData[17] != "")
+                    {
+                        TempData["ErrorMessage"] = $"Jūsų faile {seperatedData[0]} eilutėje yra kandidatas, kuris nėra pakviestas į pokalbį, bet turi pokalbio įvertinimą.";
+                        return RedirectToAction("Index", "ImportCSV");
+                    }
+                    if (seperatedData[16].ToLower() != "taip" && seperatedData[18].ToLower() == "taip")
+                    {
+                        TempData["ErrorMessage"] = $"Jūsų faile {seperatedData[0]} eilutėje yra kandidatas, kuris nėra pakviestas į pokalbį, bet yra kviečiamas studijuoti.";
+                        return RedirectToAction("Index", "ImportCSV");
+                    }
+                    if (seperatedData[16].ToLower() != "taip" && seperatedData[19].ToLower() == "taip")
+                    {
+                        TempData["ErrorMessage"] = $"Jūsų faile {seperatedData[0]} eilutėje yra kandidatas, kuris nėra pakviestas į pokalbį, bet yra pasirašęs sutartį.";
+                        return RedirectToAction("Index", "ImportCSV");
+                    }
+                    if (seperatedData[18].ToLower() != "taip" && seperatedData[19].ToLower() == "taip")
+                    {
+                        TempData["ErrorMessage"] = $"Jūsų faile {seperatedData[0]} eilutėje yra kandidatas, kuris yra pasirašęs sutartį, bet nėra pakviestas studijuoti.";
+                        return RedirectToAction("Index", "ImportCSV");
+                    }
+
                 }
             }
             using (StreamReader streamReader = new StreamReader(file.OpenReadStream()))
@@ -174,40 +195,45 @@ namespace PRIS.Web.Controllers
         {
             dataFromCSV.FirstName = firstNameAndLastName.First();
             dataFromCSV.LastName = firstNameAndLastName.Last();
-            dataFromCSV.Priority = seperatedData[2];
-            string[] tasks = new string[10];
-            for (int i = 3; i < 13; i++)
-            {
-                if (seperatedData[i] == "")
-                {
-                    tasks[i - 3] = "0";
-                }
-                else
-                {
-                    tasks[i - 3] = seperatedData[i].Replace(',', '.');
-                }
-            }
-            dataFromCSV.Tasks = $"[{String.Join(",", tasks)}]";
-            if (seperatedData[13].ToLower() == "m")
+            if (seperatedData[2] == "")
+                dataFromCSV.Email = "-";
+            else
+                dataFromCSV.Email = seperatedData[2];
+            if (seperatedData[3] == "")
+                dataFromCSV.PhoneNumber = "-";
+            else
+                dataFromCSV.PhoneNumber = seperatedData[3];
+            if (seperatedData[4].ToLower() == "m")
                 dataFromCSV.Gender = Gender.Moteris;
-            else if (seperatedData[13].ToLower() == "v")
+            else if (seperatedData[4].ToLower() == "v")
                 dataFromCSV.Gender = Gender.Vyras;
             else
                 dataFromCSV.Gender = Gender.Kita;
+            dataFromCSV.Priority = seperatedData[5];
+            string[] tasks = new string[10];
+            for (int i = 6; i < 16; i++)
+            {
+                if (seperatedData[i] == "")
+                    tasks[i - 6] = "0";
+                else
+                    tasks[i - 6] = seperatedData[i].Replace(',', '.');
 
-            if (seperatedData[14] == "Taip")
+            }
+            dataFromCSV.Tasks = $"[{String.Join(",", tasks)}]";
+
+            if (seperatedData[16].ToLower() == "taip")
                 dataFromCSV.PassedExam = true;
             else
                 dataFromCSV.PassedExam = false;
-            if (double.TryParse(seperatedData[15], out double conversationResult))
+            if (double.TryParse(seperatedData[17], out double conversationResult))
                 dataFromCSV.ConversationResult = conversationResult;
             else
                 dataFromCSV.ConversationResult = null;
-            if (seperatedData[16] == "Taip")
+            if (seperatedData[18].ToLower() == "taip")
                 dataFromCSV.InvitationToStudy = true;
             else
                 dataFromCSV.InvitationToStudy = false;
-            if (seperatedData[17] == "Taip")
+            if (seperatedData[19].ToLower() == "taip")
                 dataFromCSV.SignedAContract = true;
             else
                 dataFromCSV.SignedAContract = false;

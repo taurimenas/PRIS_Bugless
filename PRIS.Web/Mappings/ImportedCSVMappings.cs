@@ -19,8 +19,8 @@ namespace PRIS.Web.Mappings
             student.SignedAContract = importedStudentsDataModel.SignedAContract;
             student.ResultId = result.Id;
             student.Result = result;
-            student.Email = "-";
-            student.PhoneNumber = "-";
+            student.Email = importedStudentsDataModel.Email;
+            student.PhoneNumber = importedStudentsDataModel.PhoneNumber;
             result.Student = student;
             result.StudentForeignKey = student.Id;
             result.Tasks = importedStudentsDataModel.Tasks;
@@ -36,8 +36,8 @@ namespace PRIS.Web.Mappings
             student.Result = result;
             student.ConversationResultId = conversationResult.Id;
             student.ConversationResult = conversationResult;
-            student.Email = "-";
-            student.PhoneNumber = "-";
+            student.Email = importedStudentsDataModel.Email;
+            student.PhoneNumber = importedStudentsDataModel.PhoneNumber;
             result.Student = student;
             result.StudentForeignKey = student.Id;
             result.Tasks = importedStudentsDataModel.Tasks;

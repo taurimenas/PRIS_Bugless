@@ -11,6 +11,8 @@ namespace PRIS.Web.Models
         public string CsvId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
         public string Priority { get; set; }
         public string Tasks { get; set; }
         public Gender Gender { get; set; }
