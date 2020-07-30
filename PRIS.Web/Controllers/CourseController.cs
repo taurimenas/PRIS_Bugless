@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MoreLinq;
 using PRIS.Core.Library.Entities;
 using PRIS.Web.Mappings;
 using PRIS.Web.Models.CourseModels;
 using PRIS.Web.Storage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,10 +18,14 @@ namespace PRIS.Web.Controllers
     public class CourseController : Controller
     {
         private readonly IRepository _repository;
+        private readonly ILogger<CourseController> _logger;
+        private readonly string _user;
 
-        public CourseController(IRepository repository)
+        public CourseController(IRepository repository, ILogger<CourseController> logger, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
+            _logger = logger;
+            _user = httpContextAccessor.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value;
         }
         public async Task<IActionResult> Index(string examId, string courseId, string cityId, string searchString, string sortOrder)
         {
@@ -90,15 +96,19 @@ namespace PRIS.Web.Controllers
                             if (findStudents.SignedAContract == true)
                             {
                                 findStudents.StudentDataLocked = true;
+                                _logger.LogInformation("Student {Student} data locked. At {Time}. User {User}", findStudents.Id, DateTime.UtcNow, _user);
                             }
                             else
                             {
+                                
                                 ModelState.AddModelError("StudentDelete", "Kandidatas turi būti pasirašęs sutartį, kad būtų galima užrakinti kandidato duomenis");
                                 TempData["ErrorMessage"] = "Kandidatas turi būti pasirašęs sutartį, kad būtų galima užrakinti kandidato duomenis";
                             }
+                            _logger.LogWarning("Failed to lock data, the student {Student} must be signed to a contract. At {Time}. User {User}.", findStudents.Id, DateTime.UtcNow, _user);
                         }
                     }
                 }
+                _logger.LogInformation("Successfully saved data. At {Time}. User {User}.", DateTime.UtcNow, _user);
                 await _repository.SaveAsync();
                 var currentUrl = HttpContext.Request.Headers["Referer"];
                 return Redirect(currentUrl);
