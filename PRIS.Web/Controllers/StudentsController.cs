@@ -71,7 +71,7 @@ namespace PRIS.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(int[] HasPassedExam)
+        public async Task<IActionResult> Index(int[] studentId, int[] HasPassedExam)
         {
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
             var backToExam = RedirectToAction("Index", "Students", new { id = ExamId });

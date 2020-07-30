@@ -4,9 +4,9 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Logs</h1>
+<h1>Vartotojų veiksmų fiksavimas</h1>
 
-<table class="table">
+<table class="table table-bordered ActionsLoggingTable">
     <thead>
         <tr>
             <th>
@@ -24,28 +24,48 @@
             <th>
                 @Html.DisplayNameFor(model => model.Exception)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Message)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Level)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TimeStamp)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Exception)
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Message)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Level)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeStamp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Exception)
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+<p class="mb-3"></p>
+<script>
+    $('.ActionsLoggingTable').DataTable({
+        "lengthMenu": [[10, 25, 50, 100, 250, 500, 1000, -1], [10, 25, 50, 100, 250, 500, 1000, "Visi"]],
+        language: {
+            search: "Paieška",
+            info: "Nuo _START_ iki _END_ iš _TOTAL_ įrašų",
+            "lengthMenu": "Rodyti _MENU_ įrašų",
+            zeroRecords: "Įrašų nerasta",
+            infoEmpty: "Įrašai rodomi nuo 0 iki 0 iš 0 įrašų",
+            infoFiltered: "(ieškota iš _MAX_ įrašų)",
+            paginate: {
+                first: "Pirmas",
+                previous: "Ankstesnis",
+                next: "Sekantis",
+                last: "Paskutinis",
+            }
+        }
+    });
+</script>
