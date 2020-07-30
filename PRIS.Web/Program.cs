@@ -33,12 +33,12 @@ namespace PRIS.Web
         {
             var connection = hostBuilderContext.Configuration.GetConnectionString("DefaultConnection");
 
-            cfg
+                cfg
                 .MinimumLevel.Information()
                 //.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 //.MinimumLevel.Override("System", LogEventLevel.Warning)
-                  .WriteTo
-                  .MSSqlServer(
+                .WriteTo
+                .MSSqlServer(
                 connectionString: connection,
                 sinkOptions: new SinkOptions
                 {

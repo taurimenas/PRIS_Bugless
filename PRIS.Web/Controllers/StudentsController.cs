@@ -85,7 +85,7 @@ namespace PRIS.Web.Controllers
                     .Include(x => x.ConversationResult)
                     .FirstOrDefaultAsync(x => x.Id == studentId[i]));
                 }
-                
+
                 students.ForEach(x => x.PassedExam = false);
 
                 for (int i = 0; i < HasPassedExam.Length; i++)
@@ -185,6 +185,7 @@ namespace PRIS.Web.Controllers
                         studentCourse.CourseId = course.Id;
                         studentCourse.Course = course;
                         await _repository.InsertAsync<Course>(course);
+                        _logger.LogInformation($"Added new course: {course.Title}. User {_user}.");
                     }
 
                     var selectedPriorityWithoutNullAndDuplictates = selectedPriority.Where(priority => !string.IsNullOrEmpty(priority)).Distinct().ToArray();
@@ -210,6 +211,7 @@ namespace PRIS.Web.Controllers
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
             if (id == null)
             {
+                _logger.LogWarning($"Student id not found. User {_user}.");
                 return NotFound();
             }
             if (!examPassed)
@@ -221,7 +223,10 @@ namespace PRIS.Web.Controllers
                                                      .SingleOrDefaultAsync(x => x.Id == id);
                     await _repository.DeleteAsync<Student>(id);
                     if (student.ResultId != null)
+                    {
+                        _logger.LogInformation($"Deleted result: {student.Result.Id}. User {_user}.");
                         await _repository.DeleteAsync<Result>(student.ResultId);
+                    }
                 }
                 else
                 {
