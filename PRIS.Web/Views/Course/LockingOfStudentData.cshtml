@@ -3,24 +3,11 @@
 @{
     ViewData["Title"] = "LockingOfStudentData";
 }
-<h3>
-    Studentų duomenų užrakinimas
-    @*sutvarkyti grizti mygtuka*@
-    @Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
-
-    <form asp-action="LockingOfStudentData" method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-        <div class="input-group">
-            <input type="text" name="searchString" value="" class="form-control bg-light border-1 rounded small" placeholder="Ieškoti..." aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary rounded-circle ml-1 mr-1" type="submit" value="Search">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-                <a class="fa fa-times ml-1 mr-1 center" asp-action="LockingOfStudentData" aria-hidden="true"></a>
-            </div>
-        </div>
-    </form>
-
-    <form asp-action="LockingOfStudentData" method="get" class="float-right d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100">
+    <h3>
+        Studentų duomenų užrakinimas
+    </h3>
+    @Html.ActionLink("Grįžti į pagrindinį", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
+    <form asp-action="LockingOfStudentData" method="get" class="d-none d-sm-inline-block form-inline mr-auto my-2 my-md-0 mw-100">
         <div class="input-group">
             <select name="ExamId" class="btn btn-outline-secondary float-right mr-3">
                 <option style="display:none">@Model.SelectedAcceptancePeriod</option>
@@ -47,11 +34,12 @@
             <button class="btn btn-primary rounded-circle ml-1 mr-1" type="submit" value="Search">
                 <i class="fas fa-search fa-sm"></i>
             </button>
+            <a class="fa fa-times ml-1 mr-1 center" asp-action="LockingOfStudentData" aria-hidden="true"></a>
         </div>
     </form>
-</h3>
 <hr />
 <div class="text-danger">@ViewContext.TempData["ErrorMessage"]</div>
+<div class="text-success">@ViewContext.TempData["SuccessMessage"]</div>
 <form asp-action="LockingOfStudentData">
     <table class="table table-bordered StudentDataLockingTable">
         <thead>
@@ -61,16 +49,16 @@
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Email)</th>
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().PhoneNumber)</th>
                 <th>
-                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.PercentageGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalTestPoints)</a>
+                    @Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalTestPoints)
                 </th>
                 <th>
-                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.ConversationGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().ConversationGrade)</a>
+                    @Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().ConversationGrade)
                 </th>
                 <th>
-                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.FinalAverageGradeSort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalAverageGrade)</a>
+                    @Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().FinalAverageGrade)
                 </th>
                 <th>
-                    <a asp-action="LockingOfStudentData" asp-route-sortOrder="@ViewBag.PrioritySort">@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Priority)</a>
+                    @Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().Priority)
                 </th>
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().SignedAContract)</th>
                 <th>@Html.DisplayNameFor(model => model.StudentDataLocking.FirstOrDefault().StudentDataLocked)</th>

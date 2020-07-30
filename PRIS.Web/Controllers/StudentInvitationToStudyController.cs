@@ -54,6 +54,7 @@ namespace PRIS.Web.Controllers
                     findStudents.InvitedToStudy = true;
                 }
                 await _repository.SaveAsync();
+                TempData["SuccessMessage"] = "Duomenys sėkmingai išsaugoti";
                 var currentUrl = HttpContext.Request.Headers["Referer"];
                 return Redirect(currentUrl);
             }

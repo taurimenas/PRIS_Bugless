@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Configuration;
 using Serilog;
+using Serilog.Sinks.MSSqlServer.Sinks.MSSqlServer.Options;
 
 namespace PRIS.Web
 {
@@ -46,7 +47,7 @@ namespace PRIS.Web
                     logging.ClearProviders();
                     logging.AddConfiguration(context.Configuration.GetSection("Logging"));
                     logging.AddDebug();
-                    logging.AddConsole(); // TODO: Google ApplicationInsights
+                    logging.AddConsole();
                 })
                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>

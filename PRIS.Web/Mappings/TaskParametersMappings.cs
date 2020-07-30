@@ -22,6 +22,7 @@ namespace PRIS.Web.Mappings
 
         public static SetTaskParameterModel ToTaskParameterViewModel(Exam examEntity)
         {
+            
             return new SetTaskParameterModel
             {
                 Id = examEntity.Id,

@@ -8,20 +8,7 @@
     Kandidatų sąrašas
 </h3>
 @Html.ActionLink("Grįžti", "Main", "Home", new { }, new { @class = "btn btn-outline-secondary float-right rounded-pill" })
-
-    <form asp-action="Index" method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-        <div class="input-group">
-            <input type="text" name="searchString" value="" class="form-control bg-light border-1 rounded small" placeholder="Ieškoti..." aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary rounded-circle ml-1 mr-1" type="submit" value="Search">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-                <a class="fa fa-times ml-1 mr-1 center" asp-action="Index" aria-hidden="true"></a>
-            </div>
-        </div>
-    </form>
-
-    <form asp-action="Index" method="get" class="float-right d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100">
+    <form asp-action="Index" method="get" class="d-none d-sm-inline-block form-inline mr-auto my-2 my-md-0 mw-100">
         <div class="input-group">
             <select name="ExamId" class="btn btn-outline-secondary float-right mr-3">
                 <option style="display:none">@Model.SelectedAcceptancePeriod</option>
@@ -65,16 +52,16 @@
                 @Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().PhoneNumber)
             </th>
             <th>
-                @Html.ActionLink(@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().FinalTestPoints), "Index", new { sortOrder = "PercentageGrade" })
+                @Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().FinalTestPoints)
             </th>
             <th>
-                @Html.ActionLink(@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().ConversationGrade), "Index", new { sortOrder = "ConversationGrade" })
+                @Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().ConversationGrade)
             </th>
             <th>
-                @Html.ActionLink(@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().FinalAverageGrade), "Index", new { sortOrder = "FinalAverageGrade" })
+                @Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().FinalAverageGrade)
             </th>
             <th>
-                @Html.ActionLink(@Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().Priority), "Index", new { sortOrder = "Priority" })
+                @Html.DisplayNameFor(model => model.StudentEvaluations.FirstOrDefault().Priority)
             </th>
             <th>
                 II Prioritetas

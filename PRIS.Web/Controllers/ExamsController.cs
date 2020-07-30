@@ -61,7 +61,7 @@ namespace PRIS.Web.Controllers
                 studentsCountInAcceptancePeriod += results.Count(x => x.ExamId == examId);
             }
             TempData["Count"] = studentsCountInAcceptancePeriod;
-            _logger.LogInformation("Found {Count} records. At {Time}. User {User}.", viewModel.ExamViewModels.Count(), DateTime.UtcNow, _user);
+            _logger.LogInformation("Found {Count} records. User {User}.", viewModel.ExamViewModels.Count(), _user);
             return View(viewModel);
         }
 
@@ -99,12 +99,12 @@ namespace PRIS.Web.Controllers
                 {
                     exam.Tasks = latestDate.Tasks;
                     await _repository.InsertAsync(exam);
-                    _logger.LogInformation("New exam added to DB. At {Time}. User {User}.", DateTime.UtcNow, _user);
+                    _logger.LogInformation("New exam added to DB. User {User}.", _user);
                     return Redirect(previousUrl);
                 }
                 else
                 {
-                    _logger.LogWarning("Exam was null. Nothing added to DB. At {Time}. User {User}.", DateTime.UtcNow, _user);
+                    _logger.LogWarning("Exam was null. Nothing added to DB. User {User}.", _user);
                 }
                 await _repository.InsertAsync(exam);
                 return Redirect(previousUrl);
@@ -116,7 +116,7 @@ namespace PRIS.Web.Controllers
         {
             if (id == null)
             {
-                _logger.LogWarning("Exam not found. At {Time}", DateTime.UtcNow);
+                _logger.LogWarning("Exam not found. User {User}.", _user);
                 return NotFound();
             }
 
@@ -124,7 +124,7 @@ namespace PRIS.Web.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (exam == null)
             {
-                _logger.LogWarning("Can not find exam by provided id. At {Time}. User {User}.", DateTime.UtcNow, _user);
+                _logger.LogWarning("Can not find exam by provided id. User {User}.", _user);
                 return NotFound();
             }
             var examById = await _repository.FindByIdAsync<Exam>(id);
@@ -137,14 +137,14 @@ namespace PRIS.Web.Controllers
                 var studentById = await _repository.FindByIdAsync<Student>(result.StudentForeignKey);
                 if (studentById != null)
                 {
-                    _logger.LogWarning("Unsuccessful exam delete, exam has one or more students that have passed exam. At {Time}. User {User}.", DateTime.UtcNow, _user);
+                    _logger.LogWarning("Unsuccessful exam delete, exam has one or more students that have passed exam. User {User}.", _user);
                     TempData["ErrorMessage"] = "Testo negalima ištrinti, nes prie jo jau yra priskirta testą išlaikiusių kandidatų.";
                     ModelState.AddModelError("AssignedStudent", "Testo negalima ištrinti, nes prie jo jau yra priskirta testą išlaikiusių kandidatų.");
                 }
                 else
                 {
                     await RemoveFromExams(examById);
-                    _logger.LogInformation("Exam {City} {Date} deleted from DB. At {Time}", examById.City, examById.Date, DateTime.UtcNow);
+                    _logger.LogInformation("Exam {City} {Date} deleted from DB.", examById.City, examById.Date);
                     return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");
                 }
                 return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");
@@ -154,7 +154,7 @@ namespace PRIS.Web.Controllers
                 _logger.LogInformation("Exam has no result.");
                 var oldestExam = await _repository.Query<Exam>().OrderBy(m => m.Date).FirstOrDefaultAsync();
                 await RemoveFromExams(examById);
-                _logger.LogInformation("Exam {City} {Date} deleted from DB. At {Time}. User {User}.", examById.City, examById.Date, DateTime.UtcNow, _user);
+                _logger.LogInformation("Exam {City} {Date} deleted from DB. User {User}.", examById.City, examById.Date, _user);
                 if (examById.Date == oldestExam.Date)
                     return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod - 1}");
                 return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");

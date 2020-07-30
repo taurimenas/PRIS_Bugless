@@ -110,6 +110,7 @@ namespace PRIS.Web.Controllers
                 }
                 _logger.LogInformation("Successfully saved data. At {Time}. User {User}.", DateTime.UtcNow, _user);
                 await _repository.SaveAsync();
+                TempData["SuccessMessage"] = "Duomenys sėkmingai išsaugoti";
                 var currentUrl = HttpContext.Request.Headers["Referer"];
                 return Redirect(currentUrl);
             }
