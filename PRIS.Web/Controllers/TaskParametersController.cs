@@ -11,24 +11,27 @@ namespace PRIS.Web.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<ExamsController> _logger;
+        private readonly string _user;
 
-        public TaskParametersController(ApplicationDbContext context, ILogger<ExamsController> logger)
+        public TaskParametersController(ApplicationDbContext context, ILogger<ExamsController> logger, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _logger = logger;
+            _user = httpContextAccessor.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value;
+
         }
 
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
-                _logger.LogWarning("ExamId not found. At {Time}.", DateTime.UtcNow);
+                _logger.LogWarning("ExamId not found. User {User}.", _user);
                 return NotFound();
             }
             var tasks = await _context.Exams.FindAsync(id);
             if (tasks == null)
             {
-                _logger.LogWarning("Tasks not found. At {Time}.", DateTime.UtcNow);
+                _logger.LogWarning("Tasks not found. User {User}.", _user);
                 return NotFound();
             }
             var setTaskParameterModel = TaskParametersMappings.ToTaskParameterViewModel(tasks);
@@ -51,7 +54,7 @@ namespace PRIS.Web.Controllers
             if (studentsCountInAcceptancePeriod > 0)
             {
                 TempData["ErrorMessage"] = "Šablono keisti negalima, nes prie jo jau yra priskirta kandidatų.";
-                ModelState.AddModelError("ExamsError", "Šablono keisti negalima, nes prie jo jau yra priskirta kandidatų.");
+                _logger.LogWarning("Can not change Tasks, {Count} students found in this period. User {User}.", studentsCountInAcceptancePeriod, _user);
                 return RedirectToAction("Edit", "TaskParameters", new { id });
             }
             else
@@ -59,6 +62,7 @@ namespace PRIS.Web.Controllers
                 var exam = await _context.Exams.FindAsync(id);
                 if (id != exam.Id)
                 {
+                    _logger.LogWarning("Can not find Exam by id = {Id}. User {User}.", id, _user);
                     return NotFound();
                 }
                 if (ModelState.IsValid)
@@ -69,8 +73,10 @@ namespace PRIS.Web.Controllers
                     }
                     TaskParametersMappings.EditTaskParametersEntity(exam, tasks);
                     await _context.SaveChangesAsync();
+                    _logger.LogWarning("Can not find Exam by id = {Id}. User {User}.", id, _user);
                     return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");
                 }
+                _logger.LogError("Something went wrong with modelstate. User {User}.", _user);
                 return View(TaskParametersMappings.ToTaskParameterViewModel(tasks));
             }
         }

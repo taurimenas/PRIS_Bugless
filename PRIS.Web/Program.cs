@@ -47,7 +47,7 @@ namespace PRIS.Web
                     logging.ClearProviders();
                     logging.AddConfiguration(context.Configuration.GetSection("Logging"));
                     logging.AddDebug();
-                    logging.AddConsole(); // TODO: Google ApplicationInsights
+                    logging.AddConsole();
                 })
                 .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
