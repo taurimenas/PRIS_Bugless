@@ -21,9 +21,9 @@ namespace PRIS.Web.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            if (true)
+            List<Logs> logsModel = new List<Logs>();
+            if (_user == "admin@akademija.it")
             {
-                List<Logs> logsModel = new List<Logs>();
                 using (SqlConnection con = new SqlConnection("Server = (localdb)\\mssqllocaldb; Database = PrisDb; Trusted_Connection = True; MultipleActiveResultSets = true"))
                 {
                     await con.OpenAsync();
@@ -38,9 +38,8 @@ namespace PRIS.Web.Controllers
             }
             else
             {
-                return View();
+                return View(logsModel);
             }
-            return View();
         }
     }
 }
