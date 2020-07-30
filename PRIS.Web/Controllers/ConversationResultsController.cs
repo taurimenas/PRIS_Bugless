@@ -57,9 +57,9 @@ namespace PRIS.Web.Controllers
 
         }
         //GET
-        public async Task<IActionResult> EditConversationResult(int? id, int? examId)
+        public async Task<IActionResult> EditConversationResult(int? id)
         {
-            int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
+            int.TryParse(TempData["ExamId"].ToString(), out int examId);
             var passedStudents = await _repository.Query<Student>()
                 .Include(i => i.Result)
                 .ThenInclude(u => u.Exam)
@@ -91,8 +91,7 @@ namespace PRIS.Web.Controllers
                 await _repository.SaveAsync();
                 ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel();
                 conversationResultViewModel.ConversationResultId = conversationResult.Id;
-                TempData["ExamId"] = ExamId;
-                examId = ExamId;
+                TempData["ExamId"] = examId;
                 return View(ConversationResultMappings.ToViewModel(student, conversationResult, examId));
             }
             else
@@ -100,8 +99,7 @@ namespace PRIS.Web.Controllers
                 var conversationResult = await _repository.FindByIdAsync<ConversationResult>(student.ConversationResultId);
                 ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel();
                 conversationResultViewModel.ConversationResultId = conversationResult.Id;
-                TempData["ExamId"] = ExamId;
-                examId = ExamId;
+                TempData["ExamId"] = examId;
                 return View(ConversationResultMappings.ToViewModel(student, conversationResult, examId));
             }
         }
@@ -131,7 +129,7 @@ namespace PRIS.Web.Controllers
                     var conversationResultViewModel = ConversationResultMappings.ToViewModel(student, conversationResult, examId);
                     ConversationResultMappings.EditEntity(conversationResult, model);
                     await _repository.UpdateAsync(conversationResult);
-                    _logger.LogInformation("Successfully edited conversation result {ConversationResult}. User {User}",conversationResult.Id, _user);
+                    _logger.LogInformation("Successfully edited conversation result {ConversationResult}. User {User}", conversationResult.Id, _user);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -146,34 +144,33 @@ namespace PRIS.Web.Controllers
         }
 
         //GET
-        public async Task<IActionResult> EditConversationForm(int? id, int? studentId)
+        public async Task<IActionResult> EditConversationForm(int? studentId)
         {
-            var studentById = await _repository.Query<Student>().Include(x => x.ConversationResult).FirstOrDefaultAsync(x => x.Id == studentId);
-            if(studentById.ConversationResult != null)
-            id = studentById.ConversationResult.Id;
+            var studentById = await _repository.Query<Student>().FirstOrDefaultAsync(x => x.Id == studentId);
+  
             int.TryParse(TempData["ExamId"].ToString(), out int examId);
             var conversationForms = await _repository
                 .Query<ConversationForm>()
                 .Include(x => x.ConversationResult)
                 .ThenInclude(x => x.Student)
-                .Where(x => x.ConversationResultId == id)
+                .Where(x => x.ConversationResultId == studentById.ConversationResultId)
                 .ToListAsync();
             List<ConversationForm> newConversationForms = new List<ConversationForm>();
+            if (studentById.ConversationResultId == null)
+            {
+                ConversationResult conversationResult = new ConversationResult();
+                conversationResult.Student = studentById;
+                conversationResult.StudentForeignKey = studentById.Id;
+                await _repository.InsertAsync(conversationResult);
+                studentById.ConversationResultId = conversationResult.Id;
+                await _repository.SaveAsync();
+
+            }
             if (conversationForms.Count() == 0)
             {
-                if (studentById.ConversationResult == null)
-                { 
-                ConversationResult conversationResult = new ConversationResult();
-                
-                conversationResult.Student = studentById;
-
-                studentById.ConversationResult = conversationResult;
-                conversationResult = await _repository.InsertAsync(conversationResult);
-                    id = conversationResult.Id;
-                }
                 for (int i = 0; i < 10; i++)
                 {
-                    newConversationForms.Add(new ConversationForm { ConversationResultId = id });
+                    newConversationForms.Add(new ConversationForm { ConversationResultId = studentById.ConversationResultId });
                     await _repository.InsertAsync<ConversationForm>(newConversationForms.ElementAt(i));
                 }
                 conversationForms = newConversationForms;
@@ -181,15 +178,14 @@ namespace PRIS.Web.Controllers
                     .Query<ConversationForm>()
                     .Include(x => x.ConversationResult)
                     .ThenInclude(x => x.Student)
-                    .Where(x => x.ConversationResultId == id)
+                    .Where(x => x.ConversationResultId == studentById.ConversationResultId)
                     .ToListAsync();
                 _logger.LogInformation("Successfully created conversation form. User {User}", _user);
             }
             TempData["ExamId"] = examId;
-            var student = conversationForms.Select(x => x.ConversationResult?.Student).FirstOrDefault();
-            TempData["ConversationResultId"] = student.ConversationResultId;
-            TempData["StudentId"] = student.Id;
-            return View(ConversationResultMappings.ToConversationFormViewModel(conversationForms, student, examId));
+            TempData["ConversationResultId"] = studentById.ConversationResultId;
+            TempData["StudentId"] = studentById.Id;
+            return View(ConversationResultMappings.ToConversationFormViewModel(conversationForms, studentById, examId));
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
