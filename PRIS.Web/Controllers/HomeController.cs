@@ -29,7 +29,6 @@ namespace PRIS.Web.Controllers
         }
         public IActionResult Main()
         {
-            _logger.LogInformation("User {User} open this page.", _user);
             return View();
         }
      
