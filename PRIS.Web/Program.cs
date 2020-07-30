@@ -33,19 +33,19 @@ namespace PRIS.Web
         {
             var connection = hostBuilderContext.Configuration.GetConnectionString("DefaultConnection");
 
-                cfg
-                .MinimumLevel.Information()
-                //.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                //.MinimumLevel.Override("System", LogEventLevel.Warning)
-                .WriteTo
-                .MSSqlServer(
-                connectionString: connection,
-                sinkOptions: new SinkOptions
-                {
-                    TableName = "Logs",
-                    AutoCreateSqlTable = true,
-                })
-                  .WriteTo.Console();
+            cfg
+            .MinimumLevel.Information()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .MinimumLevel.Override("System", LogEventLevel.Warning)
+            .WriteTo
+            .MSSqlServer(
+            connectionString: connection,
+            sinkOptions: new SinkOptions
+            {
+                TableName = "Logs",
+                AutoCreateSqlTable = true,
+            })
+              .WriteTo.Console();
         }
     }
 }
