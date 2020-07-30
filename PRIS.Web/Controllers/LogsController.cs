@@ -35,7 +35,7 @@ namespace PRIS.Web.Controllers
                     }
                     await con.CloseAsync();
                 };
-                return View(logsModel);
+                return View(logsModel.OrderByDescending(x => x.TimeStamp));
             }
             else
             {
