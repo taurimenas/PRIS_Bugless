@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.Logging;
 using PRIS.Core.Library.Entities;
 using PRIS.Web.Mappings;
 using PRIS.Web.Models;
@@ -18,17 +19,21 @@ namespace PRIS.Web.Controllers
     public class StudentsController : Controller
     {
         private readonly IRepository _repository;
+        private readonly ILogger<ExamsController> _logger;
+        private readonly string _user;
 
-
-        public StudentsController(IRepository repository)
+        public StudentsController(IRepository repository, ILogger<ExamsController> logger, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
+            _logger = logger;
+            _user = httpContextAccessor.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value;
         }
 
         public async Task<IActionResult> Index(int? id)
         {
             if (id == null)
             {
+                _logger.LogError("Exam id was null. User {User}.", _user);
                 return NotFound();
             }
             TempData["ExamId"] = id;
@@ -39,6 +44,7 @@ namespace PRIS.Web.Controllers
             var students = await studentRequest.Where(x => x.Result.Exam.Id == id).ToListAsync();
             if (students == null)
             {
+                _logger.LogWarning("No students found. User {User}.", _user);
                 return NotFound();
             }
 
@@ -58,15 +64,14 @@ namespace PRIS.Web.Controllers
                 }
             }
 
-
             studentViewModels = studentViewModels.OrderByDescending(x => x.FinalPoints).ToList();
-
+            _logger.LogInformation($"Found {studentViewModels.Count} students. User {_user}.");
             return View(studentViewModels);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(int[] HasPassedExam)
+        public async Task<IActionResult> Index(int[] studentId, int[] HasPassedExam)
         {
             int.TryParse(TempData["ExamId"].ToString(), out int ExamId);
             var backToExam = RedirectToAction("Index", "Students", new { id = ExamId });
@@ -86,12 +91,14 @@ namespace PRIS.Web.Controllers
                     findStudents.PassedExam = true;
                     if (findStudents.Result.Tasks == null)
                     {
+                        _logger.LogWarning($"No tasks assigned to student. User {_user}.");
                         TempData["ErrorMessage"] = "Negalima kviesti kandidato į pokalbį, jei jis neturi įrašytų testo rezultatų.";
                         return backToExam;
                     }
                 }
 
                 await _repository.SaveAsync();
+                _logger.LogWarning($"Saved data successfully. User {_user}.");
                 TempData["SuccessMessage"] = "Duomenys sėkmingai išsaugoti";
                 return backToExam;
             }
@@ -186,6 +193,7 @@ namespace PRIS.Web.Controllers
                         studentCourse.Priority = priority + 1;
 
                     await _repository.InsertAsync<StudentCourse>(studentCourse);
+                    _logger.LogInformation($"Created student: {studentViewModel.FirstName} {studentViewModel.LastName}. User {_user}.");
                 }
                 return backToExam;
 
@@ -396,7 +404,7 @@ namespace PRIS.Web.Controllers
                     var student = await studentRequest.FirstOrDefaultAsync(x => x.Id == result.StudentForeignKey);
                     var studentResultViewModel = StudentsMappings.ToStudentsResultViewModel(Tasks);
                     var examTasks = StudentsMappings.ToStudentsResultViewModel(result).Tasks;
-                    
+
                     if (student.PassedExam)
                     {
                         TempData["ErrorMessage"] = "Kandidatas yra pakviestas į pokalbį, todėl jo duomenų negalima redaguoti.";
