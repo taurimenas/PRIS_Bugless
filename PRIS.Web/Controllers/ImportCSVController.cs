@@ -16,6 +16,7 @@ using PRIS.Web.Mappings;
 using PRIS.Core.Library.Entities;
 using PRIS.Web.Storage;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace PRIS.Web.Controllers
 {
@@ -23,11 +24,15 @@ namespace PRIS.Web.Controllers
     {
         private IWebHostEnvironment _environment;
         private readonly IRepository _repository;
+        private readonly ILogger<ImportCSVController> _logger;
+        private readonly string _user;
 
-        public ImportCSVController(IWebHostEnvironment environment, IRepository repository)
+        public ImportCSVController(IWebHostEnvironment environment, IRepository repository, ILogger<ImportCSVController> logger, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor)
         {
             _environment = environment;
             _repository = repository;
+            _logger = logger;
+            _user = httpContextAccessor.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value;
         }
 
         public IActionResult Index()

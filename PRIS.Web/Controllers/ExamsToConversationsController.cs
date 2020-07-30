@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PRIS.Core.Library.Entities;
 using PRIS.Web.Mappings;
 using PRIS.Web.Models;
@@ -15,10 +16,15 @@ namespace PRIS.Web.Controllers
     public class ExamsToConversationsController : Controller
     {
         private readonly IRepository _repository;
+        private readonly ILogger<ExamsToConversationsController> _logger;
+        private readonly string _user;
 
-        public ExamsToConversationsController(IRepository repository)
+
+        public ExamsToConversationsController(IRepository repository, ILogger<ExamsToConversationsController> logger, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
+            _logger = logger;
+            _user = httpContextAccessor.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value;
         }
 
         public async Task<IActionResult> Index(int value, [Bind("SelectedCity")] ExamsViewModel viewModel)
@@ -53,6 +59,7 @@ namespace PRIS.Web.Controllers
                 studentsCountInAcceptancePeriod += results.Count(x => x.ExamId == examId);
             }
             TempData["Count"] = studentsCountInAcceptancePeriod;
+            _logger.LogInformation("Found {Count} records. At {Time}. User {User}.", viewModel.ExamViewModels.Count(), DateTime.UtcNow, _user);
             return View(viewModel);
         }
         private async Task<List<string>> CalculateAcceptancePeriods(List<ExamViewModel> examViewModels)
