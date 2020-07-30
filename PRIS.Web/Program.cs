@@ -21,10 +21,19 @@ namespace PRIS.Web
                 .AddJsonFile("appsettings.json")
                 .Build();
 
+            string defaultConnection = configuration.GetConnectionString("DefaultConnection");
             Log.Logger = new LoggerConfiguration()
+                .WriteTo
+                .MSSqlServer(
+              connectionString: defaultConnection,
+              sinkOptions: new SinkOptions
+              {
+                  TableName = "LogEvents",
+                  AutoCreateSqlTable = true,
+              }
+                )
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
-
             try
             {
                 Log.Information("Application starting");
