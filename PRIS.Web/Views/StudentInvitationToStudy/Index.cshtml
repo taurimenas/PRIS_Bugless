@@ -101,8 +101,17 @@
                         @Html.DisplayFor(modelItem => modelItem.StudentInvitationToStudy[i].Priority)
                     </td>
                     <td class="text-center">
-                        <input type="checkbox" name="HasInvitedToStudy" asp-for="@Model.StudentInvitationToStudy[i].InvitedToStudy" value="@Model.StudentInvitationToStudy[i].Id" id="checkbox-@Model.StudentInvitationToStudy[i].Id" class="checkbox-inline text-center">
-                        @Html.ActionLink("", "EditComment", "StudentInvitationToStudy", new { id = Model.StudentInvitationToStudy[i].Id }, new { @class = "fa fa-comments text-secondary float-right" })
+                        @if (@Model.StudentInvitationToStudy[i].StudentDataLocked == true)
+                        {
+                            <input type="checkbox" checked="checked" disabled="disabled" />
+                            <input type="hidden" name="HasInvitedToStudy" asp-for="@Model.StudentInvitationToStudy[i].InvitedToStudy" value="@Model.StudentInvitationToStudy[i].Id" id="checkbox-@Model.StudentInvitationToStudy[i].Id" class="checkbox-inline text-center">
+                            @Html.ActionLink("", "EditComment", "StudentInvitationToStudy", new { id = Model.StudentInvitationToStudy[i].Id }, new { @class = "fa fa-comments text-secondary float-right" })
+                        }
+                        else
+                        {
+                            <input type="checkbox" name="HasInvitedToStudy" asp-for="@Model.StudentInvitationToStudy[i].InvitedToStudy" value="@Model.StudentInvitationToStudy[i].Id" id="checkbox-@Model.StudentInvitationToStudy[i].Id" class="checkbox-inline text-center">
+                            @Html.ActionLink("", "EditComment", "StudentInvitationToStudy", new { id = Model.StudentInvitationToStudy[i].Id }, new { @class = "fa fa-comments text-secondary float-right" })
+                        }
                     </td>
                 </tr>
             }

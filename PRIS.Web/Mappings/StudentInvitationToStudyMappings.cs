@@ -38,6 +38,7 @@ namespace PRIS.Web.Mappings
                 ConversationGrade = conversationResult?.Grade,
                 FinalAverageGrade = finalAverageGrade,
                 Priority = priorities,
+                StudentDataLocked = student.StudentDataLocked,
                 InvitedToStudy = student.InvitedToStudy,
                 CityId = result?.Exam.City.Id,
                 ExamId = result?.Exam.Id,
