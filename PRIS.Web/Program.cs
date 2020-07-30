@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Configuration;
 using Serilog;
+using Serilog.Events;
 using Serilog.Sinks.MSSqlServer.Sinks.MSSqlServer.Options;
 
 namespace PRIS.Web
@@ -17,49 +18,34 @@ namespace PRIS.Web
     {
         public static void Main(string[] args)
         {
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            Log.Logger = new LoggerConfiguration()
-                  .WriteTo
-                  .MSSqlServer(
-                connectionString: configuration.GetConnectionString("DefaultConnection"),
-                sinkOptions: new SinkOptions
-                {
-                    TableName = "Logs",
-                    AutoCreateSqlTable = true,
-                }
-                  )
-                .CreateLogger();
-            try
-            {
-                Log.Information("Application starting");
-                CreateHostBuilder(args).Build().Run();
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e, "The application failed to start.");
-            }
-            finally
-            {
-                Log.CloseAndFlush();
-            }
+            CreateHostBuilder(args).UseSerilog(ConfigureDefaultLogger).Build().Run();
+            AppDomain.CurrentDomain.ProcessExit += (s, e) => Log.CloseAndFlush();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureLogging((context, logging) =>
-                {
-                    logging.ClearProviders();
-                    logging.AddConfiguration(context.Configuration.GetSection("Logging"));
-                    logging.AddDebug();
-                    logging.AddConsole();
-                })
-                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+        public static void ConfigureDefaultLogger(HostBuilderContext hostBuilderContext, LoggerConfiguration cfg)
+        {
+            var connection = hostBuilderContext.Configuration.GetConnectionString("DefaultConnection");
+
+            cfg
+                .MinimumLevel.Information()
+                //.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                //.MinimumLevel.Override("System", LogEventLevel.Warning)
+                  .WriteTo
+                  .MSSqlServer(
+                connectionString: connection,
+                sinkOptions: new SinkOptions
+                {
+                    TableName = "Logs",
+                    AutoCreateSqlTable = true,
+                })
+                  .WriteTo.Console();
+        }
     }
 }
