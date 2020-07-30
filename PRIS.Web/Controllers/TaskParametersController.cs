@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PRIS.Web.Data;
 using PRIS.Web.Mappings;
+using System;
 using System.Threading.Tasks;
 
 namespace PRIS.Web.Controllers
@@ -8,21 +10,25 @@ namespace PRIS.Web.Controllers
     public class TaskParametersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ExamsController> _logger;
 
-        public TaskParametersController(ApplicationDbContext context)
+        public TaskParametersController(ApplicationDbContext context, ILogger<ExamsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
+                _logger.LogWarning("ExamId not found. At {Time}.", DateTime.UtcNow);
                 return NotFound();
             }
             var tasks = await _context.Exams.FindAsync(id);
             if (tasks == null)
             {
+                _logger.LogWarning("Tasks not found. At {Time}.", DateTime.UtcNow);
                 return NotFound();
             }
             var setTaskParameterModel = TaskParametersMappings.ToTaskParameterViewModel(tasks);
