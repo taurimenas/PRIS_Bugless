@@ -33,6 +33,7 @@ namespace PRIS.Web.Controllers
                     {
                         logsModel.Add(new Logs { Id = reader["Id"].ToString(), Level = reader["Level"].ToString(), Message = reader["Message"].ToString(), TimeStamp = reader["TimeStamp"].ToString(), Exception = reader["Exception"].ToString() });
                     }
+                    await con.CloseAsync();
                 };
                 return View(logsModel);
             }
