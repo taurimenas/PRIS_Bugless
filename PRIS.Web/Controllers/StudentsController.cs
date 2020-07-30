@@ -77,12 +77,15 @@ namespace PRIS.Web.Controllers
             var backToExam = RedirectToAction("Index", "Students", new { id = ExamId });
             if (ModelState.IsValid)
             {
-                var students = await _repository.Query<Student>()
+                var students = new List<Student>();
+                for (int i = 0; i < studentId.Length; i++)
+                {
+                    students.Add(await _repository.Query<Student>()
                     .Include(x => x.Result)
                     .Include(x => x.ConversationResult)
-                    .Where(x => x.Id > 0)
-                    .Where(x => x.Result.Exam.Id == ExamId)
-                    .ToListAsync();
+                    .FirstOrDefaultAsync(x => x.Id == studentId[i]));
+                }
+                
                 students.ForEach(x => x.PassedExam = false);
 
                 for (int i = 0; i < HasPassedExam.Length; i++)
