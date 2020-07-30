@@ -71,18 +71,21 @@ namespace PRIS.Web.Controllers
             {
                 return NotFound();
             }
-            var student = await _repository.FindByIdAsync<Student>(id);
+            var student = await _repository.Query<Student>()
+                .Include(x => x.ConversationResult)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
             TempData["ConversationResultId"] = student.ConversationResultId;
             TempData["StudentId"] = student.Id;
 
-            if (student.ConversationResultId == null)
+            if (student.ConversationResult == null)
             {
                 ConversationResult conversationResult = new ConversationResult();
                 conversationResult.Student = student;
 
                 student.ConversationResult = conversationResult;
                 conversationResult = await _repository.InsertAsync(conversationResult);
-                _logger.LogInformation("New conversation result added to DB. At {Time}. User {User}.", DateTime.UtcNow, _user);
+                _logger.LogInformation("New conversation result added to DB. User {User}.", _user);
                 student.ConversationResultId = conversationResult.Id;
                 TempData["ConversationResultId"] = student.ConversationResultId;
                 await _repository.SaveAsync();
@@ -113,7 +116,7 @@ namespace PRIS.Web.Controllers
             var studentFromDatabase = await _repository.FindByIdAsync<Student>(studentId);
             if (studentFromDatabase.InvitedToStudy == true)
             {
-                _logger.LogWarning("Failed to edit conversation result, student {Student} has invited to study. At {Time}. User {User}", studentFromDatabase.Id, DateTime.UtcNow, _user);
+                _logger.LogWarning("Failed to edit conversation result, student {Student} has invited to study. User {User}", studentFromDatabase.Id, _user);
                 ModelState.AddModelError("ConversationResultEdit", "Kandidatas yra pakviestas studijuoti, pokalbio įvertinimo redaguoti negalima");
                 TempData["ErrorMessage"] = "Kandidatas yra pakviestas studijuoti, pokalbio įvertinimo redaguoti negalima";
                 return RedirectToAction("EditConversationResult", "ConversationResults", new { id = studentId });
@@ -128,7 +131,7 @@ namespace PRIS.Web.Controllers
                     var conversationResultViewModel = ConversationResultMappings.ToViewModel(student, conversationResult, examId);
                     ConversationResultMappings.EditEntity(conversationResult, model);
                     await _repository.UpdateAsync(conversationResult);
-                    _logger.LogInformation("Successfully edited conversation result {ConversationResult} At {Time}. User {User}",conversationResult.Id, DateTime.UtcNow, _user);
+                    _logger.LogInformation("Successfully edited conversation result {ConversationResult}. User {User}",conversationResult.Id, _user);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -136,15 +139,18 @@ namespace PRIS.Web.Controllers
                 }
                 return RedirectToAction("Index", "ConversationResults", new { id = examId });
             }
-            _logger.LogWarning("Bad input, conversation result input must be between 0 and 10 student. At {Time}. User {User}", DateTime.UtcNow, _user);
+            _logger.LogWarning("Bad input, conversation result input must be between 0 and 10 student. User {User}", _user);
             TempData["ErrorMessage"] = "Pokalbio įvertinimas turi būti nuo 0 iki 10";
             ModelState.AddModelError("ConversationResultRange", "Pokalbio įvertinimas turi būti nuo 0 iki 10");
             return RedirectToAction("EditConversationResult", "ConversationResults", new { id = studentId });
         }
 
         //GET
-        public async Task<IActionResult> EditConversationForm(int id)
+        public async Task<IActionResult> EditConversationForm(int? id, int? studentId)
         {
+            var studentById = await _repository.Query<Student>().Include(x => x.ConversationResult).FirstOrDefaultAsync(x => x.Id == studentId);
+            if(studentById.ConversationResult != null)
+            id = studentById.ConversationResult.Id;
             int.TryParse(TempData["ExamId"].ToString(), out int examId);
             var conversationForms = await _repository
                 .Query<ConversationForm>()
@@ -155,6 +161,16 @@ namespace PRIS.Web.Controllers
             List<ConversationForm> newConversationForms = new List<ConversationForm>();
             if (conversationForms.Count() == 0)
             {
+                if (studentById.ConversationResult == null)
+                { 
+                ConversationResult conversationResult = new ConversationResult();
+                
+                conversationResult.Student = studentById;
+
+                studentById.ConversationResult = conversationResult;
+                conversationResult = await _repository.InsertAsync(conversationResult);
+                    id = conversationResult.Id;
+                }
                 for (int i = 0; i < 10; i++)
                 {
                     newConversationForms.Add(new ConversationForm { ConversationResultId = id });
@@ -167,7 +183,7 @@ namespace PRIS.Web.Controllers
                     .ThenInclude(x => x.Student)
                     .Where(x => x.ConversationResultId == id)
                     .ToListAsync();
-                _logger.LogInformation("Successfully created conversation form. At {Time}. User {User}", DateTime.UtcNow, _user);
+                _logger.LogInformation("Successfully created conversation form. User {User}", _user);
             }
             TempData["ExamId"] = examId;
             var student = conversationForms.Select(x => x.ConversationResult?.Student).FirstOrDefault();
@@ -185,7 +201,7 @@ namespace PRIS.Web.Controllers
             var studentFromDatabase = await _repository.FindByIdAsync<Student>(studentId);
             if (studentFromDatabase.InvitedToStudy == true)
             {
-                _logger.LogWarning("Failed to edit conversation result form, student {Student} has invited to study. At {Time}. User {User}", studentFromDatabase.Id, DateTime.UtcNow, _user);
+                _logger.LogWarning("Failed to edit conversation result form, student {Student} has invited to study. User {User}", studentFromDatabase.Id, _user);
                 ModelState.AddModelError("ConversationFormEdit", "Kandidatas yra pakviestas studijuoti, pokalbio anketos redaguoti negalima");
                 TempData["ErrorMessage"] = "Kandidatas yra pakviestas studijuoti, pokalbio anketos redaguoti negalima";
                 return RedirectToAction("EditConversationForm", "ConversationResults", new { id = conversationResultId });
@@ -196,7 +212,7 @@ namespace PRIS.Web.Controllers
                 {
                     var conversationForm = await _repository.Query<ConversationForm>().Where(x => x.ConversationResultId == conversationResultId).ToListAsync();
                     ConversationResultMappings.EditConversationFormEntity(conversationForm, model);
-                    _logger.LogInformation("Successfully edited conversation form. At {Time}. User{User}", DateTime.UtcNow, _user);
+                    _logger.LogInformation("Successfully edited conversation form. User {User}", _user);
                     await _repository.SaveAsync();
                 }
                 catch (DbUpdateConcurrencyException)

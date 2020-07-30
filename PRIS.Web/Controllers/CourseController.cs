@@ -79,12 +79,13 @@ namespace PRIS.Web.Controllers
                     var findStudents = students.FirstOrDefault(x => x.Id == HasSignedAContract[i]);
                     findStudents.SignedAContract = true;
                 }
-
+                _logger.LogInformation("{Count} has signed a contract. User {User}",students.Where(x=>x.SignedAContract).Count(), _user);
                 var studentsForDataLock = new List<Student>();
                 for (int i = 0; i < studentId.Length; i++)
                 {
                     studentsForDataLock.Add(await _repository.FindByIdAsync<Student>(studentId[i]));
                 }
+                var currentUrl = HttpContext.Request.Headers["Referer"];
                 studentsForDataLock.ForEach(x => x.StudentDataLocked = false);
                 for (int i = 0; i < HasStudentDataLocked.Length; i++)
                 {
@@ -96,22 +97,23 @@ namespace PRIS.Web.Controllers
                             if (findStudents.SignedAContract == true)
                             {
                                 findStudents.StudentDataLocked = true;
-                                _logger.LogInformation("Student {Student} data locked. At {Time}. User {User}", findStudents.Id, DateTime.UtcNow, _user);
+                                _logger.LogInformation("Student {Student} data locked. User {User}", student.Id, _user);
                             }
                             else
                             {
-                                
                                 ModelState.AddModelError("StudentDelete", "Kandidatas turi būti pasirašęs sutartį, kad būtų galima užrakinti kandidato duomenis");
                                 TempData["ErrorMessage"] = "Kandidatas turi būti pasirašęs sutartį, kad būtų galima užrakinti kandidato duomenis";
+                                _logger.LogWarning("Failed to lock data, the student {Student} must be signed to a contract. User {User}.", student.Id, _user);
+                                return Redirect(currentUrl);
                             }
-                            _logger.LogWarning("Failed to lock data, the student {Student} must be signed to a contract. At {Time}. User {User}.", findStudents.Id, DateTime.UtcNow, _user);
                         }
                     }
                 }
-                _logger.LogInformation("Successfully saved data. At {Time}. User {User}.", DateTime.UtcNow, _user);
+                
                 await _repository.SaveAsync();
+                _logger.LogInformation("Successfully saved data. User {User}.", _user);
                 TempData["SuccessMessage"] = "Duomenys sėkmingai išsaugoti";
-                var currentUrl = HttpContext.Request.Headers["Referer"];
+                
                 return Redirect(currentUrl);
             }
             return RedirectToAction("Index", "Home");

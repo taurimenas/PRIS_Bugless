@@ -50,6 +50,7 @@
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.FirstName)
+                        <input type="hidden" name="studentId" value="@item.Id" class="text" asp-for="@item.FirstName" />
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.LastName)

@@ -43,7 +43,7 @@
                     <td class="text-center">
                         @Html.DisplayFor(modelItem => modelItem.ConversationForm.ElementAtOrDefault(i).ConversationFormName)
                         <span class="float-none text-secondary">
-                            @Html.ActionLink("", "EditConversationForm", new { id = Model.ConvResults.ElementAtOrDefault(i).ConversationResultId}, new { @class = "far fa-file-alt" })
+                            @Html.ActionLink("", "EditConversationForm", new { id = Model.ConvResults.ElementAtOrDefault(i).ConversationResultId, studentId = Model.Students.ElementAt(i).Id }, new { @class = "far fa-file-alt" })
                         </span>
                     </td>
                 </tr>
