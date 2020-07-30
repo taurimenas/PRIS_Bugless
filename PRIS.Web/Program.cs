@@ -22,15 +22,15 @@ namespace PRIS.Web
                 .Build();
 
             Log.Logger = new LoggerConfiguration()
-                .WriteTo
-                .MSSqlServer(
-              connectionString: configuration.GetConnectionString("DefaultConnection"),
-              sinkOptions: new SinkOptions
-              {
-                  TableName = "Logs",
-                  AutoCreateSqlTable = true,
-              }
-                )
+                //  .WriteTo
+                //  .MSSqlServer(
+                //connectionString: configuration.GetConnectionString("DefaultConnection"),
+                //sinkOptions: new SinkOptions
+                //{
+                //    TableName = "Logs",
+                //    AutoCreateSqlTable = true,
+                //}
+                //  )
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
             try
