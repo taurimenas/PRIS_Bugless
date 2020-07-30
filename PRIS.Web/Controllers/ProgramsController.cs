@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PRIS.Core.Library.Entities;
 using PRIS.Web.Mappings;
 using PRIS.Web.Models;
@@ -15,10 +16,14 @@ namespace PRIS.Web.Controllers
     public class ProgramsController : Controller
     {
         private readonly IRepository _repository;
+        private readonly ILogger<ProgramsController> _logger;
+        private readonly string _user;
 
-        public ProgramsController(IRepository repository)
+        public ProgramsController(IRepository repository, ILogger<ProgramsController> logger, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
+            _logger = logger;
+            _user = httpContextAccessor.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value;
         }
 
         public async Task<IActionResult> Index()
@@ -35,6 +40,7 @@ namespace PRIS.Web.Controllers
             cities.ForEach(city => citiesList.Add(ProgramMappings.ToCityListViewModel(city)));
             programViewModel.CityNames = citiesList;
 
+            _logger.LogInformation($"{programsList.Count()} programs and {citiesList.Count()} cities exist in view. User {_user}");
             return View(programViewModel);
         }
 
@@ -54,12 +60,15 @@ namespace PRIS.Web.Controllers
                 var beforeCreatedProgam = _repository.Query<Core.Library.Entities.Program>().FirstOrDefault(x => x.Name == result.Name);
                 if (beforeCreatedProgam != null)
                 {
+                    _logger.LogWarning($"User {_user} tried to create existing program {result.Name}");
                     TempData["ErrorMessage"] = "Ši programa jau yra sukurta";
                     return RedirectToAction(nameof(Create));
                 }
                 await _repository.InsertAsync<Core.Library.Entities.Program>(result);
+                _logger.LogInformation($"User {_user} created program {result.Name}");
                 return RedirectToAction(nameof(Index));
             }
+            _logger.LogError($"Error with ModelState validation. User {_user} ");
             return View(programCreateModel);
         }
         public IActionResult CreateNewCity()
@@ -77,35 +86,43 @@ namespace PRIS.Web.Controllers
                 var beforeCreatedCity = _repository.Query<City>().FirstOrDefault(x => x.Name == result.Name);
                 if (beforeCreatedCity != null)
                 {
+                    _logger.LogWarning($"User {_user} tried to create existing city {result.Name}");
                     TempData["ErrorMessage"] = "Šis miestas jau yra sukurtas";
                     return RedirectToAction(nameof(CreateNewCity));
                 }
                 await _repository.InsertAsync<City>(result);
+                _logger.LogInformation($"User {_user} created city {result.Name}");
                 return RedirectToAction(nameof(Index));
             }
+            _logger.LogError($"Error with ModelState validation. User {_user} ");
             return View(cityCreateModel);
         }
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
+                _logger.LogError($"Program was not found. User {_user} ");
                 return NotFound();
             }
             var program = await _repository.Query<Core.Library.Entities.Program>()
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (program == null)
             {
+                _logger.LogError($"Program with {id} id was not found. User {_user} ");
                 return NotFound();
             }
             var programById = await _repository.FindByIdAsync<Core.Library.Entities.Program>(id);
             var course = await _repository.Query<Course>().FirstOrDefaultAsync(x => x.Title == program.Name);
             if (course != null)
             {
+
+                _logger.LogWarning($"{program.Name} program with {id} id was impossible to delete because it has students. User {_user} ");
                 return await BadRequest(course, "Programos negalima ištrinti, nes prie jos jau yra priskirta kandidatų.");
             }
             else
             {
                 await _repository.DeleteAsync<Core.Library.Entities.Program>(programById.Id);
+                _logger.LogInformation($"{program.Name} program with {id} id was deleted. User {_user} ");
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -114,11 +131,13 @@ namespace PRIS.Web.Controllers
         {
             if (id == null)
             {
+                _logger.LogError($"City was not found. User {_user} ");
                 return NotFound();
             }
             var city = await _repository.FindByIdAsync<City>(id);
             if (city == null)
             {
+                _logger.LogError($"City with {id} id was not found. User {_user} ");
                 return NotFound();
             }
 
@@ -131,10 +150,12 @@ namespace PRIS.Web.Controllers
                 {
                     TempData["ErrorMessage"] = "Miesto negalima ištrinti, nes prie jo jau yra priskirta kandidatų.";
                 }
+                _logger.LogWarning($"{city.Name} city with {id} id was impossible to delete because it has students. User {_user} ");
                 return RedirectToAction(nameof(Index));
             }
             else
             {
+                _logger.LogInformation($"{city.Name} city with {id} id was deleted. User {_user} ");
                 await _repository.DeleteAsync<City>(city.Id);
                 return RedirectToAction(nameof(Index));
             }

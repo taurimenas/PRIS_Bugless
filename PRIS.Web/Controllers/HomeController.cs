@@ -24,12 +24,12 @@ namespace PRIS.Web.Controllers
 
         public IActionResult Index()
         {
-            _logger.LogInformation("At {Time}. User {User} logged in", DateTime.UtcNow, _user);
+            _logger.LogInformation("User {User} logged in", _user);
             return View();
         }
         public IActionResult Main()
         {
-            _logger.LogInformation("At {Time}. User {User} open this page.", DateTime.UtcNow, _user);
+            _logger.LogInformation("User {User} open this page.", _user);
             return View();
         }
      

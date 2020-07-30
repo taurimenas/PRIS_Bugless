@@ -45,11 +45,13 @@ namespace PRIS.Web.Controllers
         {
             if (file == null)
             {
+                _logger.LogWarning("User {User} tried to save empty file", _user);
                 TempData["ErrorMessage"] = "Nėra įkeltas failas.";
                 return RedirectToAction("Index", "ImportCSV");
             }
             if (!file.FileName.EndsWith(".csv"))
             {
+                _logger.LogWarning("User {User} tried to upload", _user, file.FileName);
                 TempData["ErrorMessage"] = "Prašome įkelti .csv failą.";
                 return RedirectToAction("Index", "ImportCSV");
             }
@@ -64,16 +66,19 @@ namespace PRIS.Web.Controllers
                     var seperatedData = dataFromCSV.Split(";");
                     if (seperatedData.Length > 20)
                     {
+                        _logger.LogWarning("User {User} tried to upload {File} with too many columns", _user, file.FileName);
                         TempData["ErrorMessage"] = $"Jūsų faile yra per daug stulpelių arba CSV faile tarp duomenų yra naudojamas kabliataškis(;).";
                         return RedirectToAction("ImportCSV", "ImportCSV");
                     }
                     if (seperatedData.Length < 20)
                     {
+                        _logger.LogWarning("User {User} tried to upload {File} with less columns or wrong .CSV format", _user, file.FileName);
                         TempData["ErrorMessage"] = $"Jūsų faile yra per mažai stulpelių arba CSV failo skirtuvas yra blogas.";
                         return RedirectToAction("Index", "ImportCSV");
                     }
                     if (seperatedData[1] == "")
                     {
+                        _logger.LogWarning("User {User} tried to upload {File} where student in {Line} line does not  firstname and lastname", _user, file.FileName, seperatedData[0]);
                         TempData["ErrorMessage"] = $"Jūsų faile {seperatedData[0]} eilutėje yra kandidatas, kuris neturi vardo ir pavardės.";
                         return RedirectToAction("Index", "ImportCSV");
                     }
@@ -81,6 +86,7 @@ namespace PRIS.Web.Controllers
                     var programFromCSV = programs.FirstOrDefault(x => x.Name == seperatedData[5]);
                     if (programFromCSV == null)
                     {
+                        _logger.LogWarning("User {User} tried to upload {File} where program in {Line} line does not exist", _user, file.FileName, seperatedData[0]);
                         TempData["ErrorMessage"] = $"Jūsų faile {seperatedData[0]} eilutėje yra programa, kuri neegzistuoja sitemoje. Pirma sukurkite programą, tada kelkite failą.";
                         return RedirectToAction("Index", "ImportCSV");
                     }
@@ -88,31 +94,37 @@ namespace PRIS.Web.Controllers
 
                     if (firstNameAndLastName.First() == "" || firstNameAndLastName.First() == " ")
                     {
+                        _logger.LogWarning("User {User} tried to upload {File} where student in {Line} line does not have firstname", _user, file.FileName, seperatedData[0]);
                         TempData["ErrorMessage"] = $"Jūsų faile {seperatedData[0]} eilutėje yra kandidatas, kurio vardo yra negalima aptikti. Patikrinkite ar nėra tarpo prieš vardą.";
                         return RedirectToAction("Index", "ImportCSV");
                     }
                     if (firstNameAndLastName.Last() == "" || firstNameAndLastName.Last() == " ")
                     {
+                        _logger.LogWarning("User {User} tried to upload {File} where student in {Line} line does not have lastname", _user, file.FileName, seperatedData[0]);
                         TempData["ErrorMessage"] = $"Jūsų faile {seperatedData[0]} eilutėje yra kandidatas, kurio pavardės negalima aptikti.";
                         return RedirectToAction("Index", "ImportCSV");
                     }
                     if (seperatedData[16].ToLower() != "taip" && seperatedData[17] != "")
                     {
+                        _logger.LogWarning("User {User} tried to upload {File} where student in {Line} line did not passedExam and has conversationResult", _user, file.FileName, seperatedData[0]);
                         TempData["ErrorMessage"] = $"Jūsų faile {seperatedData[0]} eilutėje yra kandidatas, kuris nėra pakviestas į pokalbį, bet turi pokalbio įvertinimą.";
                         return RedirectToAction("Index", "ImportCSV");
                     }
                     if (seperatedData[16].ToLower() != "taip" && seperatedData[18].ToLower() == "taip")
                     {
+                        _logger.LogWarning("User {User} tried to upload {File} where student in {Line} line did not passedExam and has invitation to study", _user, file.FileName, seperatedData[0]);
                         TempData["ErrorMessage"] = $"Jūsų faile {seperatedData[0]} eilutėje yra kandidatas, kuris nėra pakviestas į pokalbį, bet yra kviečiamas studijuoti.";
                         return RedirectToAction("Index", "ImportCSV");
                     }
                     if (seperatedData[16].ToLower() != "taip" && seperatedData[19].ToLower() == "taip")
                     {
+                        _logger.LogWarning("User {User} tried to upload {File} where student in {Line} line did not passedExam and signed a contract", _user, file.FileName, seperatedData[0]);
                         TempData["ErrorMessage"] = $"Jūsų faile {seperatedData[0]} eilutėje yra kandidatas, kuris nėra pakviestas į pokalbį, bet yra pasirašęs sutartį.";
                         return RedirectToAction("Index", "ImportCSV");
                     }
                     if (seperatedData[18].ToLower() != "taip" && seperatedData[19].ToLower() == "taip")
                     {
+                        _logger.LogWarning("User {User} tried to upload {File} where student in {Line} line signed a contract but did not have invitation to studies", _user, file.FileName, seperatedData[0]);
                         TempData["ErrorMessage"] = $"Jūsų faile {seperatedData[0]} eilutėje yra kandidatas, kuris yra pasirašęs sutartį, bet nėra pakviestas studijuoti.";
                         return RedirectToAction("Index", "ImportCSV");
                     }
@@ -135,17 +147,21 @@ namespace PRIS.Web.Controllers
                         ExamId = examId,
                     };
                     await _repository.InsertAsync<Result>(result);
+                        _logger.LogInformation($"Result with {result.Id} id was saved from {file.FileName} by {_user}");
                     var student = new Student();
                     await _repository.InsertAsync<Student>(student);
+                        _logger.LogInformation($"Student with {student.Id} id was saved from {file.FileName} by {_user}");
                     if (dataFromCSV.ConversationResult == null)
                     {
+                        _logger.LogInformation($"Student with {student.Id} id does not have conversationResult from {file.FileName} by {_user}");
                         ImportedCSVMappings.ToEntityWithoutConversationResult(student, result, dataFromCSV);
                     }
                     else
                     {
-                        var coversationResult = new ConversationResult();
-                        await _repository.InsertAsync<ConversationResult>(coversationResult);
-                        ImportedCSVMappings.ToEntity(student, result, coversationResult, dataFromCSV);
+                        var conversationResult = new ConversationResult();
+                        await _repository.InsertAsync<ConversationResult>(conversationResult);
+                        _logger.LogInformation($"ConversationResult {conversationResult.Id} Id was created for student with {student.Id} id  from {file.FileName} by {_user}");
+                        ImportedCSVMappings.ToEntity(student, result, conversationResult, dataFromCSV);
                     }
                     var studentsExam = _repository.Query<Exam>().FirstOrDefault(x => x.Id == examId);
 
@@ -182,6 +198,7 @@ namespace PRIS.Web.Controllers
                             studentCourse.CourseId = course.Id;
                             studentCourse.Course = course;
                             await _repository.InsertAsync<Course>(course);
+                        _logger.LogInformation($"New course {course.Title}{course.StartYear} {course.EndYear} was created from {file.FileName} by {_user}");
                         }
                         var programFromCSV = programs.FirstOrDefault(x => x.Name == dataFromCSV.Priority);
                         if (programFromCSV.Name == program.Name)
@@ -190,10 +207,12 @@ namespace PRIS.Web.Controllers
                             studentCourse.Priority = null;
 
                         await _repository.InsertAsync<StudentCourse>(studentCourse);
+                        _logger.LogInformation($"{studentCourse.Priority} priority for {student.Id} was added from {file.FileName} by {_user}");
                         await _repository.SaveAsync();
                     }
                 }
             }
+            _logger.LogInformation("User {User} uploaded successfully data from {File}", _user, file.FileName);
             return RedirectToAction("Index", "Students", new { id = examId });
         }
         private static void DataFromCSVMappingToImportStudentsDataModel(string[] seperatedData, ImportedStudentsDataModel dataFromCSV, string[] firstNameAndLastName)

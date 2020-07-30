@@ -59,7 +59,7 @@ namespace PRIS.Web.Controllers
                 studentsCountInAcceptancePeriod += results.Count(x => x.ExamId == examId);
             }
             TempData["Count"] = studentsCountInAcceptancePeriod;
-            _logger.LogInformation("Found {Count} records. At {Time}. User {User}.", viewModel.ExamViewModels.Count(), DateTime.UtcNow, _user);
+            _logger.LogInformation("Found {Count} records. User {User}.", viewModel.ExamViewModels.Count(), _user);
             return View(viewModel);
         }
         private async Task<List<string>> CalculateAcceptancePeriods(List<ExamViewModel> examViewModels)
