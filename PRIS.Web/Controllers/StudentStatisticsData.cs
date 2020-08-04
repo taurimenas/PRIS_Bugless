@@ -161,7 +161,7 @@ namespace PRIS.Web.Controllers
             }
             stringAcceptancePeriods.Add(new SelectListItem { Value = null, Text = "" });
 
-            return stringAcceptancePeriods;
+            return stringAcceptancePeriods.OrderByDescending(x => x.Text).ToList();
         }
     }
 }
