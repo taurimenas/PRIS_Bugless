@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PRIS.Core.Library.Entities;
 using PRIS.Web.Data;
 using PRIS.Web.Mappings;
+using PRIS.Web.Storage;
 using System;
 using System.Threading.Tasks;
 
@@ -9,29 +12,26 @@ namespace PRIS.Web.Controllers
 {
     public class TaskParametersController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository _repository;
         private readonly ILogger<ExamsController> _logger;
-        private readonly string _user;
 
-        public TaskParametersController(ApplicationDbContext context, ILogger<ExamsController> logger, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor)
+        public TaskParametersController(IRepository repository, ILogger<ExamsController> logger)
         {
-            _context = context;
+            _repository = repository;
             _logger = logger;
-            _user = httpContextAccessor.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value;
-
         }
 
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
-                _logger.LogWarning("ExamId not found. User {User}.", _user);
+                _logger.LogWarning("ExamId not found. User {User}.", User.Identity.Name);
                 return NotFound();
             }
-            var tasks = await _context.Exams.FindAsync(id);
+            var tasks = await _repository.FindByIdAsync<Exam>(id);
             if (tasks == null)
             {
-                _logger.LogWarning("Tasks not found. User {User}.", _user);
+                _logger.LogWarning("Tasks not found. User {User}.", User.Identity.Name);
                 return NotFound();
             }
             var setTaskParameterModel = TaskParametersMappings.ToTaskParameterViewModel(tasks);
@@ -54,15 +54,15 @@ namespace PRIS.Web.Controllers
             if (studentsCountInAcceptancePeriod > 0)
             {
                 TempData["ErrorMessage"] = "Šablono keisti negalima, nes prie jo jau yra priskirta kandidatų.";
-                _logger.LogWarning("Can not change Tasks, {Count} students found in this period. User {User}.", studentsCountInAcceptancePeriod, _user);
+                _logger.LogWarning("Can not change Tasks, {Count} students found in this period. User {User}.", studentsCountInAcceptancePeriod, User.Identity.Name);
                 return RedirectToAction("Edit", "TaskParameters", new { id });
             }
             else
             {
-                var exam = await _context.Exams.FindAsync(id);
+                var exam = await _repository.FindByIdAsync<Exam>(id);
                 if (id != exam.Id)
                 {
-                    _logger.LogWarning("Can not find Exam by id = {Id}. User {User}.", id, _user);
+                    _logger.LogWarning("Can not find Exam by id = {Id}. User {User}.", id, User.Identity.Name);
                     return NotFound();
                 }
                 if (ModelState.IsValid)
@@ -72,11 +72,11 @@ namespace PRIS.Web.Controllers
                         tasks[i] = double.Parse(tasksString[i], System.Globalization.CultureInfo.InvariantCulture);
                     }
                     TaskParametersMappings.EditTaskParametersEntity(exam, tasks);
-                    await _context.SaveChangesAsync();
-                    _logger.LogWarning("Can not find Exam by id = {Id}. User {User}.", id, _user);
+                    await _repository.SaveAsync();
+                    _logger.LogWarning("Can not find Exam by id = {Id}. User {User}.", id, User.Identity.Name);
                     return Redirect($"/Exams/Index?value={SelectedAcceptancePeriod}");
                 }
-                _logger.LogError("Something went wrong with modelstate. User {User}.", _user);
+                _logger.LogError("Something went wrong with modelstate. User {User}.", User.Identity.Name);
                 return View(TaskParametersMappings.ToTaskParameterViewModel(tasks));
             }
         }

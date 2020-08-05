@@ -80,8 +80,10 @@ namespace PRIS.Web.Controllers
 
             if (student.ConversationResult == null)
             {
-                ConversationResult conversationResult = new ConversationResult();
-                conversationResult.Student = student;
+                ConversationResult conversationResult = new ConversationResult
+                {
+                    Student = student
+                };
 
                 student.ConversationResult = conversationResult;
                 conversationResult = await _repository.InsertAsync(conversationResult);
@@ -89,16 +91,20 @@ namespace PRIS.Web.Controllers
                 student.ConversationResultId = conversationResult.Id;
                 TempData["ConversationResultId"] = student.ConversationResultId;
                 await _repository.SaveAsync();
-                ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel();
-                conversationResultViewModel.ConversationResultId = conversationResult.Id;
+                ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel
+                {
+                    ConversationResultId = conversationResult.Id
+                };
                 TempData["ExamId"] = examId;
                 return View(ConversationResultMappings.ToViewModel(student, conversationResult, examId));
             }
             else
             {
                 var conversationResult = await _repository.FindByIdAsync<ConversationResult>(student.ConversationResultId);
-                ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel();
-                conversationResultViewModel.ConversationResultId = conversationResult.Id;
+                ConversationResultViewModel conversationResultViewModel = new ConversationResultViewModel
+                {
+                    ConversationResultId = conversationResult.Id
+                };
                 TempData["ExamId"] = examId;
                 return View(ConversationResultMappings.ToViewModel(student, conversationResult, examId));
             }
@@ -147,7 +153,7 @@ namespace PRIS.Web.Controllers
         public async Task<IActionResult> EditConversationForm(int? studentId)
         {
             var studentById = await _repository.Query<Student>().FirstOrDefaultAsync(x => x.Id == studentId);
-  
+
             int.TryParse(TempData["ExamId"].ToString(), out int examId);
             var conversationForms = await _repository
                 .Query<ConversationForm>()
@@ -158,9 +164,11 @@ namespace PRIS.Web.Controllers
             List<ConversationForm> newConversationForms = new List<ConversationForm>();
             if (studentById.ConversationResultId == null)
             {
-                ConversationResult conversationResult = new ConversationResult();
-                conversationResult.Student = studentById;
-                conversationResult.StudentForeignKey = studentById.Id;
+                ConversationResult conversationResult = new ConversationResult
+                {
+                    Student = studentById,
+                    StudentForeignKey = studentById.Id
+                };
                 await _repository.InsertAsync(conversationResult);
                 studentById.ConversationResultId = conversationResult.Id;
                 await _repository.SaveAsync();
