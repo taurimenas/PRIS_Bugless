@@ -19,23 +19,22 @@ namespace PRIS.Tests
     public class TaskParametersTests
     {
         [Fact]
-        public async Task Edit_ReturnsAViewResult_WithAListOfTaskParameters()
+        public async Task Edit_ReturnsAViewResult_WithOneTaskParameter()
         {
             // Arrange
             var mockRepo = new Mock<IRepository>();
             var mockLogger = new Mock<ILogger<ExamsController>>();
-
             mockRepo.Setup(repo => repo.FindByIdAsync<Exam>(2))
                 .ReturnsAsync(GetTestData());
-
             var controller = new TaskParametersController(mockRepo.Object, mockLogger.Object);
-
             // Act
             var result = await controller.Edit(2);
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsAssignableFrom<SetTaskParameterModel>(viewResult.ViewData.Model);
             Assert.Equal(2, model.Id);
+            Assert.NotEqual(0, model.Id);
+            Assert.NotNull(model);
         }
 
         private Exam GetTestData()
